@@ -1,0 +1,136 @@
+% This document is part of the transientdict project.
+% Copyright 2013 the authors.
+
+\documentclass[12pt]{emulateapj}
+\usepackage{graphicx}
+%\usepackage{epsfig}
+\usepackage{times}
+\usepackage{natbib}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsbsy}
+\usepackage{bm}
+\usepackage{hyperref}
+\usepackage{url}
+%\usepackage{subfigure}
+\usepackage{microtype}
+\usepackage{rotating}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+\usepackage{tabularx}
+\usepackage{subfigure}
+
+
+%\usepackage{longtable}%\usepackage[stable]{footmisc}
+%\usepackage{color}
+%\bibliographystyle{apj}
+
+\newcommand{\project}[1]{\textsl{#1}}
+\newcommand{\fermi}{\project{Fermi}}
+\newcommand{\rxte}{\project{RXTE}}
+\newcommand{\given}{\,|\,}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\counts}{y}
+\newcommand{\pars}{\theta}
+\newcommand{\mean}{\lambda}
+\newcommand{\likelihood}{{\mathcal L}}
+\newcommand{\Poisson}{{\mathcal P}}
+\newcommand{\Uniform}{{\mathcal U}}
+\newcommand{\bg}{\mathrm{bg}}
+\newcommand{\word}{\phi}
+\newcommand{\stingray}{\texttt{stingray}}
+\newcommand{\python}{\texttt{Python}}
+\newcommand{\astropy}{\texttt{astropy}}
+\newcommand{\lightcurve}{\texttt{Lightcurve}}
+
+%\newcommand{\bs}{\boldsymbol}
+
+\begin{document}
+
+\title{\stingray: A modern \python\ Library For Spectral Timing}
+
+\author{D. Huppenkothen\altaffilmark{1, 2, 3}, M. Bachetti\altaffilmark{4}, A. Stevens\altaffilmark{}, OTHER CO-AUTHORS!}
+ 
+\altaffiltext{1}{Center for Cosmology and Particle Physics, Department of Physics, New York University, 4 Washington Place, New York, NY 10003, USA \\
+}
+  \altaffiltext{2}{Center for Data Science, New York University, 65 5h Avenue, 7th Floor, New York, NY 10003}
+  \altaffiltext{3}{E-mail: daniela.huppenkothen@nyu.edu}
+\altaffiltext{4}{}
+\altaffiltext{5}{}
+\altaffiltext{}{}
+\altaffiltext{}{}
+
+
+\begin{abstract}
+% This abstract could be more exciting, I think.
+This paper describes the design, implementation and usage of \stingray, a library in \python\ built to perform time series analysis and related tasks on astronomical light curves. Its core functionality comprises a large range of Fourier analysis techniques commonly used in Spectral Timing, as well as extensions for analysing pulsar data, simulating data sets, and statistical modelling. Its modular build allows for easy extensions and we aim for the library to be a platform for future development. Here, we describe its Python classes and functions in detail, as well as give practical example using astronomical data sets. The code is well-tested, with a test coverage of currently 95\%.
+
+\end{abstract}
+
+\keywords{methods:statistics}
+
+\section{Introduction}
+
+Variability is one of the key diagnostics in understanding the underlying physics of the dynamics and emission processes from astronomical objects. The detection of periodic variations in the radio flux of certain objects has led to the ground-breaking discovery of pulsars. Similarly, accurately describing of dips in stellar light curves has led to the discovery of thousands of exoplanets. In high-energy astrophysics, particularly the study of black holes and neutron stars, the scientific developments of recent years have brought a growing understanding that time and wavelength are intricately linked. Different spectral components react differently to changes in accretion rate and dynamics, leading to time lags, correlated variability and higher-order effects. This has led to the study of accretion disks, in particular those of Active Galactic Nuclei (AGN), via reverberation mapping. Understanding how the emission at various wavelengths changes with time is crucial for testing and expanding our understanding of General Relativity in the strong gravity limit, the dense matter equation of state and other fundamental questions in astrophysics.
+
+Despite decades of research, the field is fragmented in terms of software; there is no commonly accepted, up-to-date framework for the core data analysis tasks involved in (spectral) timing. Code is generally siloed within groups, leading to a general lack of reproducibility of scientific results. The NASA library \texttt{xronos} is, to our knowledge, the only significant open-source library in this field, and has several shortcomings. In particular, it performs only a few of the most basic tasks, and it has not been maintained since 2004. Here, we introduce \stingray, a lightweight library built entirely in \python\ and based on \astropy\ functionality, to address the lack of well-tested, well-documented software for spectral timing. \stingray\ aims to make many of the core Fourier analysis tools used in timing analysis available to a large range of researchers while providing a common platform for new methods and tools as they enter the field. It includes the most relevant functionality in its core package, while extending that functionality in its subpackages in several ways, allowing for easy modeling of light curves and power spectra, simulation of synthetic data sets and pulsar timing. 
+The modularity of its classes allows for easy incorporation of existing \stingray\ functionality into larger data analysis workflows and pipelines, while being easily extensible for cases that the library currently does not cover. As of v1.0, it includes Basic functionality depends exclusively on \texttt{numpy} [REF], \texttt{scipy}[REF] and \texttt{astropy}[REF], with optional plotting functionality supplied by \texttt{matplotlib}[REF] and optional sampling methods by \texttt{emcee}[REF].
+
+This paper describes \stingray\ v1.0, released on [ADD DATE]. As with most open-source packages, \stingray\ is under continuous development and welcomes contributions from the community.
+The paper layout is as follows: In Section \ref{sec:general_package}, we describe the general package structure. In Section \ref{sec:core}, we detail the package's core functionality in Fourier analysis and introduce basic classes for storing light curves and Fourier spectra of various types. In Section \ref{sec:modeling}, we extend this core functionality with \stingray's modeling framework and in Section \ref{sec:simulator}, we show how users can easily simulate data sets from models. Sections \ref{sec:pulsar} lays out the functionality for analysing pulsar data, and Section{ref:dave} details existing connections to a graphical user interface currently being developed in parallel to \stingray. Finally, in Sections \ref{sec:development} and \ref{sec:future} we lay out the development process, testing and documentation environments as well as our future development plans. In each section, we present examples of the functionality described based on real-world data sets.
+
+
+\section{General Package Framework}
+\label{sec:general_package}
+
+
+
+
+\section{Core Functionality}
+\label{sec:core}
+
+\stingray\ imports its core functions and classes from the top level package. These classes define the basic data structures such as light curves and cross- as well as power spectra that are used in much of the higher-level functionality provided in the sub-packages. Additionally, it incorporates a large range of utilities for dealing with Good Time Intervals (GTIs) as well as input and output of data sets.
+
+
+\subsection{The \texttt{Lightcurve} class}
+\label{sec:lightcurve}
+
+We expect \stingray\ to be used largely on data sets of two forms: (1) event data (i.e.\ recordings of arrival times of individual photons) or (2) binned light curves. The majority of methods in \stingray\ use binned light curves, which we thus currently consider the default format. The \lightcurve\ class defines a basic data structure to store binned light curves. It also includes functionality to create binned light curves out of event data, as well as methods to do common operations, such as adding or subtracting light curves, sorting, truncating and joining them, applying GTIs, and rebinning. 
+
+\subsection{The \texttt{Events} class}
+
+\subsection{Cross Spectra and Power Spectra}
+\label{sec:csps}
+
+\subsection{Higher-Order Fourier Products}
+\label{sec:fourier_others}
+
+\section{The \texttt{modeling} Subpackage}
+\label{sec:modeling}
+
+\section{The \texttt{simulator} Subpackage}
+\label{sec:simulator}
+
+\section{The \texttt{pulsar} Subpackage}
+\label{sec:pulsar}
+
+\section{Connections to \texttt{DAVE}}
+\label{sec:dave}
+
+\section{Development and Integration Environment}
+\label{sec:development}
+
+\section{Future Development Plans}
+\label{sec:future}
+
+\paragraph{acknowledgements}
+DH acknowledges funding from the James Arthur Fellowship at NYU and the Moore-Sloan Data Science Environment at NYU. 
+We thank the Lorentz Centre for organizing the workshop that started this collaboration.
+\clearpage
+
+\bibliography{stingraypaper}
+\bibliographystyle{apj}
+
+\end{document}
+
+

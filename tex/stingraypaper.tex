@@ -42,7 +42,9 @@
 \newcommand{\Uniform}{\ensuremath{{\mathcal U}}}
 \newcommand{\bg}{\ensuremath{\mathrm{bg}}}
 \newcommand{\word}{\ensuremath{\phi}}
+\newcommand{\zsq}{\ensuremath{Z^2_n}}
 \newcommand{\stingray}{\texttt{stingray}\xspace}
+\newcommand{\maltpynt}{\texttt{whatever-name-ex-maltpynt-gets}\xspace}
 \newcommand{\python}{\texttt{Python}\xspace}
 \newcommand{\astropy}{\texttt{astropy}\xspace}
 \newcommand{\lightcurve}{\texttt{Lightcurve}\xspace}
@@ -141,11 +143,34 @@ It also includes functionality to create binned light curves out of event data, 
 \section{The \texttt{simulator} Subpackage}
 \label{sec:simulator}
 
-\section{The \texttt{pulsar} Subpackage}
+\section{The \texttt{pulse} Subpackage}
 \label{sec:pulsar}
+\stingray contains the basic operations to perform the search and characterization of pulsed signals.
+In particular, we implemented the epoch folding [REF] and \zsq [REF] statistics.
+
+\subsection{Folding}
+Among the basic algorithms used in pulsar astronomy, one cannot overstate the importance of Epoch Folding (EF).
+The algorithm consists of cutting the signal at every pulse period and summing all sub-intervals in phase. 
+An alternative way of seeing it, more useful for photon data, is just a \textit {histogram of pulse phases}.
+
+If the period is exactly correct and assuming a stable pulsation, the signal-to-noise ratio will get better approximately with the square root of the number of summed sub-intervals [REF].
+This is the method used to obtain practically all pulse profiles shown in the literature, as most pulsar signals are orders of magnitude below noise level.
+
+The `pulse.pulsar` submodule contains the functionality to calculate the phase given a simple pulse ephemeris consisting of any number of pulse frequency derivatives%
+\footnote{For more complicated cases, like binary pulsars or long-term pulsar noise not well described by pulse derivatives, we recommend to look at more focused libraries like \href{https://github.com/nanograv/PINT}{PINT} [REF]}.
+Moreover, we have a mechanism to calculate the exposure of single bins in the pulse profile. 
+This is particularly useful for very long-period pulsars where the pulsed period is comparable to the length of the GTIs.
+The different exposure of pulse bins caused by the absence of signals during GTIs is taken into account in the calculation of the final pulse profile by the folding algorithm, if the user asks for it. 
+
+\subsection{Epoch Folding search}
+
 
 \section{Connections to \texttt{DAVE}}
 \label{sec:dave}
+
+\section{\maltpynt: command-line interface}
+\label{sec:maltpynt}
+
 
 \section{Development and Integration Environment}
 \label{sec:development}

@@ -146,8 +146,7 @@ It also includes functionality to create binned light curves out of event data, 
 \section{The \texttt{pulse} Subpackage}
 \label{sec:pulsar}
 \stingray contains the basic operations to perform the search and characterization of pulsed signals.
-In particular, we implemented the epoch folding [REF] and \zsq [REF] statistics.
-
+(...)
 \subsection{Folding}
 Among the basic algorithms used in pulsar astronomy, one cannot overstate the importance of Epoch Folding (EF).
 The algorithm consists of cutting the signal at every pulse period and summing all sub-intervals in phase. 
@@ -162,7 +161,23 @@ Moreover, we have a mechanism to calculate the exposure of single bins in the pu
 This is particularly useful for very long-period pulsars where the pulsed period is comparable to the length of the GTIs.
 The different exposure of pulse bins caused by the absence of signals during GTIs is taken into account in the calculation of the final pulse profile by the folding algorithm, if the user asks for it. 
 
-\subsection{Epoch Folding search}
+\subsection{Epoch Folding and \zsq search}
+During a search for pulsations, the first step is usually the PDS. 
+However, often pulsations do not leave a clear signature above noise level in the PDS, because they are weak or they fall close to bin edges, where the sensitivity is reduced [REF].
+Even when they do, the frequency resolution of the PDS is often inadequate to measure precisely the pulse frequency.
+Therefore, an additional statistical analysis is needed. 
+In this Section, we will describe the Epoch Folding search (EFS).
+This search method consists of executing the folding at many trial frequencies around the candidate frequency.
+Once the folding is performed, the following statistics is calculated on the profile:
+\begin{equation}
+\mathcal{S} = \sum_i\frac{(P_i - \overline{P})^2}{\sigma^2}
+\end{equation}
+where $P_i$ are the bins of the profile, $\overline{P}$ is the mean level of the profile, and $\sigma$ is the standard deviation.
+This is the \textit{chi squared} of the actual pulsed profile with respect to a \textit{flat} model.
+
+If there is no pulsation, the chi squared will assume a random value distributed around the number of degrees of freedom $n - 1$ (where $n$ is the number of bins in the profile) with a well defined statistical distribution ($\chi^2_{n - 1}$) that allows an easy calculation of detection limits. 
+When a peak is \textit{very unlikely} (meaning that the probability to be obtained by noise is below a certain $\epsilon$), this peak is considered a pulse candidate.
+If the frequency resolution is sufficiently high, close to the correct frequency, as described by [Leahy et al. 1983, 1987], the peak in the epoch folding periodogram has the shape of a **sinc squared function** (whose secondary lobes are in this case drown in noise).
 
 
 \section{Connections to \texttt{DAVE}}

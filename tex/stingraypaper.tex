@@ -162,6 +162,7 @@ This is particularly useful for very long-period pulsars where the pulsed period
 The different exposure of pulse bins caused by the absence of signals during GTIs is taken into account in the calculation of the final pulse profile by the folding algorithm, if the user asks for it. 
 
 \subsection{Epoch Folding and \zsq search}
+\label{sec:efzsq}
 During a search for pulsations, the first step is usually the PDS. 
 However, often pulsations do not leave a clear signature above noise level in the PDS, because they are weak or they fall close to bin edges, where the sensitivity is reduced [REF].
 Even when they do, the frequency resolution of the PDS is often inadequate to measure precisely the pulse frequency.
@@ -177,7 +178,7 @@ This is the \textit{chi squared} of the actual pulsed profile with respect to a 
 
 If there is no pulsation, the chi squared will assume a random value distributed around the number of degrees of freedom $n - 1$ (where $n$ is the number of bins in the profile) with a well defined statistical distribution ($\chi^2_{n - 1}$) that allows an easy calculation of detection limits. 
 When a peak is \textit{very unlikely} (meaning that the probability to be obtained by noise is below a certain $\epsilon$), this peak is considered a pulse candidate.
-If the frequency resolution is sufficiently high, close to the correct frequency, as described by [Leahy et al. 1983, 1987], the peak in the epoch folding periodogram has the shape of a \textbf{sinc squared function}.
+If the frequency resolution is sufficiently high, close to the correct frequency, as described by [Leahy et al. 1983, 1987], the peak in the epoch folding periodogram has the shape of a \textbf{sinc squared function} whose width is driven by the length of the observation.
 
 The epoch folding statistics, however, can give the same value for a pulse profile at the correct frequency and, for example, an harmonic that produces a deviation from a Poisson distribution.
 A more effective method is the $Z^2_n$ statistics (Buccheri et al. 1983), which is conceptually similar to EF but has high values when the signal is well described by a small number of \textbf{sinusoidal harmonics}: 
@@ -202,6 +203,25 @@ Therefore, in Stingray, the search is performed by binning the pulse profile fir
 Since the sinusoids are only executed on a small number of bins, while the epoch folding procedure just consists of a very fast histogram-like operation, the speedup of this new formula is obvious. 
 Care must be put into the choice of the number of bins, in order to maintain a good approximation even when the number of harmonics is high. 
 We recommend in the documentation to use a number of bins at least 10 times larger than the number of harmonics.
+
+\subsection{Characterization of pulsar behavior}
+\label{sec:ephem}
+As seen in Section~\ref{sec:efzsq}, the \zsq or the EF periodograms of a perfectly stable pulsation have the shape of a sinc squared function.
+\stingray has additional functionality to fit these periodograms with sinc squared or Gaussian models, and find the mean frequency with high precision.
+
+A significant deviation from the expected shape from these peaks in the periodogram can happen if the pulsation is not stable.
+Calculating the periodogram is an option to investigate how the pulse phase varies in time.
+The periodogram is basically a 2-D histogram of the phase and arrival times of the pulses. 
+If the pulsation is stable and the pulse frequency was determined with precision, the periodogram shows vertical stripes corresponding to perfectly aligned pulses.
+If the frequency is not as precise, the stripes become more and more diagonal.
+If the pulse has a detectable frequency derivative, these stripes bend with a parabolic shape.
+
+A very precise way to determine the exact pulse ephemeris is out of the scope of \stingray. 
+However, \stingray has a mechanism to calculate the pulse arrival times (or times of arrival, TOAs) using a pulse template, using the \texttt{fftfit} algorithm used for radio pulsars. 
+This is implemented in the \texttt{get_TOA} function in `stingray.pulse.pulsar`.
+Then, the user can use the TOAs with more focused software like Tempo, Tempo2 or PINT.
+
+[Fig. XXXX: a variation of the pulse phase corresponding to a period derivative. ]
 
 \section{Connections to \texttt{DAVE}}
 \label{sec:dave}

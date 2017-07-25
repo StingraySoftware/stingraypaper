@@ -177,8 +177,31 @@ This is the \textit{chi squared} of the actual pulsed profile with respect to a 
 
 If there is no pulsation, the chi squared will assume a random value distributed around the number of degrees of freedom $n - 1$ (where $n$ is the number of bins in the profile) with a well defined statistical distribution ($\chi^2_{n - 1}$) that allows an easy calculation of detection limits. 
 When a peak is \textit{very unlikely} (meaning that the probability to be obtained by noise is below a certain $\epsilon$), this peak is considered a pulse candidate.
-If the frequency resolution is sufficiently high, close to the correct frequency, as described by [Leahy et al. 1983, 1987], the peak in the epoch folding periodogram has the shape of a **sinc squared function** (whose secondary lobes are in this case drown in noise).
+If the frequency resolution is sufficiently high, close to the correct frequency, as described by [Leahy et al. 1983, 1987], the peak in the epoch folding periodogram has the shape of a \textbf{sinc squared function}.
 
+The epoch folding statistics, however, can give the same value for a pulse profile at the correct frequency and, for example, an harmonic that produces a deviation from a Poisson distribution.
+A more effective method is the $Z^2_n$ statistics (Buccheri et al. 1983), which is conceptually similar to EF but has high values when the signal is well described by a small number of \textbf{sinusoidal harmonics}: 
+
+\begin{equation}
+\zsq = \dfrac{2}{N} \sum_{k=1}^n \left[{\left(\sum_{j=1}^N \cos k \phi_j\right)}^2 + {\left(\sum_{j=1}^N \sin k \phi_j\right)}^2\right]
+\end{equation}
+
+Where $N$ is the number of photons, $n$ is the number of harmonics, $\phi_j$ are the phases corresponding to the event arrival times $t_j$ ($\phi_j = \nu t_j$, where $\nu$ is the pulse frequency).
+
+The \zsq statistics defined in this way, far from the pulsed profile, follows a $\chi^2_n$ distribution, where $n$ is the number of harmonics this time.
+This allows, again, to easily calculate thresholds based on the probability of obtaining a given \zsq by pure noise.
+
+The standard \zsq search calculates the phase of each photon and calculates the sinusoidal functions above for each photon.
+This is very computationally expensive if the number of photons is high. 
+Therefore, in Stingray, the search is performed by binning the pulse profile first and using the phases of the folded profile in the formula above, multiplying the squared sinusoids of the phases of the pulse profile by a weight corresponding to the number of photons at each phase.
+
+\begin{equation}
+\zsq \approx \dfrac{2}{\sum_j{w_j}} \sum_{k=1}^n \left[{\left(\sum_{j=1}^m w_j \cos k \phi_j\right)}^2 + {\left(\sum_{j=1}^m w_j \sin k \phi_j\right)}^2\right]
+\end{equation}
+
+Since the sinusoids are only executed on a small number of bins, while the epoch folding procedure just consists of a very fast histogram-like operation, the speedup of this new formula is obvious. 
+Care must be put into the choice of the number of bins, in order to maintain a good approximation even when the number of harmonics is high. 
+We recommend in the documentation to use a number of bins at least 10 times larger than the number of harmonics.
 
 \section{Connections to \texttt{DAVE}}
 \label{sec:dave}

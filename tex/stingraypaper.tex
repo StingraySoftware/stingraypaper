@@ -20,6 +20,7 @@
 \usepackage{threeparttable}
 \usepackage{tabularx}
 \usepackage{subfigure}
+\usepackage{minted}
 
 
 %\usepackage{longtable}%\usepackage[stable]{footmisc}
@@ -48,6 +49,13 @@
 \newcommand{\python}{\texttt{Python}\xspace}
 \newcommand{\astropy}{\texttt{astropy}\xspace}
 \newcommand{\lightcurve}{\texttt{Lightcurve}\xspace}
+\newcommand{\eventlist}{\texttt{EventList}\xspace}
+\newcommand{\crossspectrum}{\texttt{Crossspectrum}\xspace}
+\newcommand{\powerspectrum}{\texttt{Powerspectrum}\xspace}
+
+\newcommand{\hendrics}{\texttt{HENDRICS}\xspace}
+\newcommand{\dave}{\texttt{DAVE}\xspace}
+
 
 %\newcommand{\bs}{\boldsymbol}
 
@@ -88,16 +96,25 @@ Different spectral components react differently to changes in accretion rate and
 This has led to the study of accretion disks, in particular those of Active Galactic Nuclei (AGN), via reverberation mapping. 
 Understanding how the emission at various wavelengths changes with time is crucial for testing and expanding our understanding of General Relativity in the strong gravity limit, the dense matter equation of state and other fundamental questions in astrophysics.
 
-Despite decades of research, the field is fragmented in terms of software; there is no commonly accepted, up-to-date framework for the core data analysis tasks involved in (spectral) timing. Code is generally siloed within groups, leading to a general lack of reproducibility of scientific results. 
+\section{Vision}
+
+Despite decades of research, the field is fragmented in terms of software; there is no commonly accepted, up-to-date framework for the core data analysis tasks involved in (spectral) timing. Code is generally siloed within groups, leading to a general lack of reproducibility of scientific results. Additionally, the lack of fully open-source tools constitutes a significant barrier to entry for researchers new to the field, since it effectively requires anyone not part of collaborations with an existing private code base to write their own software from scratch. 
 The NASA library \texttt{xronos} is, to our knowledge, the only significant open-source library in this field, and has several shortcomings. 
 In particular, it performs only a few of the most basic tasks, and it has not been maintained since 2004. 
 Here, we introduce \stingray, a lightweight library built entirely in \python and based on \astropy functionality, to address the lack of well-tested, well-documented software for spectral timing. 
 \stingray aims to make many of the core Fourier analysis tools used in timing analysis available to a large range of researchers while providing a common platform for new methods and tools as they enter the field. 
 It includes the most relevant functionality in its core package, while extending that functionality in its subpackages in several ways, allowing for easy modeling of light curves and power spectra, simulation of synthetic data sets and pulsar timing. 
-The modularity of its classes allows for easy incorporation of existing \stingray functionality into larger data analysis workflows and pipelines, while being easily extensible for cases that the library currently does not cover. 
-As of v1.0, it includes Basic functionality depends exclusively on \texttt{numpy} [REF], \texttt{scipy}[REF] and \texttt{astropy}[REF], with optional plotting functionality supplied by \texttt{matplotlib}[REF] and optional sampling methods by \texttt{emcee}[REF].
 
-This paper describes \stingray v1.0, released on [ADD DATE]. 
+Its primary idea is to provide time series analysis methods in an accessible, well-tested way, built as a series of modules in an object-oriented way. In practice, data 
+analysis requirements are varied and depend on the type of data, the wavelength the observation was taken at, and the object being observed. With this in mind, 
+\stingray does not aim to provide full data analysis workflows; rather, it provides the core building blocks for users to build such workflows themselves, based on the specific data analysis requirements of their source and observation. 
+The modularity of its classes allows for easy incorporation of existing \stingray functionality into larger data analysis workflows and pipelines, while being easily extensible for cases that the library currently does not cover. 
+
+\stingray is designed to be used both as a standalone package, but is also at the core of two other software packages currently under development: \hendrics [REF] provides pre-built data analysis workflows using \stingray core functionality. These workflows are accessible from the command line and are provided for some common data types and data analysis tasks. \dave [REF] on the other hand, provides a Graphical User Interface on top of \stingray to allow for easy interactive exploratory data analysis.
+ 
+As of v0.1, it includes basic functionality depends exclusively on \texttt{numpy} [REF], \texttt{scipy}[REF] and \texttt{astropy}[REF], with optional plotting functionality supplied by \texttt{matplotlib}[REF] and optional sampling methods by \texttt{emcee}[REF]. [ADD OTHER OPTIONAL DEPENDENCIES HERE!].
+
+This paper describes \stingray v0.1, released on 2018-02-12. 
 As with most open-source packages, \stingray is under continuous development and welcomes contributions from the community.
 The paper layout is as follows: 
 In Section \ref{sec:general_package}, we describe the general package structure. 
@@ -107,11 +124,12 @@ Sections \ref{sec:pulsar} lays out the functionality for analysing pulsar data, 
 Finally, in Sections \ref{sec:development} and \ref{sec:future} we lay out the development process, testing and documentation environments as well as our future development plans. 
 In each section, we present examples of the functionality described based on real-world data sets.
 
-
 \section{General Package Framework}
 \label{sec:general_package}
 
+\stingray separates out core functionality from several more specialized tasks based on those core classes and functions. Constructs related to data products as well as transformations of the data (e.g.\ power spectra, cross spectra, time lags, and other spectral timing products) are considered core functionality, as are some utility functions and classes, for example related to Good Time Interval calculations. 
 
+Current functionality in subpackages includes a framework to allow for the parametric modelling of light curves and Fourier products, simulations of spectral timing products from power spectra, and period searches in pulsars.
 
 
 \section{Core Functionality}
@@ -119,26 +137,161 @@ In each section, we present examples of the functionality described based on rea
 
 \stingray imports its core functions and classes from the top level package. 
 These classes define the basic data structures such as light curves and cross- as well as power spectra that are used in much of the higher-level functionality provided in the sub-packages. 
-Additionally, it incorporates a large range of utilities for dealing with Good Time Intervals (GTIs) as well as input and output of data sets.
-
+Additionally, it incorporates a large range of utilities for dealing with Good Time Intervals (GTIs) as well as input and output of data sets. 
 
 \subsection{The \texttt{Lightcurve} class}
 \label{sec:lightcurve}
 
 We expect \stingray to be used largely on data sets of two forms: (1) event data (i.e. recordings of arrival times of individual photons) or (2) binned light curves. 
-The majority of methods in \stingray use binned light curves, which we thus currently consider the default format. The \lightcurve class defines a basic data structure to store binned light curves. 
-It also includes functionality to create binned light curves out of event data, as well as methods to do common operations, such as adding or subtracting light curves, sorting, truncating and joining them, applying GTIs, and rebinning. 
+The majority of methods in \stingray use binned light curves, which we thus currently consider the default format. The \lightcurve class defines a basic data structure to store binned light curves. For binned data, the class can simply be invoked supplying time stamps and the corresponding flux values (and optionally uncertainties on the flux measurements):
+
+\begin{minted}{python}
+lc = Lightcurve(time, counts, err, 
+		       input_counts=True, 
+		       gti=None, 
+		       err_dist='poisson', 
+		       mjdref=0, dt=None)
+\end{minted}
+
+where \texttt{counts} corresponds to the flux per bin (or the number of photon counts per bin in the photon counting case), \texttt{err} are the flux uncertainties and \verb|input_counts| should be set to \texttt{True} if the input is in flux per bin (as opposed to flux per second). While it is possible to input GTIs, they will not by default be applied to the light curve itself, but propagated to classes and functions that take \lightcurve objects as input and make use of the GTIs stored in the object. There is, however, a method that splits a light curve into several \lightcurve objects, one for each contiguous good time interval. For unevenly sampled data or cases where gaps exist in the data, the internal algorithm for determining the time resolution \texttt{dt} might not always be correct; in these cases, it can help to input a reference time resolution manually.
+
+For event data, a static method exists that will take the time stamps of events as well as a time resolution and create a light curve using \texttt{numpy.histogram}:
+
+\begin{minted}{python}
+lc = make_lightcurve(toa, dt, tseg=None, 
+		     tstart=None, 
+		     gti=None,
+		     mjdref=0,
+		     use_hist=False)
+\end{minted}
+
+Here, \texttt{toa} should be a list or array of times of arrivals of the events and \texttt{dt} the time resolution of the binned light curve. By default, the light curve start with the arrival of the first photon and end with the arrival of the last photon. Optionally, if the observation or segment begins before the arrival time of the first event and/or ends after the arrival time of the last event, one may optionally include a start time \texttt{tstart} and a total duration \texttt{tseg} for the creation of the regular time grid. 
+
+Beyond providing a basic data structure for light curves and a creation mechanism out of event data, \stingray implements a range of operations acting on these objects. It overrides several standard operations such as the \texttt{+} operator \verb|__add__| and the \texttt{-} operator \verb|__sub__|, allowing to efficiently add and subtract light curves from one another. In either case, the addition and subtraction will operate on the \texttt{counts} attribute, and derivative attributes such as \verb|count_rate| and \texttt{err} will be automatically be recalculated. Similarly overloaded operations are the built-in function \verb|__len__|, which will return the number of time bins in the light curve, and \verb|__neg__|, which will invert the values in the \texttt{counts} attribute.
+
+Other functionality on light curves includes rebinning to a new time resolution, which must be lower than the previous time resolution (i.e.\ interpolation is not implemented). 
+\lightcurve objects can also be joined, truncated and sorted by time or counts. Finally, \stingray implements basic methods for plotting (useful for a quick look at the data), as well as reading and writing into various formats (currently FITS, HDF5 and ASCII).
 
 \subsection{The \texttt{Events} class}
 
+At short wavelengths, data is largely recorded as \textit{photon events}, where arrival times at the detector are recorded for each photon independently, along with a number of other properties of the event (for example an energy channel in which the photon was recorded in, which can be transformed to a rough estimate of the energy of the original photon arriving at the detector).
+
+\stingray implements a basic class \eventlist that acts as a container for data sets of these types. Even for a single instrument, there are often multiple data formats and types of data recorded, resulting in a plethora of data formats and internal schema to how data is stored within the FITS files distributed to the community. 
+\stingray implements a basic \eventlist class that acts as a container for basic event data, but does not aim to encompass all current data types of all current (and future) instruments entirely. Instead, it aims to abstract away from instrument-specific idosyncrasies as much as possible and remain mission-agnostic. In its basic form, it takes arrays with time stamps and optionally corresponding photon energies as input, and implements a set of basic methods. Similarly to \lightcurve, it provides basic input/output (I/O) functionality in the form of \texttt{read} and \texttt{write} methods as well as a method to join event lists, which can be particularly useful when data is recorded in several independent detector, as is common for several current and future X-ray missions. The \verb|to_lc| method provides straightforward connection to create a \lightcurve directly out of an \eventlist object. In return, it is possible to create an \eventlist out of a \lightcurve object using the \verb|from_lc|. The latter will create $N_i$ events, each with a time stamp equation to the time bin $t_i$, where $N_i$ is the number of counts in bin $i$ (event lists are, by their very definition only a useful data product if the light curve used to simulate comes from photon counting data in the first place). 
+It is possible to simulate more physically meaningful photon events from a given light curve and energy spectrum using the \verb|simulate_times| and \verb|simulate_energies| methods, which employ a combination of interpolation and rejection sampling to accurately draw events from the given light curve and spectrum.
+
+
 \subsection{Cross Spectra and Power Spectra}
 \label{sec:csps}
+
+[TODO: ADD SOME CODE AND EXAMPLE PLOTS]
+
+Consider two independently distributed, evenly-sampled, stationary time series,
+
+\begin{eqnarray}
+\mathbf{x} &=& \{x_k\}_{k=1}^N \nonumber \\
+\mathbf{y} &=& \{y_k\}_{k=1}^N \nonumber
+\end{eqnarray}
+
+\noindent with $N$ data points taken at simultaneous time intervals $\{t_k\}_{k=1}^N$ with a constant time resolution $\Delta t$ and a total duration $T = N\Delta t$. 
+The data points in the time series $\mathbf{x}$ and $\mathbf{y}$ can be expressed in terms of a Fourier series,
+
+\begin{eqnarray}
+x_k & = & \frac{1}{N} \sum_{j}{\mathcal{F}_x(j)} \nonumber \\
+x_y & = & \frac{1}{N} \sum_{j}{\mathcal{F}_y(j)}
+\end{eqnarray}
+
+\noindent where
+
+\begin{eqnarray}
+\mathcal{F}_x(j) &= & \frac{1}{2} (A_{xj} - i B_{xj}) e^{-i\left( \frac{2 \pi j t}{T} \right)} \\
+\mathcal{F}_y(j) &= & \frac{1}{2} (A_{yj} - i B_{yj}) e^{-i\left( \frac{2 \pi j t}{T} \right)} \, .
+\end{eqnarray}
+
+\noindent Here, $i = \sqrt{-1}$, and $A_{xj}, A_{yj}$ and $B_{xj}, B_{yj}$ describe the real and imaginary parts of the Fourier amplitudes, respectively (for a pedagogical introduction into Fourier analysis, see \citealt{vanderklis1989}). We restrict $\mathcal{F}_x(j)$ and $\mathcal{F}_y(j)$ to frequencies between $\nu_{j=0} = 1/T$ and the Nyquist frequency $\nu_{j=N/2} = 1/(2\Delta t)$.
+The complex cross spectrum is then calculated by multiplying the Fourier transform of light curve $\mathbf{x}$ with the complex conjugate of the Fourier transform of light curve $\mathbf{y}$ (\citealt{vaughan1997,nowak1999}, see also \citealt{uttley2014} for a recent review of spectral timing techniques):
+
+\begin{eqnarray}
+\mathcal{F}_x(j) \mathcal{F}_y^*(j) & = & \frac{1}{2} (A_{xj} - i B_{xj}) e^{i \frac{2 \pi j t}{T}} \frac{1}{2} (A_{yj} + i B_{yj}) e^{i \frac{-2 \pi j t}{T}}\nonumber \\ 
+		     & = & \frac{1}{4} [ (A_{xj}A_{yj} + B_{xj}B_{yj}) + \\\nonumber
+		     & &  i (A_{xj}B_{yj} - A_{yj}B_{xj}) ]
+\end{eqnarray}
+
+Note that for strictly real-valued time series, as light curves in astronomy always are, $A_j = A_{-j}$ and $B_j = - B_{-j}$, such that 
+
+\begin{equation}
+\mathcal{F}_x(j) \mathcal{F}_y^*(j) = \frac{1}{2} \left\{ (A_{xj}A_{yj} + B_{xj}B_{yj}) + i (A_{xj}B_{yj} - A_{yj}B_{xj}) \right\} \, .
+\label{eqn:crossspectrum}
+\end{equation}
+
+This is the formal definition of the cross spectrum, implemented in class \crossspectrum. Its inputs are two \lightcurve object, as well as optionally a normalization for the resulting Fourier amplitudes, and an array of GTIs. As defined above, it will compute the Fourier amplitudes $A_{xj}, A_{yj}$ and $B_{xj}, B_{yj}$ and store the complex result of Equation \ref{eqn:crossspectrum} in an attribute \texttt{power} along with the corresponding mid-bin frequencies in a second attribute \texttt{freq}.
+
+The power spectrum\footnote{TEXT ABOUT DIFFERENCE BETWEEN POWER SPECTRUM AND PERIODOGRAM} can be formulated as the special case of the cross spectrum where $\mathbf{x} = \mathbf{y}$, i.e.\ the cross spectrum of a light curve with itself. The class \powerspectrum is hence implemented as a subclass of \crossspectrum and takes only one \lightcurve object instead of two. The squared amplitudes corresponding to Equation \ref{eqn:crossspectrum} become in this case
+
+\begin{equation}
+\mathcal{F}_x(j) \mathcal{F}_x^*(j) = \frac{1}{2} \left\{ (A_{xj}A_{xj} + B_{xj}B_{xj})\right\} \, .
+\end{equation}
+
+\noindent The imaginary part of Equation \ref{eqn:crossspectrum} cancels out for the power spectrum, since the Fourier amplitudes come from identical light curves, and thus the phase difference between them is exactly $0$. 
+
+There are several popular normalizations for the real part of the cross spectrum as well as the power spectrum implemented in \stingray: the popular Leahy normalization [REF] is defined as 
+
+\begin{equation}
+P_j = \frac{2}{\sqrt{N_{p,x}N_{p,y}}} C_j \; ,
+\end{equation}
+
+\noindent where  $N_{p,x}^2$ and $N_{p,y}^2$ denote the total number of counts in light curves $\mathbf{x}$ and $\mathbf{y}$, respectively, and $C_j =  (A_{xj}A_{yj} + B_{xj}B_{yj}) $ as defined in Equation \ref{eqn:crossspectrum} above. As shown in [REF], this normalization allows for straightforward period searches in white noise cross spectra and power spectra, and can be applied when creating a \crossspectrum or \powerspectrum object by setting the keyword \verb|norm="leahy"|. 
+
+Another common way to normalize the cross spectrum is such that the integral under the powers corresponds to the fraction of the total variance of the light curve contained between the lower and upper integration bound in frequency space. This rms normalization [REF] is defined as
+
+\begin{equation}
+P_j = \frac{2 T_\mathrm{seg}}{N^2 \mu_{xy}^2} C_j \; ,
+\end{equation}
+
+\noindent where $C_j$ is defined as above, $N = N_x = N_y$ is the number of time bins in the light curves, $T_\mathrm{seg}$ denotes the total length in time of the light curve, and the total mean count rate is defined as $\mu_{xy} = \sqrt{\mu_x \mu_y}$ in terms of the mean count rate in each light curve $\mu_x$ and $\mu_y$. This normalization can be accessed using the \verb|norm="frac"| keyword. Closely related is the absolute rms normalization (\verb|norm="abs"|, which calculates the powers such that the integral between two frequencies $\nu_\mathrm{low}$ and $\nu_\mathrm{high}$ corresponds to the total variance contained between those frequencies:
+
+\begin{equation}
+P_j = \frac{2 T_\mathrm{seg}}{N^2} C_j \; .
+\end{equation}
+
+\noindent Setting the keyword argument \verb|norm="none"| will return the unnormalized powers $C_j$. The classes \crossspectrum and \powerspectrum share most of the implemented methods, except where otherwise noted. Both classes include methods to rebin cross- and power spectra. Linear rebinning is implemented analogously to the method in class \lightcurve. Additionally, logarithmic binning is implemented in the method \verb|rebin_log| in such a way that the bin width at a given frequency increases a fraction of the previous bin width:
+
+\[
+d\nu_{i+1} = d\nu_{i} (1 + f) \; ,
+\]
+
+\noindent where $f$ is some constant factor by which the frequency resolution increases, often $f = 0.01$. 
+
+In the case of the cross spectrum, it is also possible to calculate the time lag, defined as
+
+\[
+\tau_j = \frac{\phi_j}{2\pi\nu_j} \; 
+\]
+
+\noindent for a phase angle $\phi_j$ derived from the imaginary component of the complex cross spectrum, $(A_{xj}B_{yj} - A_{yj}B_{xj})$ and a mid-bin frequency $\nu_j$. Similarly, it is possible to calculate the coherence [REF] from the cross spectrum, defined as 
+
+\begin{equation}
+c_j = \frac{C_{xy,j}}{C_{x,j} C_{y,j}} \; . 
+\end{equation}
+
+\noindent Here, $C_{xy,j}$ corresponds to the real part of the unnormalized cross spectrum defined in Equation \ref{eqn:crossspectrum}, and $C_{x,j}$ and $C_{y,j}$ correspond to the analogous squared amplitudes of the power spectrum for each individual light curve. 
+
+Classical period searches are often formulated as outlier detection problems from an expected statistical distribution. Assuming the signal is sufficiently coherent such that all of the signal power is concentrated in one bin, one may calculate the chance probability that an observed power was generated by statistical fluctuations alone. The distribution for power spectra is well known: For a Leahy-normalized spectrum, the powers are distributed following a $\chi^2$ distribution around a mean of $2$ in the case of pure white noise, and following a $\chi^2$ distribution around an underlying power spectral shape for other stationary stochastic processes. In the white noise case, the equations to accurately calculate a $p$-value of rejecting the hypothesis that a given outlier in the power spectrum was generated by white noise was defined in \citep{Groth1975}, and can be calculated for one or multiple powers in a \Powerspectrum object using the \verb|classical_significances| method. The cross spectrum does not follow the same distribution \citep{huppenkothen2018}, and the recently derived statistical distributions for this case will be implemented in a future version of \stingray. 
+
+In many practical applications, users may wish to average power- or cross spectra from multiple light curve segments in order to suppress statistical noise. This can easily be done with the appropriate classes \texttt{AveragedPowerspectrum} and \texttt{AveragedCrossspectrum}, which take a \lightcurve object or list of \lightcurve objects as an input and will compute averaged Fourier products for a given length of segment. Both are subclasses of \crossspectrum, and either inherit or override many of the methods relevant for those classes as well. 
+
+
 
 \subsection{Higher-Order Fourier Products}
 \label{sec:fourier_others}
 
 \section{The \texttt{modeling} Subpackage}
 \label{sec:modeling}
+
+Modelling data sets with parametric (often physically motivated) models that map an independent variable (e.g.\ time or frequency) to one or more dependent variables (e.g.\ flux, counts or Fourier powers) is a common task in astronomy. Constructing a general-purpose modelling framework is a highly non-trivial task, thus \stingray's modelling interface currently restricts itself to models of commonly used spectral-timing products, in particular modelling power spectra. 
+
+
+
 
 \section{The \texttt{simulator} Subpackage}
 \label{sec:simulator}
@@ -218,7 +371,7 @@ If the pulse has a detectable frequency derivative, these stripes bend with a pa
 
 A very precise way to determine the exact pulse ephemeris is out of the scope of \stingray. 
 However, \stingray has a mechanism to calculate the pulse arrival times (or times of arrival, TOAs) using a pulse template, using the \texttt{fftfit} algorithm used for radio pulsars. 
-This is implemented in the \texttt{get_TOA} function in `stingray.pulse.pulsar`.
+This is implemented in the \verb|get_TOA| function in `stingray.pulse.pulsar`.
 Then, the user can use the TOAs with more focused software like Tempo, Tempo2 or PINT.
 
 [Fig. XXXX: a variation of the pulse phase corresponding to a period derivative. ]

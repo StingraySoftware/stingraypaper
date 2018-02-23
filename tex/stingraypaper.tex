@@ -52,6 +52,11 @@
 \newcommand{\eventlist}{\texttt{EventList}\xspace}
 \newcommand{\crossspectrum}{\texttt{Crossspectrum}\xspace}
 \newcommand{\powerspectrum}{\texttt{Powerspectrum}\xspace}
+\newcommand{\likelihood}{\texttt{Likelihood}\xspace}
+\newcommand{\posterior}{\texttt{Posterior}\xspace}
+\newcommand{\parest}{\texttt{ParameterEstimation}\xspace}
+
+
 
 \newcommand{\hendrics}{\texttt{HENDRICS}\xspace}
 \newcommand{\dave}{\texttt{DAVE}\xspace}
@@ -288,7 +293,13 @@ In many practical applications, users may wish to average power- or cross spectr
 \section{The \texttt{modeling} Subpackage}
 \label{sec:modeling}
 
-Modelling data sets with parametric (often physically motivated) models that map an independent variable (e.g.\ time or frequency) to one or more dependent variables (e.g.\ flux, counts or Fourier powers) is a common task in astronomy. Constructing a general-purpose modelling framework is a highly non-trivial task, thus \stingray's modelling interface currently restricts itself to models of commonly used spectral-timing products, in particular modelling power spectra. 
+Modelling data sets with parametric (often physically motivated) models that map an independent variable (e.g.\ time or frequency) to one or more dependent variables (e.g.\ flux, counts or Fourier powers) is a common task in astronomy. Constructing a general-purpose modelling framework is a highly non-trivial task, thus \stingray's modelling interface currently restricts itself to models of commonly used spectral-timing products, in particular modelling (averaged) power spectra. 
+
+The modelling subpackage logically separates out statistical models -- likelihoods and posteriors -- from the fitting functionality, such that different likelihoods and posteriors can be straightforwardly dropped in and out. In line with the overall philosophy of \stingray, the modelling subpackage is designed to be modular and easily extensible to specific problems a user might try to solve, while many typical tasks one might do with Fourier products are already built-in. It integrates with parts of the \verb|astropy.modeling| interface, and makes use of the \verb|scipy.optimize| interface for optimization as well as the package \texttt{emcee} for Markov Chain Monte Carlo (MCMC) sampling.
+
+All statistical models are implemented as a subclass of an Abstract Base Class \likelihood in module \verb|stingray.posterior|. In its most basic form, each subclass of \likelihood takes data in some form (most commonly two arrays, one with the independent and one with the dependent variable) as well as an object of type \verb|astropy.modeling.FittableModel|. The likelihood itself is implemented in the \texttt{evaluate} method
+
+
 
 
 

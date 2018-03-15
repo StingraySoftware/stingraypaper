@@ -38,25 +38,28 @@
 \newcommand{\counts}{\ensuremath{y}}
 \newcommand{\pars}{\ensuremath{\theta}}
 \newcommand{\mean}{\ensuremath{\lambda}}
-\newcommand{\likelihood}{\ensuremath{{\mathcal L}}}
+%\newcommand{\likelihood}{\ensuremath{{\mathcal L}}}
 \newcommand{\Poisson}{\ensuremath{{\mathcal P}}}
 \newcommand{\Uniform}{\ensuremath{{\mathcal U}}}
 \newcommand{\bg}{\ensuremath{\mathrm{bg}}}
 \newcommand{\word}{\ensuremath{\phi}}
 \newcommand{\zsq}{\ensuremath{Z^2_n}}
-\newcommand{\stingray}{\texttt{stingray}\xspace}
+\newcommand{\stingray}{\mintinline{python}{stingray}\xspace}
 \newcommand{\maltpynt}{\texttt{whatever-name-ex-maltpynt-gets}\xspace}
 \newcommand{\python}{\texttt{Python}\xspace}
 \newcommand{\astropy}{\texttt{astropy}\xspace}
-\newcommand{\lightcurve}{\texttt{Lightcurve}\xspace}
-\newcommand{\eventlist}{\texttt{EventList}\xspace}
-\newcommand{\crossspectrum}{\texttt{Crossspectrum}\xspace}
-\newcommand{\powerspectrum}{\texttt{Powerspectrum}\xspace}
-\newcommand{\likelihood}{\texttt{Likelihood}\xspace}
-\newcommand{\posterior}{\texttt{Posterior}\xspace}
-\newcommand{\parest}{\texttt{ParameterEstimation}\xspace}
+\newcommand{\lightcurve}{\mintinline{python}{Lightcurve}\xspace}
+\newcommand{\eventlist}{\mintinline{python}{EventList}\xspace}
+\newcommand{\crossspectrum}{\mintinline{python}{Crossspectrum}\xspace}
+\newcommand{\powerspectrum}{\mintinline{python}{Powerspectrum}\xspace}
+\newcommand{\likelihood}{\mintinline{python}{Likelihood}\xspace}
+\newcommand{\posterior}{\mintinline{python}{Posterior}\xspace}
+\newcommand{\parest}{\mintinline{python}{ParameterEstimation}\xspace}
 
 
+\usemintedstyle[python]{friendly}
+%\setminted[python]{}
+%\setmintedinline[python]{}
 
 \newcommand{\hendrics}{\texttt{HENDRICS}\xspace}
 \newcommand{\dave}{\texttt{DAVE}\xspace}
@@ -66,7 +69,7 @@
 
 \begin{document}
 
-\title{\stingray: A modern \python\ Library For Spectral Timing}
+\title{\stingray: A Modern \python\ Library For Spectral Timing}
 
 \author{D. Huppenkothen\altaffilmark{1, 2, 3}, M. Bachetti\altaffilmark{4}, A. Stevens\altaffilmark{}, OTHER CO-AUTHORS!}
  
@@ -115,9 +118,9 @@ analysis requirements are varied and depend on the type of data, the wavelength 
 \stingray does not aim to provide full data analysis workflows; rather, it provides the core building blocks for users to build such workflows themselves, based on the specific data analysis requirements of their source and observation. 
 The modularity of its classes allows for easy incorporation of existing \stingray functionality into larger data analysis workflows and pipelines, while being easily extensible for cases that the library currently does not cover. 
 
-\stingray is designed to be used both as a standalone package, but is also at the core of two other software packages currently under development: \hendrics [REF] provides pre-built data analysis workflows using \stingray core functionality. These workflows are accessible from the command line and are provided for some common data types and data analysis tasks. \dave [REF] on the other hand, provides a Graphical User Interface on top of \stingray to allow for easy interactive exploratory data analysis.
+\stingray is designed to be used both as a standalone package, but is also at the core of two other software packages currently under development: \hendrics \citep{hendrics} provides pre-built data analysis workflows using \stingray core functionality. These workflows are accessible from the command line and are provided for some common data types and data analysis tasks. \dave\footnote{\url{https://github.com/StingraySoftware/dave}} on the other hand, provides a Graphical User Interface on top of \stingray to allow for easy interactive exploratory data analysis.
  
-As of v0.1, it includes basic functionality depends exclusively on \texttt{numpy} [REF], \texttt{scipy}[REF] and \texttt{astropy}[REF], with optional plotting functionality supplied by \texttt{matplotlib}[REF] and optional sampling methods by \texttt{emcee}[REF]. [ADD OTHER OPTIONAL DEPENDENCIES HERE!].
+As of v0.1, it includes basic functionality depends exclusively on \texttt{numpy}\citep{numpy}, \texttt{scipy}\citep{scipy} and \texttt{astropy}\citep{astropy}, with optional plotting functionality supplied by \texttt{matplotlib}\citep{matplotlib} and \texttt{corner}\citep{corner}, and optional sampling methods by \texttt{emcee}\citep{emcee}. [ADD OTHER OPTIONAL DEPENDENCIES HERE!].
 
 This paper describes \stingray v0.1, released on 2018-02-12. 
 As with most open-source packages, \stingray is under continuous development and welcomes contributions from the community.
@@ -189,77 +192,27 @@ It is possible to simulate more physically meaningful photon events from a given
 \subsection{Cross Spectra and Power Spectra}
 \label{sec:csps}
 
-[TODO: ADD SOME CODE AND EXAMPLE PLOTS]
+The cross spectrum and the power spectrum\footnote{TEXT ABOUT DIFFERENCE BETWEEN PERIODOGRAM AND POWER SPECTRUM} are closely related (for a pedagogical introduction into Fourier analysis, see \citealt{vanderklis1989}; see also \citealt{uttley2014} for a recent review of spectral timing techniques). Computing the cross spectrum requires two evenly sampled time series $\mathbf{y}_1$ and $\mathbf{y}_2$ taken simultaneously at exactly the same time bins. Under this assumption, one may then compute the discrete Fourier transform of each time series, $\mathcal{F}_1$ and $\mathcal{F}_2$ independently, and multiple the $\mathcal{F}_1$ with $\mathcal{F}*_2$, i.e. the Fourier transform of the first time series with the \textit{complex conjugate} of the Fourier transform of $\mathbf{x}_2$. 
 
-Consider two independently distributed, evenly-sampled, stationary time series,
+Because the power spectrum is defined as the square of the real part of the Fourier amplitudes of a single, evenly sampled time series, it can be formulated as the special case of the cross spectrum where $\mathbf{x}_1 = \mathbf{x}_2$. In \stingray, we implement a class \crossspectrum, which takes two \lightcurve objects as input and internally calculates the complex cross spectrum in one of a number of common normalizations.  Because many of the internal calculations are the same, the class \powerspectrum is implemented as a subclass of \crossspectrum, but takes only a single \lightcurve object instead of two. 
 
-\begin{eqnarray}
-\mathbf{x} &=& \{x_k\}_{k=1}^N \nonumber \\
-\mathbf{y} &=& \{y_k\}_{k=1}^N \nonumber
-\end{eqnarray}
+There are several popular normalizations for the real part of the cross spectrum as well as the power spectrum implemented in \stingray: the popular Leahy normalization \citep{leahy1983} is defined such that for simple white noise, the power spectrum will follow a $\chi^2$ distribution with $2$ degrees of freedom around a mean value of $2$. It is particularly useful for period searches, because the white noise level is well understood and always the same (but be aware that detector effects like dead time can distort the power spectrum in practice [REF BACHETTI]).
+For light curves with complex variability patterns, and especially understanding how these patterns contribute to the overall variance observed, the \textit{fractional rms normalization}\citep{belloni1990,miyamoto1992}  or the \textit{absolute rms normalization}[REF?] may be more appropriate choices. 
 
-\noindent with $N$ data points taken at simultaneous time intervals $\{t_k\}_{k=1}^N$ with a constant time resolution $\Delta t$ and a total duration $T = N\Delta t$. 
-The data points in the time series $\mathbf{x}$ and $\mathbf{y}$ can be expressed in terms of a Fourier series,
+These normalizations can be set when instantiating a \crossspectrum or \powerspectrum object using the keyword argument \texttt{norm}, e.g.
+\begin{figure*}[htbp]
+\begin{center}
+\includegraphics[width=\textwidth]{example_lc_ps.pdf}
+\caption{Left panel: An example light curve of the black hole X-ray binary GRS 1915+105, taken with the \textit{Rossi} X-ray Timing Explorer's Proportional Counter Array (PCA) in the $\rho$ state [REF]. Right panel: we show the power spectrum calculated from the light curve in the left panel (black), as well as a version of the same power spectrum that has been logarithmically binned in frequency space (orange) and an averaged power spectrum calculated from $10$ segments of $256\,\mathrm{s}$ duration (purple). The log-rebinned and averaged power spectrum are normalized in the same way as the single-segment power spectrum, but arbitrarily shifted on the y-axis for clarity of comparison.}
+\label{fig:psd}
+\end{center}
+\end{figure*}
 
-\begin{eqnarray}
-x_k & = & \frac{1}{N} \sum_{j}{\mathcal{F}_x(j)} \nonumber \\
-x_y & = & \frac{1}{N} \sum_{j}{\mathcal{F}_y(j)}
-\end{eqnarray}
+\begin{minted}{python}
+ps = Powerspectrum(lc, norm="leahy")
+\end{minted}
 
-\noindent where
-
-\begin{eqnarray}
-\mathcal{F}_x(j) &= & \frac{1}{2} (A_{xj} - i B_{xj}) e^{-i\left( \frac{2 \pi j t}{T} \right)} \\
-\mathcal{F}_y(j) &= & \frac{1}{2} (A_{yj} - i B_{yj}) e^{-i\left( \frac{2 \pi j t}{T} \right)} \, .
-\end{eqnarray}
-
-\noindent Here, $i = \sqrt{-1}$, and $A_{xj}, A_{yj}$ and $B_{xj}, B_{yj}$ describe the real and imaginary parts of the Fourier amplitudes, respectively (for a pedagogical introduction into Fourier analysis, see \citealt{vanderklis1989}). We restrict $\mathcal{F}_x(j)$ and $\mathcal{F}_y(j)$ to frequencies between $\nu_{j=0} = 1/T$ and the Nyquist frequency $\nu_{j=N/2} = 1/(2\Delta t)$.
-The complex cross spectrum is then calculated by multiplying the Fourier transform of light curve $\mathbf{x}$ with the complex conjugate of the Fourier transform of light curve $\mathbf{y}$ (\citealt{vaughan1997,nowak1999}, see also \citealt{uttley2014} for a recent review of spectral timing techniques):
-
-\begin{eqnarray}
-\mathcal{F}_x(j) \mathcal{F}_y^*(j) & = & \frac{1}{2} (A_{xj} - i B_{xj}) e^{i \frac{2 \pi j t}{T}} \frac{1}{2} (A_{yj} + i B_{yj}) e^{i \frac{-2 \pi j t}{T}}\nonumber \\ 
-		     & = & \frac{1}{4} [ (A_{xj}A_{yj} + B_{xj}B_{yj}) + \\\nonumber
-		     & &  i (A_{xj}B_{yj} - A_{yj}B_{xj}) ]
-\end{eqnarray}
-
-Note that for strictly real-valued time series, as light curves in astronomy always are, $A_j = A_{-j}$ and $B_j = - B_{-j}$, such that 
-
-\begin{equation}
-\mathcal{F}_x(j) \mathcal{F}_y^*(j) = \frac{1}{2} \left\{ (A_{xj}A_{yj} + B_{xj}B_{yj}) + i (A_{xj}B_{yj} - A_{yj}B_{xj}) \right\} \, .
-\label{eqn:crossspectrum}
-\end{equation}
-
-This is the formal definition of the cross spectrum, implemented in class \crossspectrum. Its inputs are two \lightcurve object, as well as optionally a normalization for the resulting Fourier amplitudes, and an array of GTIs. As defined above, it will compute the Fourier amplitudes $A_{xj}, A_{yj}$ and $B_{xj}, B_{yj}$ and store the complex result of Equation \ref{eqn:crossspectrum} in an attribute \texttt{power} along with the corresponding mid-bin frequencies in a second attribute \texttt{freq}.
-
-The power spectrum\footnote{TEXT ABOUT DIFFERENCE BETWEEN POWER SPECTRUM AND PERIODOGRAM} can be formulated as the special case of the cross spectrum where $\mathbf{x} = \mathbf{y}$, i.e.\ the cross spectrum of a light curve with itself. The class \powerspectrum is hence implemented as a subclass of \crossspectrum and takes only one \lightcurve object instead of two. The squared amplitudes corresponding to Equation \ref{eqn:crossspectrum} become in this case
-
-\begin{equation}
-\mathcal{F}_x(j) \mathcal{F}_x^*(j) = \frac{1}{2} \left\{ (A_{xj}A_{xj} + B_{xj}B_{xj})\right\} \, .
-\end{equation}
-
-\noindent The imaginary part of Equation \ref{eqn:crossspectrum} cancels out for the power spectrum, since the Fourier amplitudes come from identical light curves, and thus the phase difference between them is exactly $0$. 
-
-There are several popular normalizations for the real part of the cross spectrum as well as the power spectrum implemented in \stingray: the popular Leahy normalization [REF] is defined as 
-
-\begin{equation}
-P_j = \frac{2}{\sqrt{N_{p,x}N_{p,y}}} C_j \; ,
-\end{equation}
-
-\noindent where  $N_{p,x}^2$ and $N_{p,y}^2$ denote the total number of counts in light curves $\mathbf{x}$ and $\mathbf{y}$, respectively, and $C_j =  (A_{xj}A_{yj} + B_{xj}B_{yj}) $ as defined in Equation \ref{eqn:crossspectrum} above. As shown in [REF], this normalization allows for straightforward period searches in white noise cross spectra and power spectra, and can be applied when creating a \crossspectrum or \powerspectrum object by setting the keyword \verb|norm="leahy"|. 
-
-Another common way to normalize the cross spectrum is such that the integral under the powers corresponds to the fraction of the total variance of the light curve contained between the lower and upper integration bound in frequency space. This rms normalization [REF] is defined as
-
-\begin{equation}
-P_j = \frac{2 T_\mathrm{seg}}{N^2 \mu_{xy}^2} C_j \; ,
-\end{equation}
-
-\noindent where $C_j$ is defined as above, $N = N_x = N_y$ is the number of time bins in the light curves, $T_\mathrm{seg}$ denotes the total length in time of the light curve, and the total mean count rate is defined as $\mu_{xy} = \sqrt{\mu_x \mu_y}$ in terms of the mean count rate in each light curve $\mu_x$ and $\mu_y$. This normalization can be accessed using the \verb|norm="frac"| keyword. Closely related is the absolute rms normalization (\verb|norm="abs"|, which calculates the powers such that the integral between two frequencies $\nu_\mathrm{low}$ and $\nu_\mathrm{high}$ corresponds to the total variance contained between those frequencies:
-
-\begin{equation}
-P_j = \frac{2 T_\mathrm{seg}}{N^2} C_j \; .
-\end{equation}
-
-\noindent Setting the keyword argument \verb|norm="none"| will return the unnormalized powers $C_j$. The classes \crossspectrum and \powerspectrum share most of the implemented methods, except where otherwise noted. Both classes include methods to rebin cross- and power spectra. Linear rebinning is implemented analogously to the method in class \lightcurve. Additionally, logarithmic binning is implemented in the method \verb|rebin_log| in such a way that the bin width at a given frequency increases a fraction of the previous bin width:
+\noindent Setting \mintinline{python}{norm="none"} will return the raw, unnormalized powers. The classes \crossspectrum and \powerspectrum share most of the implemented methods, except where otherwise noted. Both classes include methods to rebin cross- and power spectra. Linear rebinning is implemented analogously to the method in class \lightcurve. Additionally, logarithmic binning is implemented in the method \mintinline{python}{rebin_log} in such a way that the bin width at a given frequency increases a fraction of the previous bin width:
 
 \[
 d\nu_{i+1} = d\nu_{i} (1 + f) \; ,
@@ -273,17 +226,47 @@ In the case of the cross spectrum, it is also possible to calculate the time lag
 \tau_j = \frac{\phi_j}{2\pi\nu_j} \; 
 \]
 
-\noindent for a phase angle $\phi_j$ derived from the imaginary component of the complex cross spectrum, $(A_{xj}B_{yj} - A_{yj}B_{xj})$ and a mid-bin frequency $\nu_j$. Similarly, it is possible to calculate the coherence [REF] from the cross spectrum, defined as 
+\noindent for a phase angle $\phi_j$ derived from the imaginary component of the complex cross spectrum, and a mid-bin frequency $\nu_j$. Similarly, it is possible to calculate the coherence [REF] from the cross spectrum, defined as 
 
 \begin{equation}
 c_j = \frac{C_{xy,j}}{C_{x,j} C_{y,j}} \; . 
 \end{equation}
 
-\noindent Here, $C_{xy,j}$ corresponds to the real part of the unnormalized cross spectrum defined in Equation \ref{eqn:crossspectrum}, and $C_{x,j}$ and $C_{y,j}$ correspond to the analogous squared amplitudes of the power spectrum for each individual light curve. 
+\noindent Here, $C_{xy,j}$ corresponds to the real part of the unnormalized cross spectrum, and $C_{x,j}$ and $C_{y,j}$ correspond to the analogous squared amplitudes of the power spectrum for each individual light curve. 
 
-Classical period searches are often formulated as outlier detection problems from an expected statistical distribution. Assuming the signal is sufficiently coherent such that all of the signal power is concentrated in one bin, one may calculate the chance probability that an observed power was generated by statistical fluctuations alone. The distribution for power spectra is well known: For a Leahy-normalized spectrum, the powers are distributed following a $\chi^2$ distribution around a mean of $2$ in the case of pure white noise, and following a $\chi^2$ distribution around an underlying power spectral shape for other stationary stochastic processes. In the white noise case, the equations to accurately calculate a $p$-value of rejecting the hypothesis that a given outlier in the power spectrum was generated by white noise was defined in \citep{Groth1975}, and can be calculated for one or multiple powers in a \Powerspectrum object using the \verb|classical_significances| method. The cross spectrum does not follow the same distribution \citep{huppenkothen2018}, and the recently derived statistical distributions for this case will be implemented in a future version of \stingray. 
+Classical period searches are often formulated as outlier detection problems from an expected statistical distribution. Assuming the signal is sufficiently coherent such that all of the signal power is concentrated in one bin, one may calculate the chance probability that an observed power was generated by statistical fluctuations alone. The distribution for power spectra is well known: For a Leahy-normalized spectrum, the powers are distributed following a $\chi^2$ distribution around a mean of $2$ in the case of pure white noise, and following a $\chi^2$ distribution around an underlying power spectral shape for other stationary stochastic processes. In the white noise case, the equations to accurately calculate a $p$-value of rejecting the hypothesis that a given outlier in the power spectrum was generated by white noise was defined in \citep{Groth1975}, and can be calculated for one or multiple powers in a \powerspectrum object using the \verb|classical_significances| method:
 
-In many practical applications, users may wish to average power- or cross spectra from multiple light curve segments in order to suppress statistical noise. This can easily be done with the appropriate classes \texttt{AveragedPowerspectrum} and \texttt{AveragedCrossspectrum}, which take a \lightcurve object or list of \lightcurve objects as an input and will compute averaged Fourier products for a given length of segment. Both are subclasses of \crossspectrum, and either inherit or override many of the methods relevant for those classes as well. 
+\begin{minted}{python}
+pvals = ps.classical_significances(threshold=0.01, 
+                      trial_correction=True)
+\end{minted}
+
+\noindent where the \mintinline{python}{threshold} keyword argument sets the minimum threshold below which $p$-values will be reported, and \mintinline{python}{trial_correction} is a boolean keyword that sets whether the threshold will be corrected for the number of trials (i.e. the number of frequencies in the power spectrum). 
+The return variable \mintinline{python}{pvals} provides the $p$-value for each power that falls below the (trial-corrected) threshold as well as the index of that power in the original array in the \powerspectrum object.
+Note that the cross spectrum does not follow the same distribution \citep{huppenkothen2017}, and the recently derived statistical distributions for this case will be implemented in a future version of \stingray. 
+
+In many practical applications, users may wish to average power- or cross spectra from multiple light curve segments in order to suppress statistical noise. This can easily be done with the appropriate classes \texttt{AveragedPowerspectrum} and \texttt{AveragedCrossspectrum}, which take a \lightcurve object or list of \lightcurve objects as an input and will compute averaged Fourier products for a given length of segment. Both are subclasses of \crossspectrum, and either inherit or override many of the methods relevant for those classes as well:
+
+\begin{minted}{python}
+# segment size in same time units 
+# as light curve object
+seg_size = 256.0
+# compute averaged power spectrum
+avg_ps = AveragedPowerspectrum(lc, seg_size, 
+                               norm="frac")
+\end{minted}
+
+\noindent An example of the kinds of products produced by the functions above is given in Figure \ref{fig:psd}.
+
+
+
+
+ 
+
+
+%\noindent Here, $i = \sqrt{-1}$, and $A_{xj}, A_{yj}$ and $B_{xj}, B_{yj}$ describe the real and imaginary parts of the Fourier amplitudes, respectively . We restrict $\mathcal{F}_x(j)$ and $\mathcal{F}_y(j)$ to frequencies between $\nu_{j=0} = 1/T$ and the Nyquist frequency $\nu_{j=N/2} = 1/(2\Delta t)$.
+%The complex cross spectrum is then calculated by multiplying the Fourier transform of light curve $\mathbf{x}$ with the complex conjugate of the Fourier transform of light curve $\mathbf{y}$ (\citealt{vaughan1997,nowak1999}, see also \citealt{uttley2014} for a recent review of spectral timing techniques):
+
 
 
 
@@ -294,15 +277,145 @@ In many practical applications, users may wish to average power- or cross spectr
 \label{sec:modeling}
 
 Modelling data sets with parametric (often physically motivated) models that map an independent variable (e.g.\ time or frequency) to one or more dependent variables (e.g.\ flux, counts or Fourier powers) is a common task in astronomy. Constructing a general-purpose modelling framework is a highly non-trivial task, thus \stingray's modelling interface currently restricts itself to models of commonly used spectral-timing products, in particular modelling (averaged) power spectra. 
+While it makes heavy use of the \verb|astropy.modeling.FittableModel| definitions, it does not use the fitting algorithms implemented in \texttt{astropy}. This is necessitated by the fact that the statistical properties of spectral timing products do not follow the assumptions made by the fitters implemented in \texttt{astropy}, and would thus produce incorrect results in practice.
 
-The modelling subpackage logically separates out statistical models -- likelihoods and posteriors -- from the fitting functionality, such that different likelihoods and posteriors can be straightforwardly dropped in and out. In line with the overall philosophy of \stingray, the modelling subpackage is designed to be modular and easily extensible to specific problems a user might try to solve, while many typical tasks one might do with Fourier products are already built-in. It integrates with parts of the \verb|astropy.modeling| interface, and makes use of the \verb|scipy.optimize| interface for optimization as well as the package \texttt{emcee} for Markov Chain Monte Carlo (MCMC) sampling.
+\subsection{General Overview}
+The modelling subpackage logically separates out statistical models -- likelihoods and posteriors -- from the fitting functionality, such that different likelihoods and posteriors can be straightforwardly dropped in and out depending on the data set and problem at hand\footnote{This paper is not intended as an introduction into parametric modelling and statistical inference. For suitable introductions, we recommend e.g.~ \citet{hogg2010}}. In line with the overall philosophy of \stingray, the modelling subpackage is designed to be modular and easily extensible to specific problems a user might try to solve, while many typical tasks one might do with Fourier products are already built-in. It integrates with parts of the \verb|astropy.modeling| interface, and makes use of the \verb|scipy.optimize| interface for optimization as well as the package \texttt{emcee} for Markov Chain Monte Carlo (MCMC) sampling.
 
-All statistical models are implemented as a subclass of an Abstract Base Class \likelihood in module \verb|stingray.posterior|. In its most basic form, each subclass of \likelihood takes data in some form (most commonly two arrays, one with the independent and one with the dependent variable) as well as an object of type \verb|astropy.modeling.FittableModel|. The likelihood itself is implemented in the \texttt{evaluate} method
+\subsection{Statistical Models}
 
+All statistical models are implemented as a subclass of an Abstract Base Class \likelihood in module \verb|stingray.posterior|. In its most basic form, each subclass of \likelihood takes data in some form (most commonly two arrays, one with the independent and one with the dependent variable) as well as an object of type \verb|astropy.modeling.FittableModel|. The likelihood itself is implemented in the \texttt{evaluate} method, which takes a set of parameters to be passed to the \verb|astropy.modeling.FittableModel| instance, computes model values for each data point in the array of independent variables and statistically compares these model values with the data points stored in the dependent variable, assuming the particular statistical distribution of the likelihood definition. The result is a single quantity, which can then be e.g.~ optimized in order to find a Maximum Likelihood (ML) solution.
 
+For all \likelihood subclasses implemented in \stingray, there will also be an appropriate subclass of \verb|stingray.modeling.Posterior| available. As with the \likelihood subclasses, subclasses of class \verb|Posterior| take data of some form and an \verb|astropy.modeling.FittableModel| instance upon instantiation. Additionally, all subclasses of  \verb|Posterior| also require definition of a \texttt{logprior} method, which calculates the value of the prior distributions on the parameters given a particular set of parameters. There are two ways to define priors: they can be passed into the \texttt{priors} keyword argument upon instantiation of the class, or they can be set using the \verb|set_logprior| utility function in \verb|stingray.modeling|. In either case, the priors should be passed as a dictionary of \verb|"parameter name": distribution| pairs, where the parameter names match those of the \verb|astropy.modeling.FittableModel| instantiated and each distribution is a function definition that takes a parameter value and returns the probability density at that parameter value. \verb|stingray.modeling.Posterior| subclasses generally have three outward-facing methods: \verb|Posterior.logprior|, \verb|Posterior.loglikelihood| and \verb|Posterior.logposterior|. All three take a list of parameters as input. In addition, a \verb|__call__| method that executes \verb|logposterior| will allow the user to call the class instance directly and compute the log-posterior of the model given a set of input parameters. 
 
+\verb|Loglikelihood| and \verb|Posterior| subclass definitions exist for a range of different statistical models useful in the context of astronomy data:
+\begin{itemize}
+\item{\verb|GaussianLogLikelihood| and \verb|GaussianPosterior| implement statistical models for data with normally distributed uncertainties. \verb|GaussianLogLikelihood| will compute what astronomers generally call $\chi^2$, because the likelihood calculated by this statistical model generally follows a $\chi^2$ distribution with $N-P$ degrees of freedom (where $N$ is the number of data points and $P$ the number of free parameters). Note, however, that this is \textbf{not} the same as the $\chi^2$ likelihood defined below!}
+\item{\verb|PoissonLogLikelihood| and \verb|PoissonPosterior| calculate the likelihood and posterior for Poisson-distributed data, respectively. This likelihood is equivalent to what in astronomy is often called the \textit{Cash statistic} \citep{cash1979} and is the appropriate likelihood to use for count- or event-type data often found in X-ray astronomy time series and spectra.}
+\item{\verb|PSDLogLikelihood| and \verb|PSDPosterior| implement the statistical model appropriate for modelling (averaged) power spectra, a $\chi^2$ distribution. We broke with the rule of naming likelihoods and posteriors after the statistical distribution they implement in this case, because as mentioned above, astronomers tend to call the likelihood for normally distributed data $\chi^2$, and this naming helps avoid any confusion. These two classes implement a $\chi^2_2$ distribution for Fourier spectra generated with the \powerspectrum class, and a $\chi^2_{2MK}$ distribution for power spectra generated with the \texttt{AveragedPowerspectrum} class, where $M$ is the number of averaged segments and $K$ is the number of averaged neighbouring frequency bins. Please note that as laid out in \citet{huppenkothen2017}, these distribution are \textbf{not} appropriate for use on (averaged) cross spectra. The appropriate distributions for these products will be implemented in a future version of \stingray.}
+\end{itemize}
 
+Other statistical models can be easily implemented by subclassing the \verb|LogLikelihood| and \verb|Posterior| Abstract Base Classes and using the existing classes as template..
 
+\subsection{General Parameter Estimation and Model Comparison Functionality}
+
+Stingray implements utility functions in order to reduce some of the overhead required for standard parameter estimation and model comparison tasks. Im particular, the \verb|parameterestimation| module implements a range of classes and functions to aid users in fitting models to data and estimating the probability distributions of parameters.
+
+The class \verb|ParameterEstimation| provides the basis for more sophisticated, specialized implementations for particular data types. Its core methods are \verb|fit| and \verb|sample|. The former takes an instance of a \verb|LogLikelihood| or \verb|Posterior| subclass and uses minimization algorithms implemented in \verb|scipy.optimize| to find the Maximum Likelihood (ML) or Maximum-A-Posteriori (MAP) solution. The \verb|sample| method uses the Affine-Invariant MCMC sampler implemented in \verb|emcee| [REF] to generate samples from a posterior distribution passed as an instance of a subclass of \verb|Posterior|. Note that \textit{you should never pass a} \verb|LogLikelihood| \textit{instance into the} \verb|sample| \textit{method}, because sampling from a likelihood is statistically invalid. In addition to these core methods, higher-level functionality implemented in this class includes calculating the Likelihood Ratio Test (LRT) for two different models $M_1$ and $M_2$ via the \verb|compute_lrt| method (note the statistical assumptions of the LRT, and where they fail, e.g. \citealt{protassov2002}). In addition, the \verb|calibrate_lrt| method allows calibrating the p-value for rejecting the model $M_1$ via simulations of $M_1$, using either an MCMC sample (for Bayesian inference) or the covariance matrix derived from the optimization (both Bayesian and Maximum Likelihood approaches).
+
+Stingray also implements two classes that summarize results of the optimization and sampling procedures in concise, useful ways. The \verb|fit| method returns an instance of class \verb|OptimizationResults|. This contains the most important outputs from the optimizer, but will also behind the scenes calculate a number of useful quantities, including the covariance between parameters (or a numerical approximation for some minimization algorithms), the Akaike and Bayesian Information Criteria (AIC [REF] and BIC [REF], respectively) as well as various summary statistics, e.g. the figure of merit, defined as 
+
+\[
+m = \sum_{j=1}^{N}{\left( \frac{y_j - \nu_j}{\nu_j} \right)^2} \,
+\]
+
+\noindent where $\mathbf{D} = \{x_j, y_j\}_{j=1}^{N}$ is the set of $N$ data points and $\nu_j$ is the value of the model evaluated at each $x_j$.
+
+Similarly, an instance of class \verb|SamplingResults| is returned by the \verb|sample| method, which returns the posterior samples calculated by the MCMC sampler, as well as computes a number of helpful quantities using the MCMC chains. It calculates useful diagnostics including the acceptance fraction, the autocorrelation length and the Rubin-Gelman statistic [REF] to indicate convergence, and infers means, standard deviations and user-defined credible intervals for each parameter.
+
+Both \verb|OptimizationResults| and \verb|SamplingResults| implement a \verb|print_results| and a \verb|plot_results| method, which produce useful text output for log files and diagnostic plots that help understand the results.
+
+\subsection{Special Functionality for Fourier Products}
+
+The subclass \verb|PSDParEst| inherits directly from \verb|ParameterEstimation| and implements a number of additional methods particularly useful for modelling power spectra. One particularly common task is to search for periodic signals (e.g. from pulsars) in a power spectrum, which reduces to finding outliers around an assumed power spectral shape (assuming the signal is \textit{strictly} periodic, and thus all power approximately concentrated in one bin). In the presence of other variability, the probability of observing a certain power $P_j$ at a frequency $\nu_j$ under the assumption that no periodic signal is present depends on the shape and parameters of the underlying power spectral model assumed to have generated the data. As \citet{vaughan2010} show, there is an inherent uncertainty in our inference of the parameters of this power spectral model, which must be taken into account via simulations. \verb|PSDParEst| implements a method \verb|calibrate_highest_outlier|, which finds the $k$ highest outliers (where $k$ is a user-defined number) and calculates the posterior predictive $p$-value that said outlier can be explained by noise only. It makes heavy use of the method \verb|simulate_highest_outlier|, which uses the \verb|sample| method to derive an MCMC sample and then simulate fake power spectra from that model for a range of plausible parameter values in order to include our model uncertainty into the $p$-value. For details of the overall procedure, see \citet{vaughan2010}. 
+
+As of this version, the \verb|stingray.modeling| subpackage has no functionality to model higher-order Fourier products. For spectral timing in particular, this would involve being able to read and apply instrument responses to models, as well as being able to interface with the library of spectral models associated with the X-ray spectral fitting tool XSPEC \citep{arnaud1996}. Providing this functionality is planned for a future release of \stingray. 
+
+For an example workflow describing how to model a power spectrum using \stingray, see [ADD CODE].
+
+\begin{listing}
+\begin{minted}{python}
+import numpy as np
+from astropy.modeling import models
+
+from stingray import Powerspectrum
+from stingray.modeling import PSDLogLikelihood
+from stingray.modeling import PSDPosterior, set_logprior
+from stingray.modeling import PSDParEst
+
+# create the model (Power law + constant)
+pl = models.PowerLaw1D()
+pl.x_0.fixed = True
+c = models.Const1D()
+plc = pl + c
+
+# set parameters
+_fitter_to_model_params(plc, [5.0,  2.0, 2.0])
+
+# frequency array
+freq = np.linspace(0.01, 10.0, 10.0/0.01)
+
+# compute model and add correct noise distribution to create fake data
+psd_shape = plc(freq)
+powers = psd_shape*np.random.chisquare(2, size=psd_shape.shape[0])/2.0
+
+# create Powerspectrum object
+ps = Powerspectrum()
+ps.freq = freq
+ps.power = powers
+ps.df = ps.freq[1] - ps.freq[0]
+ps.m = 1
+
+# instantiate log-likelihood object
+loglike = PSDLogLikelihood(ps.freq, ps.power, plc, m=ps.m)
+
+# instantiate PSDParEst object for parameter estimation
+parest = PSDParEst(ps, fitmethod="L-BFGS-B", max_post=False)
+
+# do maximum likelihood fit
+starting_pars = [3.0, 1.0, 2.4]
+res = parest.fit(loglike, starting_pars)
+
+# print some results
+print(res.p_opt)
+print(res.err)
+
+# compute likelihood ratios for power law and broken power law
+bplc = models.BrokenPowerLaw1D() + c
+
+# set starting parameters + define LogLikelihood object for broken power law
+bplc_start_pars = [2.0, 1.0, 3.0, 1.0, 2.5]
+loglike_bplc = PSDLogLikelihood(ps.freq, ps.power, bplc, m=ps.m)
+
+# compute likelihood ratio test
+lrt, plc_opt, bplc_opt = parest.compute_lrt(loglike, starting_pars, loglike_bplc, bplc_start_pars)
+
+print("Likelihood Ratio: " + str(lrt))
+
+# Bayesian parameter estimation
+
+# define posterior
+lpost = PSDPosterior(ps.freq, ps.power, plc, m=ps.m)
+ 
+# need to define some priors
+
+# flat prior for the power law index
+p_alpha = lambda alpha: ((-1. <= alpha) & (alpha <= 5.))
+
+# flat prior for the power law amplitude
+p_amplitude = lambda amplitude: ((0.01 <= amplitude) & (amplitude <= 10.0))
+
+# normal prior for the white noise parameter
+p_whitenoise = lambda white_noise: scipy.stats.norm(2.0, 0.1).pdf(white_noise)
+
+priors = {}
+priors["alpha_0"] = p_alpha
+priors["amplitude_0"] = p_amplitude
+priors["amplitude_1"] = p_whitenoise
+
+# set logprior method in lpost object
+lpost.logprior = set_logprior(lpost, priors)
+
+# do optimization
+parest = PSDParEst(ps, fitmethod='BFGS', max_post=True)
+res = parest.fit(lpost, starting_pars)
+
+# sample from posterior
+sample = parest.sample(lpost, res.p_opt, cov=res.cov, nwalkers=200,
+             niter=100, burnin=100, namestr="psd_modeling_test") 
+
+\end{minted}
+\end{listing}
 
 \section{The \texttt{simulator} Subpackage}
 \label{sec:simulator}

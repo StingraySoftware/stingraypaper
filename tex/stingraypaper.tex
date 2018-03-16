@@ -19,7 +19,7 @@
 \usepackage{booktabs}
 \usepackage{threeparttable}
 \usepackage{tabularx}
-\usepackage{subfigure}
+\usepackage{subcaption}
 \usepackage{minted}
 
 
@@ -45,7 +45,6 @@
 \newcommand{\word}{\ensuremath{\phi}}
 \newcommand{\zsq}{\ensuremath{Z^2_n}}
 \newcommand{\stingray}{\mintinline{python}{stingray}\xspace}
-\newcommand{\maltpynt}{\texttt{whatever-name-ex-maltpynt-gets}\xspace}
 \newcommand{\python}{\texttt{Python}\xspace}
 \newcommand{\astropy}{\texttt{astropy}\xspace}
 \newcommand{\lightcurve}{\mintinline{python}{Lightcurve}\xspace}
@@ -71,16 +70,14 @@
 
 \title{\stingray: A Modern \python\ Library For Spectral Timing}
 
-\author{D. Huppenkothen\altaffilmark{1, 2, 3}, M. Bachetti\altaffilmark{4}, A. Stevens\altaffilmark{}, OTHER CO-AUTHORS!}
+\author{D. Huppenkothen\altaffilmark{1, 2}, M. Bachetti\altaffilmark{4}, A. Stevens\altaffilmark{}, OTHER CO-AUTHORS!}
  
-\altaffiltext{1}{Center for Cosmology and Particle Physics, Department of Physics, New York University, 4 Washington Place, New York, NY 10003, USA \\
-}
-  \altaffiltext{2}{Center for Data Science, New York University, 65 5h Avenue, 7th Floor, New York, NY 10003}
-  \altaffiltext{3}{E-mail: daniela.huppenkothen@nyu.edu}
-\altaffiltext{4}{INAF-Osservatorio Astronomico di Cagliari, via della Scienza 5, I-09047 Selargius (CA), Italy}
+\altaffiltext{1}{DIRAC Institute, Department of Astronomy, University of Washington, 3910 15th Ave NE, Seattle, WA 98195}
+  \altaffiltext{2}{E-mail: dhuppenk@uw.edu}
+\altaffiltext{3}{INAF-Osservatorio Astronomico di Cagliari, via della Scienza 5, I-09047 Selargius (CA), Italy}
+\altaffiltext{4}{}
 \altaffiltext{5}{}
-\altaffiltext{}{}
-\altaffiltext{}{}
+\altaffiltext{6}{}
 
 
 \begin{abstract}
@@ -120,7 +117,7 @@ The modularity of its classes allows for easy incorporation of existing \stingra
 
 \stingray is designed to be used both as a standalone package, but is also at the core of two other software packages currently under development: \hendrics \citep{hendrics} provides pre-built data analysis workflows using \stingray core functionality. These workflows are accessible from the command line and are provided for some common data types and data analysis tasks. \dave\footnote{\url{https://github.com/StingraySoftware/dave}} on the other hand, provides a Graphical User Interface on top of \stingray to allow for easy interactive exploratory data analysis.
  
-As of v0.1, it includes basic functionality depends exclusively on \texttt{numpy}\citep{numpy}, \texttt{scipy}\citep{scipy} and \texttt{astropy}\citep{astropy}, with optional plotting functionality supplied by \texttt{matplotlib}\citep{matplotlib} and \texttt{corner}\citep{corner}, and optional sampling methods by \texttt{emcee}\citep{emcee}. [ADD OTHER OPTIONAL DEPENDENCIES HERE!].
+As of v0.1, it includes basic functionality depends exclusively on \texttt{numpy} \citep{numpy}, \texttt{scipy} \citep{scipy} and \texttt{astropy} \citep{astropy}, with optional plotting functionality supplied by \texttt{matplotlib} \citep{matplotlib} and \texttt{corner} \citep{corner}, and optional sampling methods by \texttt{emcee} \citep{emcee}. [ADD OTHER OPTIONAL DEPENDENCIES HERE!].
 
 This paper describes \stingray v0.1, released on 2018-02-12. 
 As with most open-source packages, \stingray is under continuous development and welcomes contributions from the community.
@@ -128,7 +125,7 @@ The paper layout is as follows:
 In Section \ref{sec:general_package}, we describe the general package structure. 
 In Section \ref{sec:core}, we detail the package's core functionality in Fourier analysis and introduce basic classes for storing light curves and Fourier spectra of various types. 
 In Section \ref{sec:modeling}, we extend this core functionality with \stingray's modeling framework and in Section \ref{sec:simulator}, we show how users can easily simulate data sets from models. 
-Sections \ref{sec:pulsar} lays out the functionality for analysing pulsar data, and Section{ref:dave} details existing connections to a graphical user interface currently being developed in parallel to \stingray. 
+Section \ref{sec:pulsar} lays out the functionality for analysing pulsar data, and Sections \ref{sec:hendrics} and \ref{sec:dave} details existing connections to the command-line interface and a graphical user interface, respectively, which currently being developed in parallel to \stingray. 
 Finally, in Sections \ref{sec:development} and \ref{sec:future} we lay out the development process, testing and documentation environments as well as our future development plans. 
 In each section, we present examples of the functionality described based on real-world data sets.
 
@@ -203,7 +200,7 @@ These normalizations can be set when instantiating a \crossspectrum or \powerspe
 \begin{figure*}[htbp]
 \begin{center}
 \includegraphics[width=\textwidth]{example_lc_ps.pdf}
-\caption{Left panel: An example light curve of the black hole X-ray binary GRS 1915+105, taken with the \textit{Rossi} X-ray Timing Explorer's Proportional Counter Array (PCA) in the $\rho$ state [REF]. Right panel: we show the power spectrum calculated from the light curve in the left panel (black), as well as a version of the same power spectrum that has been logarithmically binned in frequency space (orange) and an averaged power spectrum calculated from $10$ segments of $256\,\mathrm{s}$ duration (purple). The log-rebinned and averaged power spectrum are normalized in the same way as the single-segment power spectrum, but arbitrarily shifted on the y-axis for clarity of comparison.}
+\caption{Left panel: An example light curve of the black hole X-ray binary GRS 1915+105, taken with the \textit{Rossi} X-ray Timing Explorer's Proportional Counter Array (PCA) in the $\rho$ state [REF]. Right panel: we show the power spectrum calculated from the light curve in the left panel (black), as well as a version of the same power spectrum that has been logarithmically binned in frequency space (orange) and an averaged power spectrum calculated from $43$ segments of $256\,\mathrm{s}$ duration (purple). The log-rebinned and averaged power spectrum are normalized in the same way as the single-segment power spectrum, but arbitrarily shifted on the y-axis for clarity of comparison.}
 \label{fig:psd}
 \end{center}
 \end{figure*}
@@ -226,7 +223,7 @@ In the case of the cross spectrum, it is also possible to calculate the time lag
 \tau_j = \frac{\phi_j}{2\pi\nu_j} \; 
 \]
 
-\noindent for a phase angle $\phi_j$ derived from the imaginary component of the complex cross spectrum, and a mid-bin frequency $\nu_j$. Similarly, it is possible to calculate the coherence [REF] from the cross spectrum, defined as 
+\noindent for a phase angle $\phi_j$ derived from the imaginary component of the complex cross spectrum, and a mid-bin frequency $\nu_j$. Similarly, it is possible to calculate the coherence \citep{vaughan1997,nowak1999} from the cross spectrum, defined as 
 
 \begin{equation}
 c_j = \frac{C_{xy,j}}{C_{x,j} C_{y,j}} \; . 
@@ -259,19 +256,32 @@ avg_ps = AveragedPowerspectrum(lc, seg_size,
 \noindent An example of the kinds of products produced by the functions above is given in Figure \ref{fig:psd}.
 
 
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=9cm]{dyn_spec.pdf}
+\caption{An example of a dynamical power spectrum. This spectrum was generated by simulating a Poisson-distributed light curve with a duration of $T=100 \mathrm{s}$, a time resolution of $dt = 0.01\,\mathrm{s}$ and an average constant count rate of $100\mathrm{counts/s}$. Superimposed on that time series is a sinusoidal signal with a frequency that itself varies around a frequency of $\nu = 25\mathrm{Hz}$ as a function of time in a periodic manner with a period of $130\,\mathrm{s}$. We split the light curve into segments of $T_\mathrm{seg} = 3\,\mathrm{s}$ duration and Fourier-transformed each individually to produce the dynamical power spectrum in this Figure. In red, we show the frequency with the highest power found in each segment, using the \mintinline{python}{trace_maximum} method.}
+\label{fig:dynspec}
+\end{center}
+\end{figure}
 
+For long observations with quasi-periodic oscillations (QPOs) spectrograms, more commonly known in the astronomy literature as Dynamical Power Spectra [REF], can be a useful way to track changes in the QPO centroid frequency over time. We have implemented \mintinline{python}{DynamicalPowerspectrum} as a subclass to \mintinline{python}{AveragedPowerspectrum} to provide this functionality. Like \mintinline{python}{AveragedPowerspectrum}, this class takes a \lightcurve object and a segment size as input, but instead of averaging the power spectra of each individual segment, it will create a matrix of time bins (one bin for each segment) as rows and Fourier frequencies as columns. Rebinning both along the time and frequency axis is possible. Moreover, the method \mintinline{python}{trace_maximum} automatically finds the frequency with the highest 
+power in each segment and traces this maximum over time. An example using simulated data is shown in Figure \ref{fig:dynspec}.
 
- 
+Closely related to the cross spectrum and power spectrum are the crosscorrelation and the autocorrelation, implemented in classes \mintinline{python}{CrossCorrelation} and \mintinline{python}{AutoCorrelation}, respectively. As their respective Fourier spectra equivalents they take either one (autocorrelation) or two (cross correlation) \lightcurve objects as input and computes the correlation between the two light curves or of the single light curve with itself, along with the time lags for which the correlation was produced and the time lag at which the maximum correlation is measured.
 
+It is useful to note that all classes in this section are compatible with Good Time Intervals
 
 %\noindent Here, $i = \sqrt{-1}$, and $A_{xj}, A_{yj}$ and $B_{xj}, B_{yj}$ describe the real and imaginary parts of the Fourier amplitudes, respectively . We restrict $\mathcal{F}_x(j)$ and $\mathcal{F}_y(j)$ to frequencies between $\nu_{j=0} = 1/T$ and the Nyquist frequency $\nu_{j=N/2} = 1/(2\Delta t)$.
-%The complex cross spectrum is then calculated by multiplying the Fourier transform of light curve $\mathbf{x}$ with the complex conjugate of the Fourier transform of light curve $\mathbf{y}$ (\citealt{vaughan1997,nowak1999}, see also \citealt{uttley2014} for a recent review of spectral timing techniques):
+%The complex cross spectrum is then calculated by multiplying the Fourier transform of light curve $\mathbf{x}$ with the complex conjugate of the Fourier transform of light curve $\mathbf{y}$ (, see also \citealt{uttley2014} for a recent review of spectral timing techniques):
 
 
 
 
-\subsection{Higher-Order Fourier Products}
+\subsection{Higher-Order Fourier Products and Spectral Timing Functionality}
 \label{sec:fourier_others}
+
+Over the past decade, higher-order Fourier products and spectral timing have emerged as key methods to study variability on different time scales as well as a function of wavelength. In \stingray, we have implemented several of the most common techniques, with plans to add to the existing tools as they become available in the future.
+
 
 \section{The \texttt{modeling} Subpackage}
 \label{sec:modeling}
@@ -315,6 +325,19 @@ Similarly, an instance of class \verb|SamplingResults| is returned by the \verb|
 
 Both \verb|OptimizationResults| and \verb|SamplingResults| implement a \verb|print_results| and a \verb|plot_results| method, which produce useful text output for log files and diagnostic plots that help understand the results.
 
+\begin{figure*}[htbp]
+\begin{center}
+\begin{subfigure}[b]{10.5cm}
+\includegraphics[width=\linewidth]{example_posterior.pdf}
+\end{subfigure}
+\begin{subfigure}[b]{6.8cm}
+\includegraphics[width=\linewidth]{example_psd_corner.pdf}
+\end{subfigure}
+\caption{Left panel: The averaged periodogram from Figure \ref{fig:psd} (black), along with draws from the posterior distribution of the power law model plus constant used to model the data (red). The Maximum-A-Posteriori fit is shown in blue, but completely hidden behind the posterior draws. Right panel: corner plot showing the marginal posterior distributions (diagonal) of the three parameters of the model: the log-amplitude of the power law $A_\mathrm{PL}$, the power law index $\gamma$ and the log-amplitude of the white noise, $A_\mathrm{WN}$. The right-hand figure was produced using the package \texttt{corner} \citep{corner}.}
+\label{fig:posterior}
+\end{center}
+\end{figure*}
+
 \subsection{Special Functionality for Fourier Products}
 
 The subclass \verb|PSDParEst| inherits directly from \verb|ParameterEstimation| and implements a number of additional methods particularly useful for modelling power spectra. One particularly common task is to search for periodic signals (e.g. from pulsars) in a power spectrum, which reduces to finding outliers around an assumed power spectral shape (assuming the signal is \textit{strictly} periodic, and thus all power approximately concentrated in one bin). In the presence of other variability, the probability of observing a certain power $P_j$ at a frequency $\nu_j$ under the assumption that no periodic signal is present depends on the shape and parameters of the underlying power spectral model assumed to have generated the data. As \citet{vaughan2010} show, there is an inherent uncertainty in our inference of the parameters of this power spectral model, which must be taken into account via simulations. \verb|PSDParEst| implements a method \verb|calibrate_highest_outlier|, which finds the $k$ highest outliers (where $k$ is a user-defined number) and calculates the posterior predictive $p$-value that said outlier can be explained by noise only. It makes heavy use of the method \verb|simulate_highest_outlier|, which uses the \verb|sample| method to derive an MCMC sample and then simulate fake power spectra from that model for a range of plausible parameter values in order to include our model uncertainty into the $p$-value. For details of the overall procedure, see \citet{vaughan2010}. 
@@ -323,98 +346,71 @@ As of this version, the \verb|stingray.modeling| subpackage has no functionality
 
 For an example workflow describing how to model a power spectrum using \stingray, see [ADD CODE].
 
+
 \begin{listing}
-\begin{minted}{python}
-import numpy as np
+\begin{minted}
+[frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=white,
+fontsize=\footnotesize,
+linenos
+]{python}
+from scipy.stats import uniform
 from astropy.modeling import models
+from stingray import sampledata
+from stingray import Lightcurve
+from stingray import Powerspectrum, AveragedPowerspectrum
+from stingray.modeling import PSDPosterior, PSDParEst
+from stingray.modeling import set_logprior
 
-from stingray import Powerspectrum
-from stingray.modeling import PSDLogLikelihood
-from stingray.modeling import PSDPosterior, set_logprior
-from stingray.modeling import PSDParEst
+# load light curve 
+lc = sampledata.sample_data() 
 
-# create the model (Power law + constant)
-pl = models.PowerLaw1D()
-pl.x_0.fixed = True
-c = models.Const1D()
-plc = pl + c
+# create a PSD
+ps = Powerspectrum(lc, norm="frac")
 
-# set parameters
-_fitter_to_model_params(plc, [5.0,  2.0, 2.0])
+# compute averaged power spectrum
+avg_ps = AveragedPowerspectrum(lc, 
+                               segment_size=64, 
+                               norm="frac")
 
-# frequency array
-freq = np.linspace(0.01, 10.0, 10.0/0.01)
+# create a model instance
+m = models.PowerLaw1D() + models.Const1D()
+m.x_0_0.fixed=True
 
-# compute model and add correct noise distribution to create fake data
-psd_shape = plc(freq)
-powers = psd_shape*np.random.chisquare(2, size=psd_shape.shape[0])/2.0
+# create the posterior object
+lpost = PSDPosterior(freq=avg_ps.freq, 
+                     power=avg_ps.power, 
+                     model=m, 
+                     m=avg_ps.m)
 
-# create Powerspectrum object
-ps = Powerspectrum()
-ps.freq = freq
-ps.power = powers
-ps.df = ps.freq[1] - ps.freq[0]
-ps.m = 1
+# set priors
+amp_prior = lambda amp: uniform(-15, 30).pdf(np.log(amp))
+alpha_prior = lambda alpha: uniform(0,5).pdf(alpha)
+priors = {"amplitude_0":amp_prior, 
+          "alpha_0":alpha_prior,
+          "amplitude_1": amp_prior}
 
-# instantiate log-likelihood object
-loglike = PSDLogLikelihood(ps.freq, ps.power, plc, m=ps.m)
-
-# instantiate PSDParEst object for parameter estimation
-parest = PSDParEst(ps, fitmethod="L-BFGS-B", max_post=False)
-
-# do maximum likelihood fit
-starting_pars = [3.0, 1.0, 2.4]
-res = parest.fit(loglike, starting_pars)
-
-# print some results
-print(res.p_opt)
-print(res.err)
-
-# compute likelihood ratios for power law and broken power law
-bplc = models.BrokenPowerLaw1D() + c
-
-# set starting parameters + define LogLikelihood object for broken power law
-bplc_start_pars = [2.0, 1.0, 3.0, 1.0, 2.5]
-loglike_bplc = PSDLogLikelihood(ps.freq, ps.power, bplc, m=ps.m)
-
-# compute likelihood ratio test
-lrt, plc_opt, bplc_opt = parest.compute_lrt(loglike, starting_pars, loglike_bplc, bplc_start_pars)
-
-print("Likelihood Ratio: " + str(lrt))
-
-# Bayesian parameter estimation
-
-# define posterior
-lpost = PSDPosterior(ps.freq, ps.power, plc, m=ps.m)
- 
-# need to define some priors
-
-# flat prior for the power law index
-p_alpha = lambda alpha: ((-1. <= alpha) & (alpha <= 5.))
-
-# flat prior for the power law amplitude
-p_amplitude = lambda amplitude: ((0.01 <= amplitude) & (amplitude <= 10.0))
-
-# normal prior for the white noise parameter
-p_whitenoise = lambda white_noise: scipy.stats.norm(2.0, 0.1).pdf(white_noise)
-
-priors = {}
-priors["alpha_0"] = p_alpha
-priors["amplitude_0"] = p_amplitude
-priors["amplitude_1"] = p_whitenoise
-
-# set logprior method in lpost object
 lpost.logprior = set_logprior(lpost, priors)
 
-# do optimization
-parest = PSDParEst(ps, fitmethod='BFGS', max_post=True)
-res = parest.fit(lpost, starting_pars)
+# create ParameterEstimation object
+parest = PSDParEst(avg_ps, fitmethod="BFGS", 
+             max_post=True)
 
-# sample from posterior
-sample = parest.sample(lpost, res.p_opt, cov=res.cov, nwalkers=200,
-             niter=100, burnin=100, namestr="psd_modeling_test") 
+# fit using optimization
+res = parest.fit(lpost, [0.005, 2, 0.001])
+
+# MCMC sampling
+sample = parest.sample(lpost, res.p_opt, 
+                       cov=res.cov, 
+                       nwalkers=250, 
+                       niter=200, burnin=1000, 
+                       threads=1)
 
 \end{minted}
+\caption{A typical workflow for modelling (averaged) power spectra.The results can be found in Figure \ref{fig:posterior}.}
+\label{list:modeling}
 \end{listing}
 
 \section{The \texttt{simulator} Subpackage}
@@ -503,8 +499,8 @@ Then, the user can use the TOAs with more focused software like Tempo, Tempo2 or
 \section{Connections to \texttt{DAVE}}
 \label{sec:dave}
 
-\section{\maltpynt: command-line interface}
-\label{sec:maltpynt}
+\section{\hendrics: command-line interface}
+\label{sec:hendrics}
 
 
 \section{Development and Integration Environment}
@@ -514,9 +510,8 @@ Then, the user can use the TOAs with more focused software like Tempo, Tempo2 or
 \label{sec:future}
 
 \paragraph{acknowledgements}
-DH acknowledges funding from the James Arthur Fellowship at NYU and the Moore-Sloan Data Science Environment at NYU. 
-We thank the Lorentz Centre for organizing the workshop that started this collaboration.
-\clearpage
+DH acknowledges support from the DIRAC Institute in the Department of Astronomy at the University of Washington. The DIRAC Institute is supported through generous gifts from the Charles and Lisa Simonyi Fund for Arts and Sciences, and the Washington Research Foundation.
+We thank Astro Hack Week for providing the venue that started this project and the Lorentz Centre for organizing the workshop that started the collaboration. We thank the Google Summer of Code Program for funding a total 5 students who implemented a large fraction of the various library components over two summers.
 
 \bibliography{stingraypaper}
 \bibliographystyle{apj}

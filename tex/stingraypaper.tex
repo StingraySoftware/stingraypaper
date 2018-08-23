@@ -137,6 +137,7 @@ In each section, we present examples of the functionality described based on rea
 Current functionality in subpackages includes a framework to allow for the parametric modelling of light curves and Fourier products, simulations of spectral timing products from power spectra, and period searches in pulsars.
 
 
+
 \section{Core Functionality}
 \label{sec:core}
 
@@ -144,38 +145,57 @@ Current functionality in subpackages includes a framework to allow for the param
 These classes define the basic data structures such as light curves and cross- as well as power spectra that are used in much of the higher-level functionality provided in the sub-packages. 
 Additionally, it incorporates a large range of utilities for dealing with Good Time Intervals (GTIs) as well as input and output of data sets. 
 
+\begin{table}[hbtp]
+%\renewcommand{\arraystretch}{1.0}
+\footnotesize
+\caption{Parameters for the simulated data set}
+\begin{threeparttable} 
+\begin{tabularx}{8.5cm}{p{2.5cm}p{4.0cm}p{2.0cm}}
+\toprule
+\bf{Parameter} & \bf{Description} &\bf{Value} \\ \midrule
+$A_{\mathrm{PL}}$ & Power law amplitude & $0.1$ \\
+$\alpha$ & Power law spectral index & 1.0 \\
+$A_{\mathrm{QPO}}$ & QPO amplitude &  $1.0$ \\
+$\nu_0$ & QPO centroid frequency & $2.0 \,\mathrm{Hz}$ \\
+$\gamma$ & QPO full width at half-maximum &$1 \,\mathrm{Hz}$ \\
+ \bottomrule
+\end{tabularx}
+   \begin{tablenotes}
+      \item{}
+\end{tablenotes}
+\end{threeparttable}
+\label{table:parameters}
+\end{table}
+
 \subsection{The \texttt{Lightcurve} class}
 \label{sec:lightcurve}
 
+\begin{figure*}
+\begin{center}
+\includegraphics[width=\textwidth]{../figures/lc.png}
+\caption{Power spectrum model (left) used for generation of a simulated light curve (right) using the method from \citet{timmer1995}. The underlying power spectrum consists of a power law and a Lorentzian. We use the Poisson distribution with the flux in each bin to approximate the observed photon counting statistics prevalent in X-ray astronomy. In the right panel, we also showcase the binning capabilities of the \texttt{Lightcurve} class.}
+\label{fig:scores}
+\end{center}
+\end{figure*}
+
+
 We expect \stingray to be used largely on data sets of two forms: (1) event data (i.e. recordings of arrival times of individual photons) or (2) binned light curves. 
-The majority of methods in \stingray use binned light curves, which we thus currently consider the default format. The \lightcurve class defines a basic data structure to store binned light curves. For binned data, the class can simply be invoked supplying time stamps and the corresponding flux values (and optionally uncertainties on the flux measurements):
 
-\begin{minted}{python}
-lc = Lightcurve(time, counts, err, 
-		       input_counts=True, 
-		       gti=None, 
-		       err_dist='poisson', 
-		       mjdref=0, dt=None)
-\end{minted}
+The majority of methods in \stingray use binned light curves, which we thus currently consider the default format. The \lightcurve class defines a basic data structure to store binned light curves. Its features include arrays describing time bins and associated (flux or counts) measurements, the number of data points in the light curve, the time resolution and the total duration of the light curve. For unevenly sampled light curves, the time resolution \texttt{dt} will be defined as the median difference between time bin midpoints. Users can pass uncertainties for measurements directly, or pass a string defining the statistical distribution of the data points for automatic calculation. By default, a Poisson distribution is assumed, appropriate for binned event data. 
 
-where \texttt{counts} corresponds to the flux per bin (or the number of photon counts per bin in the photon counting case), \texttt{err} are the flux uncertainties and \verb|input_counts| should be set to \texttt{True} if the input is in flux per bin (as opposed to flux per second). While it is possible to input GTIs, they will not by default be applied to the light curve itself, but propagated to classes and functions that take \lightcurve objects as input and make use of the GTIs stored in the object. There is, however, a method that splits a light curve into several \lightcurve objects, one for each contiguous good time interval. For unevenly sampled data or cases where gaps exist in the data, the internal algorithm for determining the time resolution \texttt{dt} might not always be correct; in these cases, it can help to input a reference time resolution manually.
+There are two ways to generate a \texttt{Lightcurve} object: in the standard case, the instrument has recorded a binned time series of $N$ pairs of time stamps and count (rate) or flux values, $\{t_k, c_k \}_{k=1}^{N}$. In this case, one can simply instantiate a \texttt{Lightcurve} object with the keywords \texttt{time} and \texttt{counts} (and optionally \texttt{use\_counts} when the input is in units of counts per second). In cases where the native data format is events (e.g.\ photon arrival times) it is possible to use the static method \texttt{Lightcurve.make\_lightcurve}, passing the array of events as well as a time resolution \texttt{dt} to create a new light curve from the events.
 
-For event data, a static method exists that will take the time stamps of events as well as a time resolution and create a light curve using \texttt{numpy.histogram}:
+Various operations are implemented for class \lightcurve. In particular, custom behaviour of the $+$ and $-$ operators allows straightforward addition and subtraction of light curves from one another. Assuming the light curves have the same time bins, the $+$ and $-$ operators will add or subtract the flux or counts measurements, respectively, and return a new \lightcurve\ object with the results. Other common operations implemented includes time-shifting the light curve by a constant factor, joining two light curves into a single object, truncating a light curve at a certain time bin, and input/output operations to read or write objects from/to disk in various formats (HDF5, FITS and ASCII are currently supported). For light curves that do not have consecutive time bins, there is a sorting operations, as well as the option to sort the light curve by the ascending or descending flux or counts. 
 
-\begin{minted}{python}
-lc = make_lightcurve(toa, dt, tseg=None, 
-		     tstart=None, 
-		     gti=None,
-		     mjdref=0,
-		     use_hist=False)
-\end{minted}
+In addition, we provide support for Good Time Intervals (GTIs) in many methods and implement rebinning the light curve to a new time resolution exceeding the native resolution of the data. In Figure \ref{fig:lightcurve} (right panel), we show an example light curve produced by the texttt{simulator} subpackage (see Section \ref{sec:simulator}) for implementation details). To showcase much of the functionality in the following chapters, we assume a process producing a power spectrum with an intrinsic spectrum comprising a power law and a quasi-periodic oscillation, approximated by a Lorentzian function (Figure \ref{fig:lightcurve}, left panel):
 
-Here, \texttt{toa} should be a list or array of times of arrivals of the events and \texttt{dt} the time resolution of the binned light curve. By default, the light curve start with the arrival of the first photon and end with the arrival of the last photon. Optionally, if the observation or segment begins before the arrival time of the first event and/or ends after the arrival time of the last event, one may optionally include a start time \texttt{tstart} and a total duration \texttt{tseg} for the creation of the regular time grid. 
+\[
+P(\nu) = A_{\mathrm{PL}} \nu^{\alpha} + \frac{A \gamma^2}{\gamma^2 + (\nu - \nu_0)^2} \, .
+\]
 
-Beyond providing a basic data structure for light curves and a creation mechanism out of event data, \stingray implements a range of operations acting on these objects. It overrides several standard operations such as the \texttt{+} operator \verb|__add__| and the \texttt{-} operator \verb|__sub__|, allowing to efficiently add and subtract light curves from one another. In either case, the addition and subtraction will operate on the \texttt{counts} attribute, and derivative attributes such as \verb|count_rate| and \texttt{err} will be automatically be recalculated. Similarly overloaded operations are the built-in function \verb|__len__|, which will return the number of time bins in the light curve, and \verb|__neg__|, which will invert the values in the \texttt{counts} attribute.
+We use the algorithm from \citet{timmer1995} to generate a light curve with a time resolution of $\delta t = 0.05\,\mathrm{s}$ and a length of $15.36 \,\mathrm{ks}$, amounting to $307200$ data points. The power law has a spectral index of $\alpha = 1.0$, the QPO a centroid frequency of $2 \,\mathrm{Hz}$. The generated light curve has a mean count rate of $400\,\mathrm{counts/s}$ and a fractional rms amplitude of $\mathrm{rms}_\mathrm{frac} = 0.3$. Because the resulting light curve will follow Gaussian uncertainties, we simulate photon counting statistics by drawing from a Poisson distribution for every bin with a rate parameter equal to the simulated flux in that bin. 
 
-Other functionality on light curves includes rebinning to a new time resolution, which must be lower than the previous time resolution (i.e.\ interpolation is not implemented). 
-\lightcurve objects can also be joined, truncated and sorted by time or counts. Finally, \stingray implements basic methods for plotting (useful for a quick look at the data), as well as reading and writing into various formats (currently FITS, HDF5 and ASCII).
+The remaining parameters can be found in Table \ref{tab:simdata}\footnote{The full code to reproduce all figures in this paper can be found at \url{https://github.com/stingraysoftware/stingraypaper}}. 
 
 \subsection{The \texttt{Events} class}
 
@@ -491,7 +511,7 @@ If the pulse has a detectable frequency derivative, these stripes bend with a pa
 
 A very precise way to determine the exact pulse ephemeris is out of the scope of \stingray. 
 However, \stingray has a mechanism to calculate the pulse arrival times (or times of arrival, TOAs) using a pulse template, using the \texttt{fftfit} algorithm used for radio pulsars. 
-This is implemented in the \verb|get_TOA| function in `stingray.pulse.pulsar`.
+This is implemented in the \texttt{get\_TOA} function in `stingray.pulse.pulsar`.
 Then, the user can use the TOAs with more focused software like Tempo, Tempo2 or PINT.
 
 [Fig. XXXX: a variation of the pulse phase corresponding to a period derivative. ]

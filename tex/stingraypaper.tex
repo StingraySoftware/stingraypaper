@@ -22,7 +22,6 @@
 \usepackage{subcaption}
 \usepackage{minted}
 
-
 %\usepackage{longtable}%\usepackage[stable]{footmisc}
 %\usepackage{color}
 %\bibliographystyle{apj}
@@ -107,8 +106,9 @@ In Section \ref{sec:data}, we very briefly describe the data sets being used in 
 In Sections \ref{sec:modeling}, \ref{sec:simulator} and \ref{sec:pulsar}, we lay out the submodules allowing modelling Fourier products, simulating light curves from stochastic processes, and pulsar analysis, respectively.
 Sections \ref{sec:hendrics} and \ref{sec:dave} detail existing connections to the command-line interface and a graphical user interface, respectively, which are currently being developed in parallel to \stingray. 
 Finally, in Sections \ref{sec:development} and \ref{sec:future} we lay out the development process, testing and documentation environments as well as our future development plans. 
-In each section, we present examples of the functionality described based on either simulated or real-world data sets.
+In each section, we present examples of the functionality described based on either simulated or real-world data sets. Note that we intentionally omit code examples in this manuscript in order to preserve long-term accuracy. All code to reproduce the figures in this paper is available online\footnote{\url{https://github.com/StingraySoftware/stingraypaper}}, and a full suite of up-to-date tutorials is also available\footnote{\url{https://github.com/StingraySoftware/notebooks}}.
 
+%%% DATA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Data}
 \label{sec:data}
@@ -117,6 +117,7 @@ Throughout the paper, we use a mix of both simulated time series as well as real
 \subsection{GX 339-4}
 \label{sec:gx339}
 
+ABBIE: Could you write a few words about the data set?
 
 \subsection{Hercules X-1}
 \label{sec:herx1}
@@ -157,6 +158,9 @@ P(\nu) = A_{\mathrm{PL}} \nu^{\alpha} + \frac{A \gamma^2}{\gamma^2 + (\nu - \nu_
 We use the algorithm from \citet{timmer1995} to generate a light curve with a time resolution of $\delta t = 0.05\,\mathrm{s}$ and a length of $15.36 \,\mathrm{ks}$, amounting to $307200$ data points. The power law has a spectral index of $\alpha = 1.0$, the QPO a centroid frequency of $2 \,\mathrm{Hz}$. The generated light curve has a mean count rate of $400\,\mathrm{counts/s}$ and a fractional rms amplitude of $\mathrm{rms}_\mathrm{frac} = 0.3$. Because the resulting light curve will follow Gaussian uncertainties, we simulate photon counting statistics by drawing from a Poisson distribution for every bin with a rate parameter equal to the simulated flux in that bin. 
 The remaining parameters can be found in Table \ref{tab:simdata}\footnote{The full code to reproduce all figures in this paper can be found at \url{https://github.com/stingraysoftware/stingraypaper}}. 
 
+
+%%% GENERAL PACKAGE FRAMEWORK %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Vision and General Package Framework}
 \label{sec:vision}
 
@@ -188,6 +192,7 @@ The subpackage \mintinline{python}{simulator} (Section \ref{sec:simulator}) prov
 Finally, the subpackage \mintinline{python}{pulsar} implements a range of methods particularly useful for period searches in pulsars. While no other sub-packages are currently under construction, we will implement new sub-packages based on core functionality as required. 
 
 
+%%% CORE FUNCTIONALITY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Core Functionality}
 \label{sec:core}
@@ -311,26 +316,26 @@ power in each segment and traces this maximum over time. An example using simula
 
 Closely related to the cross spectrum and power spectrum are the crosscorrelation and the autocorrelation, implemented in classes \mintinline{python}{CrossCorrelation} and \mintinline{python}{AutoCorrelation}, respectively. As their respective Fourier spectra equivalents they take either one (autocorrelation) or two (cross correlation) \lightcurve objects as input and computes the correlation between the two light curves or of the single light curve with itself, along with the time lags for which the correlation was produced and the time lag at which the maximum correlation is measured.
 
-It is useful to note that all classes in this section are compatible with Good Time Intervals
+It is useful to note that all classes in this section are compatible with Good Time Intervals. The classes \powerspectrum and \crossspectrum will generate warnings if the observations contain gaps; their averaged versions will take GTIs correctly into account by producing power spectra only from light curve segments for which data is available. 
 
 %\noindent Here, $i = \sqrt{-1}$, and $A_{xj}, A_{yj}$ and $B_{xj}, B_{yj}$ describe the real and imaginary parts of the Fourier amplitudes, respectively . We restrict $\mathcal{F}_x(j)$ and $\mathcal{F}_y(j)$ to frequencies between $\nu_{j=0} = 1/T$ and the Nyquist frequency $\nu_{j=N/2} = 1/(2\Delta t)$.
 %The complex cross spectrum is then calculated by multiplying the Fourier transform of light curve $\mathbf{x}$ with the complex conjugate of the Fourier transform of light curve $\mathbf{y}$ (, see also \citealt{uttley2014} for a recent review of spectral timing techniques):
 
 
-\subsection{Higher-Order Fourier Products and Spectral Timing Functionality}
-\label{sec:fourier_others}
+%\subsection{Higher-Order Fourier Products and Spectral Timing Functionality}
+%\label{sec:fourier_others}
 
-Over the past decade, higher-order Fourier products and spectral timing have emerged as key methods to study variability on different time scales as well as a function of wavelength. In \stingray, we have implemented several of the most common techniques, with plans to add to the existing tools as they become available in the future. Below, we will only give a brief description of each of the algorithms currently implemented in \stingray, with appropriate references where applicable.
-
-
-\subsubsection{Bispectrum and Biphase}
+%Over the past decade, higher-order Fourier products and spectral timing have emerged as key methods to study variability on different time scales as well as a function of wavelength. In \stingray, we have implemented several of the most common techniques, with plans to add to the existing tools as they become available in the future. Below, we will only give a brief description of each of the algorithms currently implemented in \stingray, with appropriate references where applicable.
 
 
+%\subsubsection{Bispectrum and Biphase}
 
-* bispectrum/biphase
 
-\subsubsection{Covariance spectra}
-* Covariancespectrum/ AveragedCovarianceSpectrum
+
+%* bispectrum/biphase
+
+%\subsubsection{Covariance spectra}
+%* Covariancespectrum/ AveragedCovarianceSpectrum
 
 %%% FUTURE STUFF
 %* RMSEnergySpectrum?
@@ -393,7 +398,7 @@ m = \sum_{j=1}^{N}{\left( \frac{y_j - \nu_j}{\nu_j} \right)^2} \,
 
 \noindent where $\mathbf{D} = \{x_j, y_j\}_{j=1}^{N}$ is the set of $N$ data points and $\nu_j$ is the value of the model evaluated at each $x_j$.
 
-Similarly, an instance of class \verb|Samp ingResults| is returned by the \verb|sample| method, which returns the posterior samples calculated by the MCMC sampler, as well as computes a number of helpful quantities using the MCMC chains. It calculates useful diagnostics including the acceptance fraction, the autocorrelation length and the Rubin-Gelman statistic [REF] to indicate convergence, and infers means, standard deviations and user-defined credible intervals for each parameter.
+Similarly, an instance of class \verb|SamplingResults| is returned by the \verb|sample| method, which returns the posterior samples calculated by the MCMC sampler, as well as computes a number of helpful quantities using the MCMC chains. It calculates useful diagnostics including the acceptance fraction, the autocorrelation length and the Rubin-Gelman statistic [REF] to indicate convergence, and infers means, standard deviations and user-defined credible intervals for each parameter.
 
 Both \verb|OptimizationResults| and \verb|SamplingResults| implement a \verb|print_results| and a \verb|plot_results| method, which produce useful text output for log files and diagnostic plots that help understand the results.
 
@@ -508,6 +513,8 @@ Then, the user can use the TOAs with more focused software like Tempo, Tempo2 or
 [Fig. XXXX: a variation of the pulse phase corresponding to a period derivative. ]
 
 
+%%% DEVELOPMENT + INTEGRATION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Development and Integration Environment}
 \label{sec:development}
 
@@ -515,6 +522,8 @@ Then, the user can use the TOAs with more focused software like Tempo, Tempo2 or
 All code within the \stingray core library is subject to extensive unit testing, with compatibility across platforms as well as different versions of Python and required packages controlled through Continuous Integration services \textit{Travis} (Unix platforms) and \textit{AppVeyor} (Windows). Test coverage is checked using \textit{Coveralls}
 All user-facing functions and classes within \stingray must have documentation in the form of docstrings, compiled and built along with the main documentation pages using \textit{sphinx} and hosted on \texttt{readthedocs}. Tutorials are provided in the form of executable \textit{Jupyter} notebooks in a separate repository, which can either be run interactively using \textit{Binder} or viewed as part of the documentation. 
 
+
+%%% HENDRICS + DAVE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{\hendrics: A Command-Line Interface for \stingray}
 \label{sec:hendrics}
 
@@ -525,20 +534,31 @@ Its key distinguishing feature from established command-line interfaces such as 
 
 \hendrics is in release version 4 as of 2018-02-12, and under active development, utilizing the same continuous integration, testing and code review standards as \stingray.
 
+
+\begin{figure*}[htbp]
+\begin{center}
+\includegraphics[width=\linewidth]{../figures/dave.pdf}
+\caption{An example of the \dave graphical user interface for the Her X-1 pulsar data observed with \nustar: At the top left, the last 30ks of the pulsar light curve with the GTIs clearly marked. In the top right, the averaged power spectrum generated from 109 segments of $256\,\mathrm{s}$ duration with a binned time resolution of $1.5\,\mathrm{s}$. In the middle, we present the dynamical power spectrum generated from the same $256\,\mathrm{s}$ segments that generated the top right averaged power spectrum. Below, header meta-data is shown for reference. On the left, the menu presents a range of options of figures to plot and compare, including spectral-timing capabilities. All figures are interactive, including panning and zooming, as well as interactive choices of data selection.}
+\label{fig:dave}
+\end{center}
+\end{figure*}
+
 \section{\texttt{DAVE}: Exploratory Data Analysis in a Graphical User Interface}
 \label{sec:dave}
 
-DAVE ? the Data Analysis for Variable Events package ? is a Graphical User Interface built on top of \stingray in order to provide users with interactive capabilities for exploratory data analysis on time series in general, and variable sources in particular. Its goal is to enable scientific exploration of astronomical X-ray observations in a graphical environment. 
+\dave---the Data Analysis for Variable Events package---is a Graphical User Interface built on top of \stingray in order to provide users with interactive capabilities for exploratory data analysis on time series in general, and variable sources in particular. Its goal is to enable scientific exploration of astronomical X-ray observations in a graphical environment. Much of the core functionality within \stingray is available in \dave as well: creation of power spectra, cross spectra, dynamical power spectra and spectral-timing products such as time lags, coherence measurements. In addition, it implements interactive filtering of light curves with respect to energy channels or energies (if a response matrix file is loaded), time ranges, and count rates. Users may compare light curves and power spectra from different energy ranges, and may create auxiliary products such as colour-colour and colour-intensity diagrams that further aid the exploration of the data. An example of the interface is shown in Figure \ref{fig:dave}. The full interface and its capabilities will be described in a forthcoming publication. 
 
 
-
+%%% FUTURE DEVELOPMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Future Development Plans}
 \label{sec:future}
 
-Future plans for \stingray development are largely aimed at extending current functionality related to Fourier spectra (with e.g.~ the planned implementation of the statistical distributions relevant to co-spectra [ADD REF]), and continuing work towards comprehensive spectra-timing capabilities. New key features in the next version of \stingray will include lag-energy spectra [REF], RMS-energy spectra [REF] and excess variance spectra [REF]. In addition, while at the moment, there is rudimentary functionality to build spectra-timing products, it is currently not possible to seamlessly work with these products using \stingray, because \stingray currently has no native capability for energy-spectral modelling. Instead, they would have to be exported (e.g. saved to disk) and then loaded into another software, significantly disrupting workflows and pipeline development. In order to streamline this process, we aim to connect \stingray with existing packages for modelling X-ray spectra. Here, it will be necessary to connect \stingray with the extensive suite of physical models implemented in XSPEC [REF] as well as existing spectral fitting codes implemented in \textit{Python}, most notably the open-source package \textit{Sherpa} [REF].
+Future plans for \stingray development are largely aimed at extending current functionality related to Fourier spectra (with e.g.~ the planned implementation of the statistical distributions relevant to co-spectra [ADD REF]), and continuing work towards comprehensive spectra-timing capabilities. While reference implementations of higher-order Fourier products such as bispectra and biphase exist, they require additional extensions to be useful to science. New key features in the next version of \stingray, based on an existing reference implementation of covariance spectra, will include lag-energy spectra [REF], RMS-energy spectra [REF] and excess variance spectra [REF]. In addition, while at the moment, there is rudimentary functionality to build spectra-timing products, it is currently not possible to seamlessly work with these products using \stingray, because \stingray currently has no native capability for energy-spectral modelling. Instead, they would have to be exported (e.g. saved to disk) and then loaded into another software, significantly disrupting workflows and pipeline development. In order to streamline this process, we aim to connect \stingray with existing packages for modelling X-ray spectra. Here, it will be necessary to connect \stingray with the extensive suite of physical models implemented in XSPEC [REF] as well as existing spectral fitting codes implemented in \textit{Python}, most notably the open-source package \textit{Sherpa} [REF].
 
 Data rates from current and future X-ray instruments are increasing at a precipitous rate, pushing memory and processing requirements for even simple tasks like Fast Fourier Transforms of data observed e.g.~ with \textit{NuSTAR} [REF] and \textit{AstroSAT} [REF] into a regime that is difficult with standard desktop computing architectures. Therefore, the other strong emphasis for the second version of \stingray will be code and algorithm optimization. Where possible, we will replace existing implementations by high-performance equivalents that take advantage of recent developments in computing (such as GPU-enabled computations and multi-core batch processing), and optimize and streamline existing code to minimize computational overhead and memory usage of the classes and functions implemented within \stingray. 
+
+%%% ACKNOWLEDGMENTS + REFERENCES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \paragraph{acknowledgements}
 DH acknowledges support from the DIRAC Institute in the Department of Astronomy at the University of Washington. The DIRAC Institute is supported through generous gifts from the Charles and Lisa Simonyi Fund for Arts and Sciences, and the Washington Research Foundation.

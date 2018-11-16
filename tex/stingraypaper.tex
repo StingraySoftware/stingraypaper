@@ -715,19 +715,27 @@ As seen in Section~\ref{sec:efzsq}, the \zsq or the EF periodograms of a perfect
 \stingray has functionality to fit these periodograms with a $\mathrm{sinc}^2$ funtion or alternatively a Gaussian model, and find the mean frequency with high precision.
 
 A significant deviation from the expected shape from these models can happen if the pulsation is not stable.
-Calculating the \textit{periodogram} is an option to investigate how the pulse phase varies in time.
-The periodogram in this context consists of a 2D histogram of the phase and arrival times of the pulses. 
-If the pulsation is stable and the pulse frequency was determined with precision, the periodogram shows vertical stripes corresponding to perfectly aligned pulses.
+Calculating the \textit{phaseogram} (Figure~\ref{fig:phaseogram}) is an option to investigate how the pulse phase varies in time.
+The phaseogram in this context consists of a 2D histogram of the phase and arrival times of the pulses. 
+If the pulsation is stable and the pulse frequency was determined with precision, the phaseogram shows vertical stripes corresponding to perfectly aligned pulses.
 If the frequency is not as precise, the stripes become more and more diagonal.
 If the pulse has a detectable frequency derivative, these stripes bend with a parabolic shape.
 
 A very precise way to determine the exact pulse ephemeris is out of the scope of \stingray. 
-However, \stingray has a mechanism to calculate the pulse arrival times (or times of arrival, TOAs) using a pulse template, using the \texttt{fftfit} algorithm used for radio pulsars. 
+Nonetheless, \stingray has a mechanism to calculate the pulse arrival times (or times of arrival, TOAs) to be analyzed with more specialized software like Tempo, Tempo2 or PINT. 
+We use the same \texttt{fftfit} algorithm used for radio pulsars \citep{Taylor92}, that calculates the cross-correlation between a template profile and the folded profile in the Fourier domain. 
 This is implemented in the \texttt{get\_TOA} function in \texttt{stingray.pulse.pulsar}.
-Then, the user can use the TOAs with more specialized software like Tempo, Tempo2 or PINT.
 
-[Fig. XXXX: a variation of the pulse phase corresponding to a period derivative. ]
-[\textbf{MATTEO}: you put this here for a figure. Do you have a handy way to make one?!]
+The functionality to plot the phaseogram, interactively change the timing parameters and adjusting the solution, and calculating the TOAs for use with external programs, is conveniently accessible in HENDRICS (See Section \ref{sec:hendrics}) and in DAVE (Section \ref{sec:dave}).
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=\linewidth]{../figures/phaseogram.pdf}
+\caption{Phaseogram showing the variation of the pulse phase corresponding to nonzero frequency derivatives in a \nustar observation of SMC X-1 (Pike et al., sub.), executed with Stingray.}
+\label{fig:phaseogram}
+\end{center}
+\end{figure}
+
 
 
 %%% DEVELOPMENT + INTEGRATION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

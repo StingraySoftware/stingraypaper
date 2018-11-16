@@ -722,11 +722,11 @@ If the frequency is not as precise, the stripes become more and more diagonal.
 If the pulse has a detectable frequency derivative, these stripes bend with a parabolic shape.
 
 A very precise way to determine the exact pulse ephemeris is out of the scope of \stingray. 
-However, \stingray has a mechanism to calculate the pulse arrival times (or times of arrival, TOAs) using a pulse template, using the \texttt{fftfit} algorithm used for radio pulsars \citep{Taylor92}. 
+Nonetheless, \stingray has a mechanism to calculate the pulse arrival times (or times of arrival, TOAs) to be analyzed with more specialized software like Tempo, Tempo2 or PINT. 
+We use the same \texttt{fftfit} algorithm used for radio pulsars \citep{Taylor92}, that calculates the cross-correlation between a template profile and the folded profile in the Fourier domain. 
 This is implemented in the \texttt{get\_TOA} function in \texttt{stingray.pulse.pulsar}.
-Then, the user can use the TOAs with more specialized software like Tempo, Tempo2 or PINT.
 
-Moreover, the functionality to plot the phaseogram, interactively change the timing parameters and adjusting the solution, and calculating the TOAs for use with external programs, is conveniently accessible in the HENDRICS tool \texttt{HENphaseogram} (See \ref{sec:hendrics}).
+The functionality to plot the phaseogram, interactively change the timing parameters and adjusting the solution, and calculating the TOAs for use with external programs, is conveniently accessible in HENDRICS (See Section \ref{sec:hendrics}) and in DAVE (Section \ref{sec:dave}).
 
 \begin{figure}[htbp]
 \begin{center}

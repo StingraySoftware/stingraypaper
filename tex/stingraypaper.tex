@@ -1,7 +1,90 @@
-% This document is part of the transientdict project.
-% Copyright 2013 the authors.
+%%
+%% Beginning of file 'sample62.tex'
+%%
+%% Modified 2018 January
+%%
+%% This is a sample manuscript marked up using the
+%% AASTeX v6.2 LaTeX 2e macros.
+%%
+%% AASTeX is now based on Alexey Vikhlinin's emulateapj.cls 
+%% (Copyright 2000-2015).  See the classfile for details.
 
-\documentclass[12pt]{emulateapj}
+%% AASTeX requires revtex4-1.cls (http://publish.aps.org/revtex4/) and
+%% other external packages (latexsym, graphicx, amssymb, longtable, and epsf).
+%% All of these external packages should already be present in the modern TeX 
+%% distributions.  If not they can also be obtained at www.ctan.org.
+
+%% The first piece of markup in an AASTeX v6.x document is the \documentclass
+%% command. LaTeX will ignore any data that comes before this command. The 
+%% documentclass can take an optional argument to modify the output style.
+%% The command below calls the preprint style  which will produce a tightly 
+%% typeset, one-column, single-spaced document.  It is the default and thus
+%% does not need to be explicitly stated.
+%%
+%%
+%% using aastex version 6.2
+\documentclass[twocolumn]{aastex62}
+
+%% The default is a single spaced, 10 point font, single spaced article.
+%% There are 5 other style options available via an optional argument. They
+%% can be envoked like this:
+%%
+%% \documentclass[argument]{aastex62}
+%% 
+%% where the layout options are:
+%%
+%%  twocolumn   : two text columns, 10 point font, single spaced article.
+%%                This is the most compact and represent the final published
+%%                derived PDF copy of the accepted manuscript from the publisher
+%%  manuscript  : one text column, 12 point font, double spaced article.
+%%  preprint    : one text column, 12 point font, single spaced article.  
+%%  preprint2   : two text columns, 12 point font, single spaced article.
+%%  modern      : a stylish, single text column, 12 point font, article with
+%% 		  wider left and right margins. This uses the Daniel
+%% 		  Foreman-Mackey and David Hogg design.
+%%  RNAAS       : Preferred style for Research Notes which are by design 
+%%                lacking an abstract and brief. DO NOT use \begin{abstract}
+%%                and \end{abstract} with this style.
+%%
+%% Note that you can submit to the AAS Journals in any of these 6 styles.
+%%
+%% There are other optional arguments one can envoke to allow other stylistic
+%% actions. The available options are:
+%%
+%%  astrosymb    : Loads Astrosymb font and define \astrocommands. 
+%%  tighten      : Makes baselineskip slightly smaller, only works with 
+%%                 the twocolumn substyle.
+%%  times        : uses times font instead of the default
+%%  linenumbers  : turn on lineno package.
+%%  trackchanges : required to see the revision mark up and print its output
+%%  longauthor   : Do not use the more compressed footnote style (default) for 
+%%                 the author/collaboration/affiliations. Instead print all
+%%                 affiliation information after each name. Creates a much
+%%                 long author list but may be desirable for short author papers
+%%
+%% these can be used in any combination, e.g.
+%%
+%% \documentclass[twocolumn,linenumbers,trackchanges]{aastex62}
+%%
+%% AASTeX v6.* now includes \hyperref support. While we have built in specific
+%% defaults into the classfile you can manually override them with the
+%% \hypersetup command. For example,
+%%
+%%\hypersetup{linkcolor=red,citecolor=green,filecolor=cyan,urlcolor=magenta}
+%%
+%% will change the color of the internal links to red, the links to the
+%% bibliography to green, the file links to cyan, and the external links to
+%% magenta. Additional information on \hyperref options can be found here:
+%% https://www.tug.org/applications/hyperref/manual.html#x1-40003
+%%
+%% If you want to create your own macros, you can do so
+%% using \newcommand. Your macros should appear before
+%% the \begin{document} command.
+%%
+
+
+%% Other packages
+
 \usepackage{xspace}
 \usepackage{graphicx}
 %\usepackage{epsfig}
@@ -23,27 +106,17 @@
 \usepackage{minted}
 \usepackage{listings}
 
-%\usepackage{longtable}%\usepackage[stable]{footmisc}
-%\usepackage{color}
-%\bibliographystyle{apj}
 
-% MB: I added xspace so that we don't have to use '\ ' after the commands
-% For commands that may or may not stay inside a math environment, we can 
-% also use \ensuremath
 \newcommand{\project}[1]{\textsl{#1}\xspace}
 \newcommand{\fermi}{\project{Fermi}\xspace}
 \newcommand{\rxte}{\project{RXTE}\xspace}
-\newcommand{\given}{\ensuremath{\,|\,}}
-\newcommand{\dd}{\ensuremath{\mathrm{d}}}
-\newcommand{\counts}{\ensuremath{y}}
-\newcommand{\pars}{\ensuremath{\theta}}
-\newcommand{\mean}{\ensuremath{\lambda}}
-%\newcommand{\likelihood}{\ensuremath{{\mathcal L}}}
-\newcommand{\Poisson}{\ensuremath{{\mathcal P}}}
-\newcommand{\Uniform}{\ensuremath{{\mathcal U}}}
-\newcommand{\bg}{\ensuremath{\mathrm{bg}}}
-\newcommand{\word}{\ensuremath{\phi}}
-\newcommand{\zsq}{\ensuremath{Z^2_n}}
+\newcommand{\nustar}{\project{NuSTAR}\xspace}
+
+\newcommand{\Poisson}{\ensuremath{{\mathcal P}}\xspace}
+\newcommand{\Uniform}{\ensuremath{{\mathcal U}}\xspace}
+\newcommand{\bg}{\ensuremath{\mathrm{bg}}\xspace}
+\newcommand{\word}{\ensuremath{\phi}\xspace}
+\newcommand{\zsq}{\ensuremath{Z^2_n}\xspace}
 %\newcommand{\stingray}{\mintinline{python}{stingray}\xspace}
 \newcommand{\python}{\texttt{Python}\xspace}
 \newcommand{\stingray}{\texttt{stingray}\xspace}
@@ -56,32 +129,154 @@
 \newcommand{\posterior}{\mintinline{python}{Posterior}\xspace}
 \newcommand{\parest}{\mintinline{python}{ParameterEstimation}\xspace}
 
-
-\usemintedstyle[python]{friendly}
-%\setminted[python]{}
-%\setmintedinline[python]{}
-
 \newcommand{\hendrics}{\texttt{HENDRICS}\xspace}
 \newcommand{\dave}{\texttt{DAVE}\xspace}
-\newcommand{\nustar}{\project{NuSTAR}\xspace}
 
 
-%\newcommand{\bs}{\boldsymbol}
+
+\usemintedstyle[python]{friendly}
+
+%% Reintroduced the \received and \accepted commands from AASTeX v5.2
+%\received{Dec 1, 2018}
+%\revised{January 7, 2018}
+%\accepted{\today}
+%% Command to document which AAS Journal the manuscript was submitted to.
+%% Adds "Submitted to " the arguement.
+\submitjournal{ApJ}
+
+%% Mark up commands to limit the number of authors on the front page.
+%% Note that in AASTeX v6.2 a \collaboration call (see below) counts as
+%% an author in this case.
+%
+%\AuthorCollaborationLimit=3
+%
+%% Will only show Schwarz, Muench and "the AAS Journals Data Scientist 
+%% collaboration" on the front page of this example manuscript.
+%%
+%% Note that all of the author will be shown in the published article.
+%% This feature is meant to be used prior to acceptance to make the
+%% front end of a long author article more manageable. Please do not use
+%% this functionality for manuscripts with less than 20 authors. Conversely,
+%% please do use this when the number of authors exceeds 40.
+%%
+%% Use \allauthors at the manuscript end to show the full author list.
+%% This command should only be used with \AuthorCollaborationLimit is used.
+
+%% The following command can be used to set the latex table counters.  It
+%% is needed in this document because it uses a mix of latex tabular and
+%% AASTeX deluxetables.  In general it should not be needed.
+%\setcounter{table}{1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% The following section outlines numerous optional output that
+%% can be displayed in the front matter or as running meta-data.
+%%
+%% If you wish, you may supply running head information, although
+%% this information may be modified by the editorial offices.
+\shorttitle{\stingray: A Modern \python\ Library For Spectral Timing}
+\shortauthors{Huppenkothen et al.}
+%%
+%% You can add a light gray and diagonal water-mark to the first page 
+%% with this command:
+% \watermark{text}
+%% where "text", e.g. DRAFT, is the text to appear.  If the text is 
+%% long you can control the water-mark size with:
+%  \setwatermarkfontsize{dimension}
+%% where dimension is any recognized LaTeX dimension, e.g. pt, in, etc.
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% This is the end of the preamble.  Indicate the beginning of the
+%% manuscript itself with \begin{document}.
 
 \begin{document}
 
 \title{\stingray: A Modern \python\ Library For Spectral Timing}
 
-\author{D. Huppenkothen\altaffilmark{1, 2}, M. Bachetti\altaffilmark{4}, A. Stevens\altaffilmark{}, OTHER CO-AUTHORS!}
- 
-\altaffiltext{1}{DIRAC Institute, Department of Astronomy, University of Washington, 3910 15th Ave NE, Seattle, WA 98195}
-  \altaffiltext{2}{E-mail: dhuppenk@uw.edu}
-\altaffiltext{3}{INAF-Osservatorio Astronomico di Cagliari, via della Scienza 5, I-09047 Selargius (CA), Italy}
-\altaffiltext{4}{}
-\altaffiltext{5}{}
-\altaffiltext{6}{}
+%% LaTeX will automatically break titles if they run longer than
+%% one line. However, you may use \\ to force a line break if
+%% you desire. In v6.2 you can include a footnote in the title.
 
+%% A significant change from earlier AASTEX versions is in the structure for 
+%% calling author and affilations. The change was necessary to implement 
+%% autoindexing of affilations which prior was a manual process that could 
+%% easily be tedious in large author manuscripts.
+%%
+%% The \author command is the same as before except it now takes an optional
+%% arguement which is the 16 digit ORCID. The syntax is:
+%% \author[xxxx-xxxx-xxxx-xxxx]{Author Name}
+%%
+%% This will hyperlink the author name to the author's ORCID page. Note that
+%% during compilation, LaTeX will do some limited checking of the format of
+%% the ID to make sure it is valid.
+%%
+%% Use \affiliation for affiliation information. The old \affil is now aliased
+%% to \affiliation. AASTeX v6.2 will automatically index these in the header.
+%% When a duplicate is found its index will be the same as its previous entry.
+%%
+%% Note that \altaffilmark and \altaffiltext have been removed and thus 
+%% can not be used to document secondary affiliations. If they are used latex
+%% will issue a specific error message and quit. Please use multiple 
+%% \affiliation calls for to document more than one affiliation.
+%%
+%% The new \altaffiliation can be used to indicate some secondary information
+%% such as fellowships. This command produces a non-numeric footnote that is
+%% set away from the numeric \affiliation footnotes.  NOTE that if an
+%% \altaffiliation command is used it must come BEFORE the \affiliation call,
+%% right after the \author command, in order to place the footnotes in
+%% the proper location.
+%%
+%% Use \email to set provide email addresses. Each \email will appear on its
+%% own line so you can put multiple email address in one \email call. A new
+%% \correspondingauthor command is available in V6.2 to identify the
+%% corresponding author of the manuscript. It is the author's responsibility
+%% to make sure this name is also in the author list.
+%%
+%% While authors can be grouped inside the same \author and \affiliation
+%% commands it is better to have a single author for each. This allows for
+%% one to exploit all the new benefits and should make book-keeping easier.
+%%
+%% If done correctly the peer review system will be able to
+%% automatically put the author and affiliation information from the manuscript
+%% and save the corresponding author the trouble of entering it by hand.
 
+\correspondingauthor{Daniela Huppenkothen}
+\email{dhuppenk@uw.edu}
+
+\author[0000-0002-1169-7486]{Daniela Huppenkothen}
+\affil{DIRAC Institute, \\
+Department of Astronomy, \\ 
+University of Washington, \\
+3910 15th Ave NE, Seattle, WA 98195}
+\nocollaboration
+
+\author{Matteo Bachetti}
+\affiliation{INAF-Osservatorio Astronomico di Cagliari, \\
+ via della Scienza 5, \\
+ I-09047 Selargius (CA), Italy}
+\nocollaboration
+
+\author{Abigail Stevens}
+\affiliation{}
+\nocollaboration
+
+\author{OTHERS!}
+\altaffiliation{}
+
+%% Note that the \and command from previous versions of AASTeX is now
+%% depreciated in this version as it is no longer necessary. AASTeX 
+%% automatically takes care of all commas and "and"s between authors names.
+
+%% AASTeX 6.2 has the new \collaboration and \nocollaboration commands to
+%% provide the collaboration status of a group of authors. These commands 
+%% can be used either before or after the list of corresponding authors. The
+%% argument for \collaboration is the collaboration identifier. Authors are
+%% encouraged to surround collaboration identifiers with ()s. The 
+%% \nocollaboration command takes no argument and exists to indicate that
+%% the nearby authors are not part of surrounding collaborations.
+
+%% Mark off the abstract in the ``abstract'' environment. 
 \begin{abstract}
 % This abstract could be more exciting, I think.
 This paper describes the design, implementation and usage of \stingray, a library in \python built to perform time series analysis and related tasks on astronomical light curves. 
@@ -89,12 +284,29 @@ Its core functionality comprises a range of Fourier analysis techniques commonly
 Its modular build allows for easy extensions and we aim for the library to be a platform for the implementation of future spectral timing techniques.  
 Here, we describe the overall vision and framework, as well as core functionality, extensions and connections to high-level command-line and graphical interfaces.
 The code is well-tested, with a test coverage of currently 95\%, and is accompanied by extensive API documentation as well as a set of step-by-step tutorials.
-
 \end{abstract}
 
+%% Keywords should appear after the \end{abstract} command. 
+%% See the online documentation for the full list of available subject
+%% keywords and the rules for their use.
 \keywords{methods:statistics}
 
-\section{Introduction}
+%% From the front matter, we move on to the body of the paper.
+%% Sections are demarcated by \section and \subsection, respectively.
+%% Observe the use of the LaTeX \label
+%% command after the \subsection to give a symbolic KEY to the
+%% subsection for cross-referencing in a \ref command.
+%% You can use LaTeX's \ref and \label commands to keep track of
+%% cross-references to sections, equations, tables, and figures.
+%% That way, if you change the order of any elements, LaTeX will
+%% automatically renumber them.
+%%
+%% We recommend that authors also use the natbib \citep
+%% and \citet commands to identify citations.  The citations are
+%% tied to the reference list via symbolic KEYs. The KEY corresponds
+%% to the KEY in the \bibitem in the reference list below. 
+
+\section{Introduction} \label{sec:intro}
 
 Variability is one of the key diagnostics in understanding the underlying physics of the dynamics and emission processes from astronomical objects. 
 The detection of periodic variations in the radio flux of certain objects has led to the ground-breaking discovery of pulsars [REF!]. Similarly, accurately describing of dips in stellar light curves has led to the discovery of thousands of exoplanets [REF!]. 
@@ -110,8 +322,6 @@ In Sections \ref{sec:modeling}, \ref{sec:simulator} and \ref{sec:pulsar}, we lay
 Sections \ref{sec:hendrics} and \ref{sec:dave} detail existing connections to the command-line interface and a graphical user interface, respectively, which are currently being developed in parallel to \stingray. 
 Finally, in Sections \ref{sec:development} and \ref{sec:future} we lay out the development process, testing and documentation environments as well as our future development plans. 
 In each section, we present examples of the functionality described based on either simulated or real-world data sets. Note that we intentionally omit code examples in this manuscript in order to preserve long-term accuracy. All code to reproduce the figures in this paper is available online\footnote{\url{https://github.com/StingraySoftware/stingraypaper}}, and a full suite of up-to-date tutorials is also available\footnote{\url{https://github.com/StingraySoftware/notebooks}}.
-
-%%% DATA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Data}
 \label{sec:data}
@@ -559,88 +769,75 @@ Data rates from current and future X-ray instruments are increasing at a precipi
 
 %%% ACKNOWLEDGMENTS + REFERENCES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\paragraph{acknowledgements}
+%% If you wish to include an acknowledgments section in your paper,
+%% separate it off from the body of the text using the \acknowledgments
+%% command.
+\acknowledgments
 DH acknowledges support from the DIRAC Institute in the Department of Astronomy at the University of Washington. The DIRAC Institute is supported through generous gifts from the Charles and Lisa Simonyi Fund for Arts and Sciences, and the Washington Research Foundation.
 We thank Astro Hack Week for providing the venue that started this project and the Lorentz Centre for organizing the workshop that started the collaboration. We thank the Google Summer of Code Program for funding a total 5 students who implemented a large fraction of the various library components over two summers.
 
+%% To help institutions obtain information on the effectiveness of their 
+%% telescopes the AAS Journals has created a group of keywords for telescope 
+%% facilities.
+%
+%% Following the acknowledgments section, use the following syntax and the
+%% \facility{} or \facilities{} macros to list the keywords of facilities used 
+%% in the research for the paper.  Each keyword is check against the master 
+%% list during copy editing.  Individual instruments can be provided in 
+%% parentheses, after the keyword, but they are not verified.
+
+%\vspace{5mm}
+%\facilities{HST(STIS), Swift(XRT and UVOT), AAVSO, CTIO:1.3m,
+%CTIO:1.5m,CXO}
+
+%% Similar to \facility{}, there is the optional \software command to allow 
+%% authors a place to specify which programs were used during the creation of 
+%% the manusscript. Authors should list each code and include either a
+%% citation or url to the code inside ()s when available.
+
+%\software{astropy \citep{2013A&A...558A..33A},  
+%          Cloudy \citep{2013RMxAA..49..137F}, 
+%          SExtractor \citep{1996A&AS..117..393B}
+%          }
+
+%% Appendix material should be preceded with a single \appendix command.
+%% There should be a \section command for each appendix. Mark appendix
+%% subsections with the same markup you use in the main body of the paper.
+
+%% Each Appendix (indicated with \section) will be lettered A, B, C, etc.
+%% The equation counter will reset when it encounters the \appendix
+%% command and will number appendix equations (A1), (A2), etc. The
+%% Figure and Table counter will not reset.
+
+%\appendix
+
+
 \bibliography{stingraypaper}
-\bibliographystyle{apj}
-
-%\section*{Appendix: Code and Workflow Examples}
-
-%In the appendix, we present a few simple examples of common workflows as implemented in \stingray. For additional examples, we refer to the documentation [REF] as well as the suite of tutorials available on the GitHub repository [REF].
-
-%\subsection*{Modelling Fourier Spectra}
+\bibliographystyle{aasjournal}
 
 
+%\begin{thebibliography}{}
 
-%\begin{listing}
-%\begin{minted}
-%[frame=lines,
-%framesep=2mm,
-%baselinestretch=1.2,
-%bgcolor=white,
-%fontsize=\footnotesize,
-%linenos
-%]{python}
-%from scipy.stats import uniform
-%from astropy.modeling import models
-%from stingray import sampledata
-%from stingray import Lightcurve
-%from stingray import Powerspectrum, AveragedPowerspectrum
-%from stingray.modeling import PSDPosterior, PSDParEst
-%from stingray.modeling import set_logprior
+%\bibitem[Astropy Collaboration et al.(2013)]{2013A&A...558A..33A} Astropy Collaboration, Robitaille, T.~P., Tollerud, E.~J., et al.\ 2013, \aap, 558, A33 
+%\bibitem[Bertin \& Arnouts(1996)]{1996A&AS..117..393B} Bertin, E., \& Arnouts, S.\ 1996, \aaps, 117, 393 
+%\bibitem[Corrales(2015)]{2015ApJ...805...23C} Corrales, L.\ 2015, \apj, 805, 23
+%\bibitem[Ferland et al.(2013)]{2013RMxAA..49..137F} Ferland, G.~J., Porter, R.~L., van Hoof, P.~A.~M., et al.\ 2013, \rmxaa, 49, 137
+%\bibitem[Hanisch \& Biemesderfer(1989)]{1989BAAS...21..780H} Hanisch, R.~J., \& Biemesderfer, C.~D.\ 1989, \baas, 21, 780 
+%\bibitem[Lamport(1994)]{lamport94} Lamport, L. 1994, LaTeX: A Document Preparation System, 2nd Edition (Boston, Addison-Wesley Professional)
+%\bibitem[Schwarz et al.(2011)]{2011ApJS..197...31S} Schwarz, G.~J., Ness, J.-U., Osborne, J.~P., et al.\ 2011, \apjs, 197, 31  
+%\bibitem[Vogt et al.(2014)]{2014ApJ...793..127V} Vogt, F.~P.~A., Dopita, M.~A., Kewley, L.~J., et al.\ 2014, \apj, 793, 127  
 
-%# load light curve 
-%lc = sampledata.sample_data() 
+%\end{thebibliography}
 
-%# create a PSD
-%ps = Powerspectrum(lc, norm="frac")
+%% This command is needed to show the entire author+affilation list when
+%% the collaboration and author truncation commands are used.  It has to
+%% go at the end of the manuscript.
+%\allauthors
 
-%# compute averaged power spectrum
-%avg_ps = AveragedPowerspectrum(lc, 
-%                               segment_size=64, 
-%                               norm="frac")
-
-%# create a model instance
-%m = models.PowerLaw1D() + models.Const1D()
-%m.x_0_0.fixed=True
-
-%# create the posterior object
-%lpost = PSDPosterior(freq=avg_ps.freq, 
-%                     power=avg_ps.power, 
-%                     model=m, 
-%                     m=avg_ps.m)
-
-%# set priors
-%amp_prior = lambda amp: uniform(-15, 30).pdf(np.log(amp))
-%alpha_prior = lambda alpha: uniform(0,5).pdf(alpha)
-%priors = {"amplitude_0":amp_prior, 
-%          "alpha_0":alpha_prior,
-%          "amplitude_1": amp_prior}
-
-%lpost.logprior = set_logprior(lpost, priors)
-
-%# create ParameterEstimation object
-%parest = PSDParEst(avg_ps, fitmethod="BFGS", 
-%             max_post=True)
-
-%# fit using optimization
-%res = parest.fit(lpost, [0.005, 2, 0.001])
-
-%# MCMC sampling
-%sample = parest.sample(lpost, res.p_opt, 
-%                       cov=res.cov, 
-%                       nwalkers=250, 
-%                       niter=200, burnin=1000, 
-%                       threads=1)
-
-%\end{minted}
-%\caption{A typical workflow for modelling (averaged) power spectra.The results can be found in Figure \ref{fig:posterior}.}
-%\label{list:modeling}
-%\end{listing}
-
+%% Include this line if you are using the \added, \replaced, \deleted
+%% commands to see a summary list of all changes at the end of the article.
+%\listofchanges
 
 \end{document}
 
-
+% End of file `sample62.tex'.

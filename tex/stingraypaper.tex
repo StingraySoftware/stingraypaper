@@ -722,19 +722,19 @@ If the frequency is not as precise, the stripes become more and more diagonal.
 If the pulse has a detectable frequency derivative, these stripes bend with a parabolic shape.
 
 A very precise way to determine the exact pulse ephemeris is out of the scope of \stingray. 
-However, \stingray has a mechanism to calculate the pulse arrival times (or times of arrival, TOAs) using a pulse template, using the \texttt{fftfit} algorithm used for radio pulsars. 
+However, \stingray has a mechanism to calculate the pulse arrival times (or times of arrival, TOAs) using a pulse template, using the \texttt{fftfit} algorithm used for radio pulsars \citep{Taylor92}. 
 This is implemented in the \texttt{get\_TOA} function in \texttt{stingray.pulse.pulsar}.
 Then, the user can use the TOAs with more specialized software like Tempo, Tempo2 or PINT.
 
-Moreover, the functionality to plot the phaseogram, interactively change the timing parameters and adjusting the solution, and calculating the TOAs for use with external programs, is conveniently accessible in the HENDRICS tool \texttt{HENphaseogram} (See \section{sec:hendrics}).
+Moreover, the functionality to plot the phaseogram, interactively change the timing parameters and adjusting the solution, and calculating the TOAs for use with external programs, is conveniently accessible in the HENDRICS tool \texttt{HENphaseogram} (See \ref{sec:hendrics}).
 
-\begin{figure*}[htbp]
+\begin{figure}[htbp]
 \begin{center}
 \includegraphics[width=\linewidth]{../figures/phaseogram.pdf}
-\caption{Phaseogram showing the variation of the pulse phase corresponding to nonzero frequency derivatives in SMC X-1, executed with Stingray.}
+\caption{Phaseogram showing the variation of the pulse phase corresponding to nonzero frequency derivatives in a \nustar observation of SMC X-1 (Pike et al., sub.), executed with Stingray.}
 \label{fig:phaseogram}
 \end{center}
-\end{figure*}
+\end{figure}
 
 
 

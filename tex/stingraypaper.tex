@@ -344,7 +344,8 @@ Time since the South Atlantic Anomaly passage was not filtered on.
 \label{sec:herx1}
 
 Hercules X-1 (Her X-1) is a well-known persistent X- ray binary pulsar with a period of $P = 1.23 \mathrm{s}$ \citep{tananbaum1972} in a binary system with a $\sim 2.2 M_\odot$ stellar companion HZ Herculis \citep{davidsen1972,forman1972,bahcall1972,reynolds1997,leahy2014} with an orbital period of $P_\mathrm{orb}=1.7\,\mathrm{days}$ and super-orbital variations on a $\sim$35-day timescale \citep{giacconi1973,scott1999,igna2011}. The companion's type varies between late-type A and early-type B with orbital phase \citep{anderson1994,cheng1995}. 
-For this work, we considered one of several observations of Her X-1 with the \textit{Nuclear Spectroscopic Telescope Array} (\nustar; \citealt{nustar13}). The observation was taken from UT 2012-09- 19 to UT 2012-09-20 and was one among several used by \citep{Fuerst13} to characterize the cyclotron resonance scattering features in the spectrum of the source. We downloaded the observation directory for observation ID 30002006002 from the HEASARC and used the FTOOL barycorr on the L2 cleaned science event files (file name ending with \verb|01_cl.evt|) to correct the photon arrival times to the solar system barycenter. For our analysis, we considered photons from 3 to 79 keV at most 50?? from the nominal position of the source, extracted from the two identical Focal Plane Modules A and B (FPMA and FPMB, respectively) onboard the spacecraft. We used a total of 32.67ks of good time intervals (GTIs), only selecting intervals longer than 10s. 
+For this work, we considered two of the several observations of Her X-1 with the \textit{Nuclear Spectroscopic Telescope Array} (\nustar; \citealt{nustar13}). The first observation was taken from UT 2012-09-19 to UT 2012-09-20 and was one among several used by \citep{Fuerst13} to characterize the cyclotron resonance scattering features (CRSFs) in the spectrum of the source. The second was taken from UT 2016-08-20 to UT 2016-08-21 and was used by \citep{staubert_2017} to detect an inversion of the decay of the CRSF. 
+We downloaded the observation directory for observation IDs 30002006002 and 10202002002 from the HEASARC and used the FTOOL barycorr and the latest (as of Nov. 27, 2018) \nustar clock correction file on the L2 cleaned science event files (file name ending with \verb|01_cl.evt|) to correct the photon arrival times to the solar system barycenter. For our analysis, we considered photons from 3 to 79 keV at most 50\prime\prime from the nominal position of the source, extracted from the two identical Focal Plane Modules A and B (FPMA and FPMB, respectively) onboard the spacecraft. We used a total of 32.67ks of good time intervals (GTIs) in the first observation and 36.56 ks in the second, only selecting intervals longer than 10s.
 
 %\subsection{Simulated Data}
 
@@ -746,12 +747,13 @@ Nonetheless, \stingray has a mechanism to calculate the pulse arrival times (or 
 We use the same \texttt{fftfit} algorithm used for radio pulsars \citep{Taylor92}, that calculates the cross-correlation between a template profile and the folded profile in the Fourier domain. 
 This is implemented in the \texttt{get\_TOA} function in \texttt{stingray.pulse.pulsar}.
 
-The functionality to plot the phaseogram, interactively change the timing parameters and adjusting the solution, and calculating the TOAs for use with external programs, is conveniently accessible in HENDRICS (See Section \ref{sec:hendrics}) and in DAVE (Section \ref{sec:dave}).
+The functionality to plot the phaseogram, interactively change the timing parameters (either pulse parameters or orbital parameters) and adjusting the solution, and calculating the TOAs for use with external programs, is conveniently accessible in HENDRICS (See Section \ref{sec:hendrics}) and Figure~\ref{fig:phaseogram} and in DAVE (Section \ref{sec:dave}).
 
 \begin{figure}[htbp]
 \begin{center}
 \includegraphics[width=\linewidth]{../figures/phaseogram.pdf}
-\caption{Phaseogram showing the variation of the pulse phase corresponding to nonzero frequency derivatives in a \nustar observation of SMC X-1 (Pike et al., sub.), executed with Stingray.}
+\caption{Phaseogram showing the variation of the pulse phase corresponding to an imperfect orbital solution in a \nustar observation of Her X-1, executed with Stingray and plotted in a convenient, interactive interface with HENDRICS. 
+The TOA button allows to calculate the TOA for use with Tempo2, PINT or similar programs.}
 \label{fig:phaseogram}
 \end{center}
 \end{figure}

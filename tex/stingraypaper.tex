@@ -658,7 +658,7 @@ Among the basic algorithms used in pulsar astronomy, one cannot overstate the im
 The algorithm consists of cutting the signal at every pulse period and summing all sub-intervals in phase. 
 An alternative way of seeing it, more useful for photon data, is as a \textit {histogram of pulse phases}.
 
-If the period is exactly correct and assuming a stable pulsation, the signal-to-noise ratio will get better approximately with the square root of the number of summed sub-intervals [REF].
+If the period is exactly correct and assuming a stable pulsation, the signal-to-noise ratio will get better approximately with the square root of the number of summed sub-intervals.
 This is the method used to obtain practically all pulse profiles shown in the literature, as most pulsar signals are orders of magnitude below noise level.
 
 The \texttt{pulse.pulsar} submodule contains the functionality to calculate the phase given a simple pulse ephemeris consisting of any number of pulse frequency derivatives%
@@ -669,8 +669,8 @@ The different exposure of pulse bins caused by the absence of signals during GTI
 
 \subsection{Epoch Folding Searches and \zsq Searches}
 \label{sec:efzsq}
-During a search for pulsations, the first step is usually calculating a power spectrum. 
-However, often pulsations do not leave a clear signature above noise level in the power spectrum, because they are weak or they fall close to bin edges, where the sensitivity is reduced [REF].
+During a search for pulsations, the first step is usually calculating a power spectrum through a Fast Fourier Transform. 
+However, often pulsations do not leave a clear signature above noise level in the power spectrum, because they are weak or they fall close to bin edges, where the sensitivity is reduced\footnote{This is due to the convolution of the signal with the observing window, that produces a sinc-like response inside the bins of the FFT; periodic signals with the same amplitude are detected with a lower Fourier amplitude if they fall far from the center of the spectral bin \citep{vanderklis1989}}.
 Even when the signature is clear, the frequency resolution of the power spectrum is often inadequate to measure precisely the pulse frequency.
 Therefore, an additional statistical analysis is needed. 
 

@@ -309,7 +309,8 @@ The detection of periodic variations in the radio flux of certain celestial obje
 Similarly, accurate models of dips in stellar light curves have led to the discovery of thousands of exoplanets \citep[e.g.]{charbonneau2000,henry2000,coughlin2016}. 
 In high-energy astrophysics, particularly the study of black holes and neutron stars, the scientific developments of recent decades have brought a growing understanding that time and wavelength are intricately linked. 
 Different spectral components react differently to changes in accretion rate and dynamics, leading to time lags, correlated variability and higher-order effects \citep[for a review, see e.g.][]{uttley2014}. 
-This has led to the study of accretion disks, in particular those of Active Galactic Nuclei (AGN), via reverberation mapping \citep[e.g.][]{Bentz2016}, and probes of the accretion disk geometry using the energy-dependence of quasi-periodic oscillations in stellar-mass black holes \citep{ingram2015,ingram2016}. 
+
+This has led to the study of accretion disks, in particular those of Active Galactic Nuclei (AGN), via reverberation mapping \citep[e.g.][]{blandford_reverberation_1982,Bentz2016}, and probes of the accretion disk geometry using the energy-dependence of quasi-periodic oscillations in stellar-mass black holes \citep{ingram2015,ingram2016}. 
 Understanding how the emission at various wavelengths changes with time is crucial for testing and expanding our understanding of General Relativity in the strong-gravity limit, the dense matter equation of state and other fundamental questions in astrophysics.
 In X-rays, there is now a wealth of public data sets of variable objects from missions such as the \textit{Rossi X-ray Timing Explorer}  (RXTE; \citealt{Bradtetal93}), the \textit{Nuclear Spectroscopic Telescope Array} (\nustar; \citealt{nustar13}), Astrosat [ref], and the Neutron Star Interior Composition Explorer (\textit{NICER}; \citealt{gendreau2016}). In addition, planned missions such as the Advanced Telescope for High-ENergy Astrophysics (\textit{Athena}) will produce data sets of unprecedented size and complexity, motivating the need for both scalable algorithms as well as the well-tested, open-source software described in this manuscript.
 
@@ -351,6 +352,7 @@ The second was taken from UT 2016-08-20 to UT 2016-08-21 and was used by \citet{
 We used observation IDs 30002006002 and 10202002002 from HEASARC and applied the FTOOL barycorr and the latest (as of Nov. 27, 2018) \nustar clock correction file on the L2 cleaned science event files (file name ending with \verb|01_cl.evt|) to correct the photon arrival times to the solar system barycenter. 
 For our analysis, we considered photons from 3 to 79 keV at most 50$^{\prime\prime}$ from the nominal position of the source, extracted from the two identical Focal Plane Modules A and B (FPMA and FPMB, respectively) onboard the spacecraft. 
 We used a total of 32.67\,ks of GTIs in the first observation and 36.56\,ks in the second, only selecting intervals longer than 10s.
+
 
 %\subsection{Simulated Data}
 
@@ -396,8 +398,10 @@ Code is often siloed within groups, making it difficult to reproduce scientific 
 Additionally, the lack of fully open-source tools constitutes a significant barrier to entry for researchers new to the field, since it effectively requires anyone not part of collaborations with an existing private code base to write their own software from scratch. 
 The NASA library \texttt{xronos} is, to our knowledge, the only widely used open-source library in this field, and has several shortcomings. 
 In particular, it performs only a few of the most basic tasks, and it has not been maintained since 2004. 
-This dearth of open tools motivated the development of \stingray\footnote{\stingray was named partly in homage to the popular 1960s childrens' TV series, from where \stingray's motto derives: \textit{Anything can happen in the next half hour (but probably spectral timing)!}}, a library built entirely in \python and based on \astropy functionality, to address the lack of well-tested, well-documented software for spectral timing. 
+Other open-source projects use languages that either require an expensive license (e.g. IDL) or have a very limited scope (e.g. S-Lang).
+This dearth of  software for spectral timing motivated the development of \stingray\footnote{\stingray was named partly in homage to the popular 1960s childrens' TV series, from where \stingray's motto derives: \textit{Anything can happen in the next half hour (but probably spectral timing)!}}, a library built entirely in the popular \python language and based on \astropy functionality. 
 \stingray aims to make many of the core Fourier analysis tools used in timing and spectral-timing analysis available to a large range of researchers while providing a common platform for new methods and tools as they enter the field. 
+
 It includes the most relevant functionality in its core package, while extending that functionality in its subpackages in several ways, allowing for easy modeling of light curves and power spectra, simulation of synthetic data sets and pulsar timing. 
 
 Its core idea is to provide time series analysis methods in an accessible, unit-tested way, built as a series of object-oriented modules. 
@@ -415,14 +419,14 @@ The subpackage \texttt{simulator} (Section \ref{sec:simulator}) provides importa
 
 Finally, the subpackage \texttt{pulsar} implements a range of methods particularly useful for period searches in pulsars. While no other sub-packages are currently under construction, we will implement new sub-packages as required. 
 
-
-\stingray is formally hosted as part of a GitHub organization called \textit{StingraySoftware},\footnote{\url{https://github.com/StingraySoftware/}} which also hosts the website, documentation, a repository with tutorial notebooks, this manuscript, as well as the two related software packages. \stingray is designed to be used both as a standalone package, but is also at the core of two other software packages currently under development: \hendrics (\citealt{hendrics}; see also Section \ref{sec:hendrics}) provides pre-built data analysis workflows using \stingray core functionality. 
+\stingray is formally hosted as part of a GitHub organization called \textit{StingraySoftware},\footnote{\url{https://github.com/StingraySoftware/}} which also hosts the website, documentation, a repository with tutorial notebooks, this manuscript, as well as the two related software packages. 
+\stingray is designed to be used both as a standalone package, but is also at the core of two other software packages currently under development: \hendrics (\citealt{hendrics}; see also Section \ref{sec:hendrics}) provides pre-built data analysis workflows using \stingray core functionality. 
 These workflows are accessible from the command line and are provided for some common data types and data analysis tasks. 
 \dave (see also Section \ref{sec:dave}) provides a Graphical User Interface on top of \stingray to allow for easy interactive exploratory data analysis.
  
 As of v0.1, \stingray is entirely written in Python, and its core functionality depends exclusively on \texttt{numpy} \citep{numpy}, \texttt{scipy} \citep{scipy} and \texttt{astropy} \citep{astropy}, with optional plotting functionality supplied by \texttt{matplotlib} \citep{matplotlib} . 
 The \texttt{modeling} subpackage optionally uses sampling methods supplied by \texttt{emcee} \citep{emcee}, some functionality implemented in \texttt{statsmodels}, and plotting using \texttt{corner} \citep{corner}. 
-The \texttt{pulse} subpackage optionally allows for just-in-time compilation using \texttt{numba} \citep{numba} for computational efficiency.
+The \texttt{pulse} subpackage optionally allows for just-in-time compilation using \texttt{numba} \citep{numba} for computational efficiency, and for advanced pulsar timing models using \texttt{PINT}\footnote{\url{https://github.com/nanograv/PINT}} .
 
 This paper describes \stingray v0.1, released on 2018-02-12. 
 As with most open-source packages, \stingray is under continuous development and welcomes contributions from the community.
@@ -481,8 +485,10 @@ Even for a single instrument, there are often multiple types of data that can be
 Instead, it aims to abstract away from instrument-specific idosyncrasies as much as possible and remain mission-agnostic. 
 In its basic form, it takes arrays with time stamps and optionally corresponding photon energies as input, and implements a set of basic methods. 
 Similarly to \lightcurve, it provides basic input/output (I/O) functionality in the form of \texttt{read} and \texttt{write} methods as well as a method to join event lists, which can be particularly useful when data is recorded in several independent detector, as is common for several current and future X-ray missions. 
-The \verb|to_lc| method provides straightforward connection to create a \lightcurve directly out of an \eventlist object. In return, it is possible to create an \eventlist out of a \lightcurve object using the \verb|from_lc|. The latter will create $N_i$ events, each with a time stamp equation to the time bin $t_i$, where $N_i$ is the number of counts in bin $i$ (event lists are, by their very definition only a useful data product if the light curve used to simulate comes from photon counting data in the first place). 
-It is possible to simulate more physically meaningful photon events from a given light curve and energy spectrum using the \verb|simulate_times| and \verb|simulate_energies| methods, which employ a combination of interpolation and rejection sampling to accurately draw events from the given light curve and spectrum.
+The \verb|to_lc| method provides straightforward connection to create a \lightcurve directly out of an \eventlist object. 
+In return, it is possible to create an \eventlist out of a \lightcurve object using the \verb|from_lc|. 
+The latter will create $N_i$ events, each with a time stamp equation to the time bin $t_i$, where $N_i$ is the number of counts in bin $i$ (event lists are, by their very definition only a useful data product if the light curve used to simulate comes from photon counting data in the first place). 
+It is possible to simulate more physically meaningful photon events from a given light curve and energy spectrum using the \verb|simulate_times| and \verb|simulate_energies| methods (from the \texttt{simulator} package, Section~\ref{sec:simulator}), which employ a combination of interpolation and rejection sampling to accurately draw events from the given light curve and spectrum.
 
 
 \subsection{Cross Spectra and Power Spectra}
@@ -566,7 +572,7 @@ We have implemented \texttt{DynamicalPowerspectrum} as a subclass to \texttt{Ave
 Like \texttt{AveragedPowerspectrum}, this class takes a \lightcurve object and a segment size as input, but instead of averaging the power spectra of each individual segment, it will create a matrix of time bins (one bin for each segment) as columns and Fourier frequencies as rows. 
 Rebinning both along the time and frequency axis is possible. 
 Moreover, the method \texttt{trace\_maximum} automatically finds the frequency with the highest power in each segment in a given range of frequencies, and traces this maximum over time. 
-An example is shown in Figure \ref{fig:dynspec}.
+An example using data from the source GX~339--4 is shown in Figure \ref{fig:dynspec}.
 
 Closely related to the cross spectrum and power spectrum are the crosscorrelation and the autocorrelation, implemented in classes \texttt{CrossCorrelation} and \texttt{AutoCorrelation}. 
 As their respective Fourier spectra equivalents they take either one (autocorrelation) or two (cross correlation) \lightcurve objects as input and computes the correlation between the two light curves or of the single light curve with itself, along with the time lags for which the correlation was produced and the time lag at which the maximum correlation is measured.
@@ -633,7 +639,11 @@ Separating out the likelihood and posterior in distinct classes makes it possibl
 
 \texttt{PoissonLogLikelihood} and \texttt{PoissonPosterior} calculate the likelihood and posterior for Poisson-distributed data, respectively. This likelihood is equivalent to what in astronomy is often called the \textit{Cash statistic} \citep{cash1979} and is the appropriate likelihood to use for count- or event-type data often found in X-ray astronomy time series and spectra.
 
-\texttt{PSDLogLikelihood} and \texttt{PSDPosterior} implement the statistical model appropriate for modeling (averaged) power spectra, a $\chi^2$ distribution. We broke with the rule of naming likelihoods and posteriors after the statistical distribution they implement in this case, because as mentioned above, astronomers tend to call the likelihood for normally distributed data $\chi^2$, and this naming helps avoid any confusion. These two classes implement a $\chi^2_2$ distribution for Fourier spectra generated with the \powerspectrum class, and a $\chi^2_{2MK}$ distribution for power spectra generated with the \texttt{AveragedPowerspectrum} class, where $M$ is the number of averaged segments and $K$ is the number of averaged neighbouring frequency bins. Please note that as laid out in \citet{huppenkothen2017}, these distribution are \textbf{not} appropriate for use on (averaged) cross spectra. The appropriate distributions for these products will be implemented in a future version of \stingray.
+\texttt{PSDLogLikelihood} and \texttt{PSDPosterior} implement the statistical model appropriate for modeling (averaged) power spectra, a $\chi^2$ distribution. 
+We broke with the rule of naming likelihoods and posteriors after the statistical distribution they implement in this case, because as mentioned above, astronomers tend to call the likelihood for normally distributed data $\chi^2$, and this naming helps avoid any confusion. 
+These two classes implement a $\chi^2_2$ distribution for Fourier spectra generated with the \powerspectrum class, and a $\chi^2_{2MK}$ distribution for power spectra generated with the \texttt{AveragedPowerspectrum} class, where $M$ is the number of averaged segments and $K$ is the number of averaged neighbouring frequency bins. 
+Please note that as laid out in \citet{huppenkothen2017}, these distribution are \textbf{not} appropriate for use on (averaged) cross spectra. 
+The appropriate distributions for these products are under development for the next version of \stingray.
 
 Other statistical models can be easily implemented by subclassing the \texttt{LogLikelihood} and \texttt{Posterior} Abstract Base Classes and using the existing classes as template.
 
@@ -737,8 +747,7 @@ An alternative way of seeing it, more useful for photon data, is as a \textit {h
 If the period is exactly correct and assuming a stable pulsation, the signal-to-noise ratio will get better approximately with the square root of the number of summed sub-intervals.
 This is the method used to obtain practically all pulse profiles shown in the literature, as most pulsar signals are orders of magnitude below the noise level.
 
-The \texttt{pulse.pulsar} submodule contains the functionality to calculate the phase given a simple pulse ephemeris consisting of any number of pulse frequency derivatives%
-\footnote{For more complicated cases, like binary pulsars or long-term pulsar noise not well described by pulse derivatives, we recommend to look at more focused libraries like \texttt{PINT}\footnote{\url{https://github.com/nanograv/PINT}}}.
+The \texttt{pulse.pulsar} submodule contains the functionality to calculate the phase given a simple pulse ephemeris consisting of any number of pulse frequency derivatives, or using a number of methods for the orbit of the pulsar (using the optional dependency \texttt{PINT})%
 Moreover, the module also includes a mechanism to calculate the exposure of single bins in the pulse profile. 
 This is particularly useful for very long-period pulsars where the pulsed period is comparable to the length of the GTIs.
 The different exposure of pulse bins caused by the absence of signals during GTIs is taken into account in the calculation of the final pulse profile by the folding algorithm, if the user asks for it. 
@@ -749,6 +758,8 @@ During a search for pulsations, the first step is usually calculating a power sp
 However, often pulsations do not leave a clear signature above the noise level in the power spectrum, because they are weak or they fall close to bin edges, where the sensitivity is reduced\footnote{This is due to the convolution of the signal with the observing window, that produces a sinc-like response inside the bins of the FFT; periodic signals with the same amplitude are detected with a lower Fourier amplitude if they fall far from the center of the spectral bin \citep{vanderklis1989}}.
 Even when the signature is clear, the frequency resolution of the power spectrum is often inadequate to measure precisely the pulse frequency.
 Therefore, an additional statistical analysis is needed. 
+
+\stingray implements two statistical methods for pulsar searches, that can be applied to event lists or light curves (that are treated as event lists with ``weights'').
 
 The Epoch Folding Search (EFS) method consists of executing the folding at many trial frequencies around the candidate frequency.
 Once the folding is performed, the following statistics is calculated on the profile:
@@ -871,7 +882,8 @@ Instead, they would have to be exported (e.g. saved to disk) and then loaded int
 In order to streamline this process, we aim to connect \stingray with existing packages for modeling X-ray spectra. 
 Here, it will be necessary to connect \stingray with the extensive suite of physical models implemented in XSPEC, as well as existing spectral fitting codes implemented in \textit{Python}, most notably the open-source package \textit{Sherpa} \citep{sherpa}.
 
-Data rates from current and future X-ray instruments are increasing at a precipitous rate, pushing memory and processing requirements for even simple tasks like Fast Fourier Transforms of data observed e.g. with \textit{NuSTAR} and \textit{AstroSAT} \citep{singh2014} into a regime that is difficult with standard desktop computing architectures. Therefore, the other strong emphasis for the second version of \stingray will be code and algorithm optimization. 
+Data rates from current and future X-ray instruments are increasing at a precipitous rate, pushing memory and processing requirements for even simple tasks like Fast Fourier Transforms of data observed e.g. with \textit{NICER} and \textit{AstroSAT} \citep{singh2014} into a regime that is difficult with standard desktop computing architectures. 
+Therefore, the other strong emphasis for the second version of \stingray will be code and algorithm optimization. 
 Where possible, we will replace existing implementations by high-performance equivalents that take advantage of recent developments in computing (such as GPU-enabled computations and multi-core batch processing), optimize and streamline existing code to minimize computational overhead and memory usage of the classes and functions implemented within \stingray. 
 
 %%% ACKNOWLEDGMENTS + REFERENCES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -880,11 +892,13 @@ Where possible, we will replace existing implementations by high-performance equ
 %% separate it off from the body of the text using the \acknowledgments
 %% command.
 \acknowledgments
+
 D.H. acknowledges support from the DIRAC Institute in the Department of Astronomy at the University of Washington. 
 The DIRAC Institute is supported through generous gifts from the Charles and Lisa Simonyi Fund for Arts and Sciences, and the Washington Research Foundation.
+M.B. is supported in part by the Italian Space Agency through agreement ASI-INAF n.2017-12-H.0 and ASI-INFN agreement n.2017-13-H.0.
 A.L.S. is supported by an NSF Astronomy and Astrophysics Posdoctoral Fellowship under award AST-1801792.
 We thank Astro Hack Week for providing the venue that started this project and the Lorentz Center fworkshop `The X-ray Spectral-Timing Revolution' (February 2016) that started the collaboration. 
-We thank the Google Summer of Code Program for funding a total 5 students who implemented a large fraction of the various library components over two summers.
+We thank the Google Summer of Code Program for funding a total 6 students who implemented a large fraction of the various library components over three summers.
 
 %% To help institutions obtain information on the effectiveness of their 
 %% telescopes the AAS Journals has created a group of keywords for telescope 

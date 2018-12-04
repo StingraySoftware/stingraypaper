@@ -253,7 +253,7 @@ In Sections \ref{sec:modeling}, \ref{sec:simulator} and \ref{sec:pulsar}, we pre
 Section \ref{sec:development} addresses the development process, testing and documentation environments, and Sections \ref{sec:hendrics} and \ref{sec:dave} point to connections with a command-line interface and a graphical user interface, respectively, which are being developed concurrently with \stingray. 
 Finally, in Section \ref{sec:future} we lay out our future development plans. 
 Note that we intentionally omit code examples and specific implementation details in this manuscript in order to preserve long-term accuracy. 
-All code to reproduce the figures in this paper is available online,\footnote{\url{https://github.com/StingraySoftware/stingraypaper}} as is a full suite of up-to-date tutorials.\footnote{\url{https://github.com/StingraySoftware/notebooks}}
+All code to reproduce the figures in this paper is available online,\footnote{\url{https://github.com/StingraySoftware/stingraypaper}} as is a full suite of up-to-date tutorials.\footnote{\label{foot:nb}\url{https://github.com/StingraySoftware/notebooks}}
 
 \section{Data}
 \label{sec:data}
@@ -351,17 +351,33 @@ The subpackage \texttt{simulator} (Section \ref{sec:simulator}) provides importa
 
 Finally, the subpackage \texttt{pulsar} implements a range of methods particularly useful for period searches in pulsars. While no other sub-packages are currently under construction, we will implement new sub-packages as required. 
 
-\stingray is formally hosted as part of a GitHub organization called \textit{StingraySoftware},\footnote{\url{https://github.com/StingraySoftware/}} which also hosts the website, documentation, a repository with tutorial notebooks, this manuscript, as well as the two related software packages. 
-\stingray is designed to be used both as a standalone package, but is also at the core of two other software packages currently under development: \hendrics (\citealt{hendrics}; see also Section \ref{sec:hendrics}) provides pre-built data analysis workflows using \stingray core functionality. 
+\stingray is designed to be used both as a standalone package, but is also at the core of two other software packages currently under development: 
+\hendrics and \dave. 
+\hendrics (\citealt{hendrics}; see also Section \ref{sec:hendrics}) provides pre-built data analysis workflows using \stingray core functionality. 
 These workflows are accessible from the command line and are provided for some common data types and data analysis tasks. 
 \dave (see also Section \ref{sec:dave}) provides a Graphical User Interface on top of \stingray to allow for easy interactive exploratory data analysis.
  
-As of v0.1, \stingray is entirely written in Python, and its core functionality depends exclusively on \texttt{numpy} \citep{numpy}, \texttt{scipy} \citep{scipy} and \texttt{astropy} \citep{astropy}, with optional plotting functionality supplied by \texttt{matplotlib} \citep{matplotlib} . 
+As of v0.1, the core functionality of \stingray depends exclusively on \texttt{numpy} \citep{numpy}, \texttt{scipy} \citep{scipy} and \texttt{astropy} \citep{astropy}, with optional plotting functionality supplied by \texttt{matplotlib} \citep{matplotlib} . 
 The \texttt{modeling} subpackage optionally uses sampling methods supplied by \texttt{emcee} \citep{emcee}, some functionality implemented in \texttt{statsmodels}, and plotting using \texttt{corner} \citep{corner}. 
 The \texttt{pulse} subpackage optionally allows for just-in-time compilation using \texttt{numba} \citep{numba} for computational efficiency, and for advanced pulsar timing models using \texttt{PINT}\footnote{\url{https://github.com/nanograv/PINT}} .
 
 This paper describes \stingray v0.1, released on 2018-02-12. 
 As with most open-source packages, \stingray is under continuous development and welcomes contributions from the community.
+
+%%% DEVELOPMENT + INTEGRATION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Development and Integration Environment}
+\label{sec:development}
+
+\stingray is developed entirely in Python 3, with backwards compatibility to Python 2.7 where possible through the integration package \texttt{six}. 
+Development is version-controlled through \texttt{git}, and officially hosted on GitHub through the organization \textit{StingraySoftware},\footnote{\url{https://github.com/StingraySoftware/}} where several interconnected repositories related to \stingray live, including the core library, extension packages \hendrics and \texttt{DAVE}, the suite of tutorials, the website, and this manuscript. 
+All patches and code are submitted via pull requests to the \stingray repository, and checked by a maintainer for correctness and adherence to standards of code, documentation, and tests. 
+As an \textit{Astropy} Affiliated Package,\footnote{\url{http://www.astropy.org/affiliated/}} we follow the coding standards as well as community guidelines (including the Code of Conduct) set out by the \textit{Astropy} community. 
+All code within the \stingray core library is subject to extensive unit testing, with compatibility across platforms as well as different versions of Python and required packages controlled through Continuous Integration services \textit{Travis} (Unix platforms) and \textit{AppVeyor} (Windows). 
+Test coverage is checked using \textit{Coveralls}. 
+All user-facing functions and classes within \stingray must have documentation in the form of docstrings, compiled and built along with the main documentation pages using \textit{sphinx} and hosted on \texttt{readthedocs}.\footnote{\url{https://stingray.readthedocs.io/en/latest/}}
+Tutorials are provided in the form of executable \textit{Jupyter} notebooks in a separate repository,$^{\ref{foot:nb}}$ which can either be run interactively using \textit{Binder} \citep{project_jupyter-proc-scipy-2018} or viewed as part of the documentation. 
+
 
 %%% CORE FUNCTIONALITY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -384,7 +400,7 @@ By default, a Poisson distribution is assumed, appropriate for binned event data
 
 There are two ways to generate a \texttt{Lightcurve} object: in the standard case, the instrument has recorded a binned time series of $N$ pairs of time stamps and count (rate) or flux values, $\{t_k, c_k \}_{k=1}^{N}$. 
 In this case, one can simply instantiate a \texttt{Lightcurve} object with the keywords \texttt{time} and \texttt{counts} (and optionally set \texttt{use\_counts=False} when the input is in units of counts per second). 
-In cases where the native data format is events (e.g.\ photon arrival times) it is possible to use the static method \texttt{Lightcurve.make\_lightcurve}, passing the array of events as well as a time resolution \texttt{dt} to create a new light curve from the events.
+In cases where the native data format is events (e.g., photon arrival times) it is possible to use the static method \texttt{Lightcurve.make\_lightcurve}, passing the array of events as well as a time resolution \texttt{dt} to create a new light curve from the events.
 
 Various operations are implemented for class \lightcurve. 
 Custom behaviour of the $+$ and $-$ operators allows straightforward addition and subtraction of light curves from one another. 
@@ -546,7 +562,7 @@ The classes \powerspectrum and \crossspectrum will generate warnings if the obse
 \section{The \texttt{modeling} Subpackage}
 \label{sec:modeling}
 
-Modeling data sets with parametric (often physically motivated) models that map an independent variable (e.g.\ time or frequency) to one or more dependent variables (e.g.\ flux, counts or Fourier powers) is a common task in astronomy. 
+Modeling data sets with parametric (often physically motivated) models that map an independent variable (e.g., time or frequency) to one or more dependent variables (e.g., flux, counts or Fourier powers) is a common task in astronomy. 
 Constructing a universal modeling framework is a highly non-trivial task, and better packages exist for general-purpose model building (e.g., STAN, \citealt{stan}). 
 Thus, \stingray's modeling interface restricts itself to models of commonly used spectral-timing products, in particular (averaged) power spectra. 
 While it makes heavy use of the \verb|astropy.modeling.FittableModel| definitions, it uses custom definitions for fitting algorithms motivated by the statistical properties of spectral timing products, which deviate significantly from other data types commonly found in astronomy and thus cannot easily be modelled with standard approaches defined in \texttt{astropy}.
@@ -771,23 +787,6 @@ The TOA button allows the user to calculate the TOA for use with Tempo2, PINT or
 \label{fig:phaseogram}
 \end{center}
 \end{figure}
-
-
-
-%%% DEVELOPMENT + INTEGRATION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Development and Integration Environment}
-\label{sec:development}
-
-\stingray is developed entirely in Python 3, with backwards compatibility to Python 2.7 where possible through the integration package \texttt{six}. 
-Development is version-controlled through \texttt{git}, and officially hosted on GitHub, where several interconnected repositories related to \stingray live, including the core library, extension packages \hendrics and \texttt{DAVE}, as well as the suite of tutorials and this manuscript. 
-All patches and code are submitted via pull requests to the \stingray repository, and checked by a maintainer for correctness and adherence to standards of code, documentation and tests. 
-As an \textit{Astropy} Affiliated Package\footnote{\url{http://www.astropy.org/affiliated/}}, we follow the coding standards as well as community guidelines (including the Code of Conduct) set out by the \textit{Astropy} community. 
-All code within the \stingray core library is subject to extensive unit testing, with compatibility across platforms as well as different versions of Python and required packages controlled through Continuous Integration services \textit{Travis} (Unix platforms) and \textit{AppVeyor} (Windows). 
-Test coverage is checked using \textit{Coveralls}. 
-All user-facing functions and classes within \stingray must have documentation in the form of docstrings, compiled and built along with the main documentation pages using \textit{sphinx} and hosted on \texttt{readthedocs}\footnote{\url{https://stingray.readthedocs.io/en/latest/}}. 
-Tutorials are provided in the form of executable \textit{Jupyter} notebooks in a separate repository\footnote{\url{https://github.com/stingraySoftware/notebooks}}, which can either be run interactively using \textit{Binder} \citep{project_jupyter-proc-scipy-2018} or viewed as part of the documentation. 
-
 
 %%% HENDRICS + DAVE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{\hendrics: A Command-Line Interface for \stingray}

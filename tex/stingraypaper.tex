@@ -312,8 +312,8 @@ Different spectral components react differently to changes in accretion rate and
 
 This has led to the study of accretion disks, in particular those of Active Galactic Nuclei (AGN), via reverberation mapping \citep[e.g.][]{blandford1982,Bentz2016}, and probes of the accretion disk geometry using the energy-dependence of quasi-periodic oscillations in stellar-mass black holes \citep[e.g.][]{ingram2015,stevensuttley2016}. 
 Understanding how the emission at various wavelengths changes with time is crucial for testing and expanding our understanding of General Relativity in the strong-gravity limit, the dense matter equation of state and other fundamental questions in astrophysics.
-In X-rays, there is now a wealth of public data sets of variable objects from missions such as the \textit{Rossi X-ray Timing Explorer}  (\textit{RXTE}; \citealt{Bradtetal93}), the \textit{Nuclear Spectroscopic Telescope Array} (\nustar; \citealt{nustar13}), \textit{Astrosat} \citep{singh2014}, and the \textit{Neutron Star Interior Composition Explorer} (\textit{NICER}; \citealt{gendreau2016}). 
-In addition, planned missions such as the \textit{Advanced Telescope for High-ENergy Astrophysics} (\textit{Athena}) will produce data sets of unprecedented size and complexity, motivating the need for both scalable algorithms as well as the well-tested, open-source software described in this manuscript.
+In X-ray astronomy, there is now a wealth of public data sets of variable objects from missions such as the \textit{Rossi X-ray Timing Explorer}  (\textit{RXTE}; \citealt{Bradtetal93}), the \textit{Nuclear Spectroscopic Telescope Array} (\nustar; \citealt{nustar13}), \textit{Astrosat} \citep{singh2014}, and the \textit{Neutron Star Interior Composition Explorer} (\textit{NICER}; \citealt{gendreau2016}). 
+In addition, planned missions such as the \textit{Advanced Telescope for High-Energy Astrophysics} \citep[\textit{Athena};][]{athenaXIFU} and proposed missions like the \textit{Enhanced X-ray Timing Polarimeter} \citep[\textit{eXTP};][]{extp16} and the \textit{Spectroscopic Time-Resolving Observatory for Broadband Energy X-rays} \citep[\textit{STROBE-X};][]{strobex18} will produce data sets of unprecedented size and complexity, motivating the need for both scalable algorithms as well as the well-tested, open-source software described in this manuscript.
 
 The paper layout is as follows: 
 In Section \ref{sec:data}, we very briefly describe the data sets being used in this paper to showcase the implemented methods. 
@@ -567,7 +567,7 @@ The error on $\tau_j$ and $c_j$ are also computed in \stingray.
 We generated 63 light curve segments of 16 seconds length with a $0.02\,\mathrm{s}$ time resolution and Fourier-transformed each to generate a power spectrum. 
 The dynamic power spectrum here plots each power spectrum as a vertical slice as a function of time, with the color indicating the fractional rms-squared-normalized power in each bin (yellow are large powers; purple, small) . 
 The dynamic power spectrum was clipped to around the range of the QPO, and smoothed using bicubic interpolation to improve clarity. 
-The QPO is clearly visible as a yellow streak, and seems not to be present during the entire observation (consistent with [REF belloni 2010]). 
+The QPO is clearly visible as a yellow streak, and seems not to be present during the entire observation \citep[consistent with][]{belloni2005}. 
 In red, we show the frequency with the highest power found in each segment (excluding frequencies below $3\,\mathrm{Hz}$ to exclude the low-frequency red noise), using the \texttt{trace\_maximum} method.}
 \label{fig:dynspec}
 \end{center}
@@ -837,7 +837,7 @@ The functionality to plot the phaseogram, interactively change the timing parame
 \begin{center}
 \includegraphics[width=\linewidth]{../figures/phaseogram.pdf}
 \caption{Phaseogram showing the variation of the pulse phase corresponding to an imperfect orbital solution (in this case the time at the ascending node $T_0$) in a \nustar observation of Her X-1, executed with \stingray and plotted in a convenient, interactive interface with \hendrics. 
-The TOA button allows to calculate the TOA for use with Tempo2, PINT or similar programs.}
+The TOA button allows the user to calculate the TOA for use with Tempo2, PINT or similar programs.}
 \label{fig:phaseogram}
 \end{center}
 \end{figure}

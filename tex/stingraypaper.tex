@@ -247,7 +247,7 @@ In addition, planned missions such as the \textit{Advanced Telescope for High-En
 
 The paper layout is as follows: 
 In Section \ref{sec:data}, we very briefly describe the data sets being used in this paper to showcase the implemented methods. 
-In Section \ref{sec:vision}, we lay out the overall vision, followed by a description of the general package structure. 
+In Section \ref{sec:vision}, we lay out the overall vision, followed by a description of the general package structure and the general development framework in Section \ref{sec:development}. 
 The package's core functionality is shown in more detail in Section \ref{sec:core}, where we introduce basic classes for generating light curves and Fourier spectra of various types.
 In Sections \ref{sec:modeling}, \ref{sec:simulator} and \ref{sec:pulsar}, we present the submodules allowing modeling Fourier products, simulating light curves from stochastic processes, and pulsar analysis, respectively.
 Section \ref{sec:development} addresses the development process, testing and documentation environments, and Sections \ref{sec:hendrics} and \ref{sec:dave} point to connections with a command-line interface and a graphical user interface, respectively, which are being developed concurrently with \stingray. 
@@ -284,40 +284,6 @@ The second was taken from UT 2016-08-20 to UT 2016-08-21 and was used by \citet{
 We used observation IDs 30002006002 and 10202002002 from HEASARC and barycentered$^{\ref{foot:bary}}$ the data with the latest (as of Nov. 27, 2018) \nustar clock correction file.
 For our analysis, we considered photons from 3 to 79 keV at most 50$^{\prime\prime}$ from the nominal position of the source, extracted from the two identical Focal Plane Modules A and B (FPMA and FPMB, respectively) onboard the spacecraft. 
 We used a total of 32.67\,ks of good data in the first observation and 36.56\,ks in the second, only selecting intervals longer than 10s.
-
-
-%\subsection{Simulated Data}
-
-
-%\begin{table}[hbtp]
-%\footnotesize
-%\caption{Parameters for the simulated data set}
-%\begin{threeparttable} 
-%\begin{tabularx}{8.5cm}{p{2.5cm}p{4.0cm}p{2.0cm}}
-%\toprule
-%\bf{Parameter} & \bf{Description} &\bf{Value} \\ \midrule
-%$A_{\mathrm{PL}}$ & Power law amplitude & $0.1$ \\
-%$\alpha$ & Power law spectral index & 1.0 \\
-%$A_{\mathrm{QPO}}$ & QPO amplitude &  $1.0$ \\
-%$\nu_0$ & QPO centroid frequency & $2.0 \,\mathrm{Hz}$ \\
-%$\gamma$ & QPO full width at half-maximum &$1 \,\mathrm{Hz}$ \\
-% \bottomrule
-%\end{tabularx}
-%   \begin{tablenotes}
-%      \item{}
-%\end{tablenotes}
-%\end{threeparttable}
-%\label{table:parameters}
-%\end{table}
-
-% To showcase much of the functionality in the following chapters, we assume a process producing a power spectrum with an intrinsic spectrum comprising a power law and a quasi-periodic oscillation, approximated by a Lorentzian function (Figure \ref{fig:lightcurve}, left panel):
-
-%\[
-%P(\nu) = A_{\mathrm{PL}} \nu^{\alpha} + \frac{A \gamma^2}{\gamma^2 + (\nu - \nu_0)^2} \, .
-%\]
-
-%We use the algorithm from \citet{timmer1995} to generate a light curve with a time resolution of $\delta t = 0.05\,\mathrm{s}$ and a length of $15.36 \,\mathrm{ks}$, amounting to $307200$ data points. The power law has a spectral index of $\alpha = 1.0$, the QPO a centroid frequency of $2 \,\mathrm{Hz}$. The generated light curve has a mean count rate of $400\,\mathrm{counts/s}$ and a fractional rms amplitude of $\mathrm{rms}_\mathrm{frac} = 0.3$. Because the resulting light curve will follow Gaussian uncertainties, we simulate photon counting statistics by drawing from a Poisson distribution for every bin with a rate parameter equal to the simulated flux in that bin. 
-%The remaining parameters can be found in Table \ref{tab:simdata}\footnote{The full code to reproduce all figures in this paper can be found at \url{https://github.com/stingraysoftware/stingraypaper}}. 
 
 
 %%% GENERAL PACKAGE FRAMEWORK %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -454,11 +420,6 @@ In \stingray, we implement a class \crossspectrum, which takes two \lightcurve o
 There are several popular normalizations for the real part of the cross spectrum as well as the power spectrum implemented in \stingray: the \textit{Leahy normalization} \citep{leahy1983} is defined such that for simple white noise, the power spectrum will follow a $\chi^2$ distribution with $2$ degrees of freedom around a mean value of $2$, and the cospectrum---the real part of the cross spectrum---will follow a Laplace distribution centred on $0$ with a scale parameter of $1$. It is particularly useful for period searches, because the white noise level is well understood and always the same (but be aware that detector effects like dead time can distort the power spectrum in practice; \citealt{Bachetti+15}).
 For light curves with complex variability patterns, and especially for understanding how these patterns contribute to the overall variance observed, the \textit{fractional rms-squared normalization} \citep{belloni1990,miyamoto1992}  or the \textit{absolute rms-squared normalization} \citep{uttley2001} may be more appropriate choices. 
 
-%These normalizations can be set when instantiating a \crossspectrum or \powerspectrum object using the keyword argument \texttt{norm}, e.g.
-%\begin{minted}{python}
-%ps = Powerspectrum(lc, norm="leahy")
-%\end{minted}
-%\noindent Setting \texttt{norm="none"} will return the raw, unnormalized powers. 
 The classes \crossspectrum and \powerspectrum share most of the implemented methods, except where otherwise noted. 
 Both classes include methods to rebin cross- and power spectra. Linear rebinning is implemented analogously to the method in class \lightcurve. 
 Additionally, logarithmic binning is implemented in the method \texttt{rebin\_log} in such a way that the bin width at a given frequency increases a fraction of the previous bin width:
@@ -497,15 +458,6 @@ c_j = \frac{C_{xy,j}}{C_{x,j} C_{y,j}} \; .
 \noindent Here, $C_{xy,j}$ corresponds to the real part of the unnormalized cross spectrum, and $C_{x,j}$ and $C_{y,j}$ correspond to the analogous squared amplitudes of the power spectrum for each individual light curve. 
 The error on $\tau_j$ and $c_j$ are also computed in \stingray.
 
-%\begin{minted}{python}
-%# segment size in same time units 
-%# as light curve object
-%seg_size = 256.0
-%# compute averaged power spectrum
-%avg_ps = AveragedPowerspectrum(lc, seg_size, 
-%                               norm="frac")
-%\end{minted}
-
 \begin{figure}[htbp]
 \begin{center}
 \includegraphics[width=9cm]{../figures/dyn_spec.pdf}
@@ -530,32 +482,7 @@ Closely related to the cross spectrum and power spectrum are the crosscorrelatio
 As their respective Fourier spectra equivalents they take either one (autocorrelation) or two (cross correlation) \lightcurve objects as input and computes the correlation between the two light curves or of the single light curve with itself, along with the time lags for which the correlation was produced and the time lag at which the maximum correlation is measured.
 
 It is useful to note that all classes in this section are compatible with GTIs. 
-The classes \powerspectrum and \crossspectrum will generate warnings if the observations contain gaps; their averaged versions will take GTIs correctly into account by producing power spectra only from light curve segments for which data is available. 
-
-%\noindent Here, $i = \sqrt{-1}$, and $A_{xj}, A_{yj}$ and $B_{xj}, B_{yj}$ describe the real and imaginary parts of the Fourier amplitudes, respectively . We restrict $\mathcal{F}_x(j)$ and $\mathcal{F}_y(j)$ to frequencies between $\nu_{j=0} = 1/T$ and the Nyquist frequency $\nu_{j=N/2} = 1/(2\Delta t)$.
-%The complex cross spectrum is then calculated by multiplying the Fourier transform of light curve $\mathbf{x}$ with the complex conjugate of the Fourier transform of light curve $\mathbf{y}$ (, see also \citealt{uttley2014} for a recent review of spectral timing techniques):
-
-
-%\subsection{Higher-Order Fourier Products and Spectral Timing Functionality}
-%\label{sec:fourier_others}
-
-%Over the past decade, higher-order Fourier products and spectral timing have emerged as key methods to study variability on different time scales as well as a function of wavelength. In \stingray, we have implemented several of the most common techniques, with plans to add to the existing tools as they become available in the future. Below, we will only give a brief description of each of the algorithms currently implemented in \stingray, with appropriate references where applicable.
-
-
-%\subsubsection{Bispectrum and Biphase}
-
-
-
-%* bispectrum/biphase
-
-%\subsubsection{Covariance spectra}
-%* Covariancespectrum/ AveragedCovarianceSpectrum
-
-%%% FUTURE STUFF
-%* RMSEnergySpectrum?
-%* LagEnergySpectrum?
-%* ExcessVarianceSpectrum?
- 
+The classes \powerspectrum and \crossspectrum will generate warnings if the observations contain gaps; their averaged versions will take GTIs correctly into account by producing power spectra only from light curve segments for which data is available.  
 
 %%% MODELING FUNCTIONALITY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -567,7 +494,7 @@ Constructing a universal modeling framework is a highly non-trivial task, and be
 Thus, \stingray's modeling interface restricts itself to models of commonly used spectral-timing products, in particular (averaged) power spectra. 
 While it makes heavy use of the \verb|astropy.modeling.FittableModel| definitions, it uses custom definitions for fitting algorithms motivated by the statistical properties of spectral timing products, which deviate significantly from other data types commonly found in astronomy and thus cannot easily be modelled with standard approaches defined in \texttt{astropy}.
 
-The modeling subpackage logically separates out statistical models -- likelihoods and posteriors -- from the fitting functionality, such that different likelihoods and posteriors can be straightforwardly dropped in and out depending on the data set and problem at hand. %\footnote{This paper is not intended as an introduction into parametric modeling and statistical inference. For suitable introductions, we recommend e.g.~ \citet{hogg2010}}. 
+The modeling subpackage logically separates out statistical models -- likelihoods and posteriors -- from the fitting functionality, such that different likelihoods and posteriors can be straightforwardly dropped in and out depending on the data set and problem at hand. 
 In line with the overall philosophy of \stingray, the modeling subpackage is designed to be modular and easily extensible to specific problems a user might try to solve, while many typical tasks one might do with Fourier products are already built-in. 
 It makes use of the \verb|scipy.optimize| interface for optimization as well as the package \texttt{emcee} for Markov Chain Monte Carlo (MCMC) sampling.
 
@@ -584,8 +511,6 @@ Because priors are strongly problem-dependent, they cannot be hard-coded into \s
 Even for relatively straightforward problems such as modeling quasi-periodic oscillations of X-ray binaries, the physical properties and their effect on the data can differ strongly from source to source, indicating that a prior set for XTE~J1550--564 may not be appropriate for e.g.~GRS~1915+105. 
 Separating out the likelihood and posterior in distinct classes makes it possible to allow the use of the likelihood for maximum likelihood estimation, while requiring priors for estimating the Bayesian posterior probability through, e.g., MCMC simulations.
 
-%There are two ways to define priors: they can be passed into the \texttt{priors} keyword argument upon instantiation of the class, or they can be set using the \verb|set_logprior| utility function in \verb|stingray.modeling|. In either case, the priors should be passed as a dictionary of \verb|"parameter name": distribution| pairs, where the parameter names match those of the \verb|astropy.modeling.FittableModel| instantiated and each distribution is a function definition that takes a parameter value and returns the probability density at that parameter value. \verb|stingray.modeling.Posterior| subclasses generally have three outward-facing methods: \verb|Posterior.logprior|, \verb|Posterior.loglikelihood| and \verb|Posterior.logposterior|. All three take a list of parameters as input. In addition, a \verb|__call__| method that executes \verb|logposterior| will allow the user to call the class instance directly and compute the log-posterior of the model given a set of input parameters. 
-
 \texttt{Loglikelihood} and \texttt{Posterior} subclass definitions currently exist within \stingray for different statistical models useful in the context of astronomical data. 
 \verb|GaussianLogLikelihood| and \texttt{GaussianPosterior} implement statistical models for data with normally distributed uncertainties. \texttt{GaussianLogLikelihood} will compute what astronomers generally call $\chi^2$, because the likelihood calculated by this statistical model generally follows a $\chi^2$ distribution with $N-P$ degrees of freedom (where $N$ is the number of data points and $P$ the number of free parameters). Note, however, that this is \textbf{not} the same as the $\chi^2$ likelihood defined below!
 
@@ -601,15 +526,11 @@ Other statistical models can be easily implemented by subclassing the \texttt{Lo
 
 \begin{figure*}[htbp]
 \begin{center}
-%\begin{subfigure}[b]{11.0cm}
 \subfloat[]{%
 \includegraphics[width=10cm]{../figures/example_posterior.pdf}
-}%\end{subfigure}
-%\begin{subfigure}[b]{6.8cm}
-\subfloat[]{%
+}\subfloat[]{%
 \includegraphics[width=6.5cm]{../figures/example_psd_corner.pdf}
-}%\end{subfigure}
-\caption{Left panel: In black, a power spectrum averaged out of 15 light curve segments of 64s each of the GX~339--4 observation, along with draws from the posterior distribution of the power law model plus the Lorentzian QPO model and constant used to represent the data (red). 
+}\caption{Left panel: In black, a power spectrum averaged out of 15 light curve segments of 64s each of the GX~339--4 observation, along with draws from the posterior distribution of the power law model plus the Lorentzian QPO model and constant used to represent the data (red). 
 Right panel: corner plot showing the marginal posterior distributions (diagonal) of the six parameters of the model: the amplitude of the power law $A_\mathrm{PL}$, the power law index $\alpha$, the amplitude of the Lorentzian $A_\mathrm{QPO}$, the QPO centroid frequency $\nu_0$, the width of the QPO $\Delta_\nu$, and the amplitude of the white noise, $A_\mathrm{WN}$. The right-hand figure was produced using the package \texttt{corner} \citep{corner}.}
 \label{fig:posterior}
 \end{center}
@@ -628,14 +549,7 @@ The former takes an instance of a \verb|LogLikelihood| or \verb|Posterior| subcl
 The \verb|fit| method returns an instance of class \verb|OptimizationResults|. 
 This contains the most important outputs from the optimizer, but will also behind the scenes calculate a number of useful quantities, including the covariance between parameters (or a numerical approximation for some minimization algorithms), the Akaike and Bayesian Information Criteria (AIC: \citealt{akaike1974}; BIC: \citealt{schwarz1978}) as well as various summary statistics.%, e.g. the figure of merit, defined as 
 
-%\[
-%m = \sum_{j=1}^{N}{\left( \frac{y_j - \nu_j}{\nu_j} \right)^2} \,
-%\]
-%\noindent where $\mathbf{D} = \{x_j, y_j\}_{j=1}^{N}$ is the set of $N$ data points and $\nu_j$ is the value of the model evaluated at each $x_j$.
-
 Similarly, an instance of class \verb|SamplingResults| is returned by the \verb|sample| method, which returns the posterior samples calculated by the MCMC sampler, as well as computes a number of helpful quantities using the MCMC chains. It calculates useful diagnostics including the acceptance fraction, the autocorrelation length and the Rubin-Gelman statistic \citep{gelman1992} to indicate convergence, and infers means, standard deviations and user-defined credible intervals for each parameter.
-
-%Both \verb|OptimizationResults| and \verb|SamplingResults| implement a \verb|print_results| and a \verb|plot_results| method, which produce useful text output for log files and diagnostic plots that help understand the results.
 
 \subsection{Special Functionality for Fourier Products}
 
@@ -650,9 +564,6 @@ For details of the overall procedure, see \citet{vaughan2010}.
 As of this version, the \verb|stingray.modeling| subpackage has no functionality to model higher-order Fourier products. 
 For spectral timing in particular, this would involve being able to read and apply instrument responses to models, as well as being able to interface with the library of spectral models associated with the X-ray spectral fitting tool XSPEC \citep{arnaud1996}. 
 Providing this functionality is planned for a future release of \stingray. 
-
-%For an example workflow describing how to model a power spectrum using \stingray, see the code example in the Appendix.
-
 
 %%% SIMULATOR %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}[htbp]
@@ -690,10 +601,7 @@ It implements the acceptance-rejection method:
 2) generate an event, with uniform probability over the observing time; 
 3) associate to this event a uniform random number $\mathcal{P}$ between 0 and 1; 
 4) if $\mathcal{P}$ is lower than the normalized light curve at the event time, \textit{accept} the event, otherwise \textit{reject} it.
-In \stingray, this procedure is actually done through arrays of events for better performance, using the functionality contained in the \texttt{numpy} library. 
-
-
-
+In \stingray, this procedure is actually done through arrays of events for better performance, using the functionality contained in the \texttt{numpy} library.
 
 %%% PULSAR FUNCTIONALITY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -883,19 +791,6 @@ We thank the Google Summer of Code Program for funding a total 6 students who im
 \bibliography{stingraypaper}
 \bibliographystyle{aasjournal}
 
-
-%\begin{thebibliography}{}
-
-%\bibitem[Astropy Collaboration et al.(2013)]{2013A&A...558A..33A} Astropy Collaboration, Robitaille, T.~P., Tollerud, E.~J., et al.\ 2013, \aap, 558, A33 
-%\bibitem[Bertin \& Arnouts(1996)]{1996A&AS..117..393B} Bertin, E., \& Arnouts, S.\ 1996, \aaps, 117, 393 
-%\bibitem[Corrales(2015)]{2015ApJ...805...23C} Corrales, L.\ 2015, \apj, 805, 23
-%\bibitem[Ferland et al.(2013)]{2013RMxAA..49..137F} Ferland, G.~J., Porter, R.~L., van Hoof, P.~A.~M., et al.\ 2013, \rmxaa, 49, 137
-%\bibitem[Hanisch \& Biemesderfer(1989)]{1989BAAS...21..780H} Hanisch, R.~J., \& Biemesderfer, C.~D.\ 1989, \baas, 21, 780 
-%\bibitem[Lamport(1994)]{lamport94} Lamport, L. 1994, LaTeX: A Document Preparation System, 2nd Edition (Boston, Addison-Wesley Professional)
-%\bibitem[Schwarz et al.(2011)]{2011ApJS..197...31S} Schwarz, G.~J., Ness, J.-U., Osborne, J.~P., et al.\ 2011, \apjs, 197, 31  
-%\bibitem[Vogt et al.(2014)]{2014ApJ...793..127V} Vogt, F.~P.~A., Dopita, M.~A., Kewley, L.~J., et al.\ 2014, \apj, 793, 127  
-
-%\end{thebibliography}
 
 %% Include this line if you are using the \added, \replaced, \deleted
 %% commands to see a summary list of all changes at the end of the article.

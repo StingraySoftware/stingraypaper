@@ -25,29 +25,6 @@
 %% using aastex version 6.2
 \documentclass[twocolumn]{aastex62}
 
-%% The default is a single spaced, 10 point font, single spaced article.
-%% There are 5 other style options available via an optional argument. They
-%% can be envoked like this:
-%%
-%% \documentclass[argument]{aastex62}
-%% 
-%% where the layout options are:
-%%
-%%  twocolumn   : two text columns, 10 point font, single spaced article.
-%%                This is the most compact and represent the final published
-%%                derived PDF copy of the accepted manuscript from the publisher
-%%  manuscript  : one text column, 12 point font, double spaced article.
-%%  preprint    : one text column, 12 point font, single spaced article.  
-%%  preprint2   : two text columns, 12 point font, single spaced article.
-%%  modern      : a stylish, single text column, 12 point font, article with
-%% 		  wider left and right margins. This uses the Daniel
-%% 		  Foreman-Mackey and David Hogg design.
-%%  RNAAS       : Preferred style for Research Notes which are by design 
-%%                lacking an abstract and brief. DO NOT use \begin{abstract}
-%%                and \end{abstract} with this style.
-%%
-%% Note that you can submit to the AAS Journals in any of these 6 styles.
-%%
 %% There are other optional arguments one can envoke to allow other stylistic
 %% actions. The available options are:
 %%
@@ -76,10 +53,6 @@
 %% bibliography to green, the file links to cyan, and the external links to
 %% magenta. Additional information on \hyperref options can be found here:
 %% https://www.tug.org/applications/hyperref/manual.html#x1-40003
-%%
-%% If you want to create your own macros, you can do so
-%% using \newcommand. Your macros should appear before
-%% the \begin{document} command.
 %%
 
 
@@ -140,8 +113,6 @@
 %\received{Dec 1, 2018}
 %\revised{January 7, 2018}
 %\accepted{\today}
-%% Command to document which AAS Journal the manuscript was submitted to.
-%% Adds "Submitted to " the arguement.
 \submitjournal{ApJ}
 
 %% Mark up commands to limit the number of authors on the front page.
@@ -161,11 +132,6 @@
 %%
 %% Use \allauthors at the manuscript end to show the full author list.
 %% This command should only be used with \AuthorCollaborationLimit is used.
-
-%% The following command can be used to set the latex table counters.  It
-%% is needed in this document because it uses a mix of latex tabular and
-%% AASTeX deluxetables.  In general it should not be needed.
-%\setcounter{table}{1}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -198,48 +164,12 @@
 %% one line. However, you may use \\ to force a line break if
 %% you desire. In v6.2 you can include a footnote in the title.
 
-%% A significant change from earlier AASTEX versions is in the structure for 
-%% calling author and affilations. The change was necessary to implement 
-%% autoindexing of affilations which prior was a manual process that could 
-%% easily be tedious in large author manuscripts.
-%%
-%% The \author command is the same as before except it now takes an optional
-%% arguement which is the 16 digit ORCID. The syntax is:
-%% \author[xxxx-xxxx-xxxx-xxxx]{Author Name}
-%%
-%% This will hyperlink the author name to the author's ORCID page. Note that
-%% during compilation, LaTeX will do some limited checking of the format of
-%% the ID to make sure it is valid.
-%%
-%% Use \affiliation for affiliation information. The old \affil is now aliased
-%% to \affiliation. AASTeX v6.2 will automatically index these in the header.
-%% When a duplicate is found its index will be the same as its previous entry.
-%%
-%% Note that \altaffilmark and \altaffiltext have been removed and thus 
-%% can not be used to document secondary affiliations. If they are used latex
-%% will issue a specific error message and quit. Please use multiple 
-%% \affiliation calls for to document more than one affiliation.
-%%
 %% The new \altaffiliation can be used to indicate some secondary information
 %% such as fellowships. This command produces a non-numeric footnote that is
 %% set away from the numeric \affiliation footnotes.  NOTE that if an
 %% \altaffiliation command is used it must come BEFORE the \affiliation call,
 %% right after the \author command, in order to place the footnotes in
 %% the proper location.
-%%
-%% Use \email to set provide email addresses. Each \email will appear on its
-%% own line so you can put multiple email address in one \email call. A new
-%% \correspondingauthor command is available in V6.2 to identify the
-%% corresponding author of the manuscript. It is the author's responsibility
-%% to make sure this name is also in the author list.
-%%
-%% While authors can be grouped inside the same \author and \affiliation
-%% commands it is better to have a single author for each. This allows for
-%% one to exploit all the new benefits and should make book-keeping easier.
-%%
-%% If done correctly the peer review system will be able to
-%% automatically put the author and affiliation information from the manuscript
-%% and save the corresponding author the trouble of entering it by hand.
 
 \correspondingauthor{Daniela Huppenkothen}
 \email{dhuppenk@uw.edu}
@@ -277,8 +207,8 @@
 % This abstract could be more exciting, I think.
 This paper describes the design and implementation of \stingray, a library in \python built to perform time series analysis and related tasks on astronomical light curves. 
 Its core functionality comprises a range of Fourier analysis techniques commonly used in spectral-timing analysis, as well as extensions for analyzing pulsar data, simulating data sets, and statistical modeling. 
-Its modular build allows for easy extensions and incorporation of its methods into data analysis workflows and pipelines. We aim for the library to be a platform for the implementation of future spectral timing techniques.  
-Here, we describe the overall vision and framework, core functionality, extensions and connections to high-level command-line and graphical interfaces.
+Its modular build allows for easy extensions and incorporation of its methods into data analysis workflows and pipelines. We aim for the library to be a platform for the implementation of future spectral-timing techniques.  
+Here, we describe the overall vision and framework, core functionality, extensions, and connections to high-level command-line and graphical interfaces.
 The code is well-tested, with a test coverage of currently 95\%, and is accompanied by extensive API documentation and a set of step-by-step tutorials.
 \end{abstract}
 
@@ -306,14 +236,14 @@ The code is well-tested, with a test coverage of currently 95\%, and is accompan
 
 Variability is one of the key diagnostics in understanding the dynamics, emission processes and underlying physical mechanisms of astronomical objects. 
 The detection of periodic variations in the radio flux of certain celestial objects has led to the ground-breaking discovery of pulsars \citep{hewish1968}. 
-Similarly, accurate models of dips in stellar light curves have led to the discovery of thousands of exoplanets \citep[e.g.]{charbonneau2000,henry2000,coughlin2016}. 
+Similarly, accurate models of dips in stellar light curves have led to the discovery of thousands of exoplanets \citep[e.g.,][]{charbonneau2000,henry2000,coughlin2016}. 
 In high-energy astrophysics, particularly the study of black holes and neutron stars, the scientific developments of recent decades have brought a growing understanding that time and wavelength are intricately linked. 
-Different spectral components react differently to changes in accretion rate and dynamics, leading to time lags, correlated variability and higher-order effects \citep[for a review, see e.g.][]{uttley2014}. 
+Different spectral components react differently to changes in accretion rate and dynamics, leading to energy-dependent time lags, correlated variability, and higher-order effects \citep[for a review, see][]{uttley2014}. 
 
-This has led to the study of accretion disks, in particular those of Active Galactic Nuclei (AGN), via reverberation mapping \citep[e.g.][]{blandford1982,Bentz2016}, and probes of the accretion disk geometry using the energy-dependence of quasi-periodic oscillations in stellar-mass black holes \citep[e.g.][]{ingram2015,stevensuttley2016}. 
-Understanding how the emission at various wavelengths changes with time is crucial for testing and expanding our understanding of General Relativity in the strong-gravity limit, the dense matter equation of state and other fundamental questions in astrophysics.
-In X-rays, there is now a wealth of public data sets of variable objects from missions such as the \textit{Rossi X-ray Timing Explorer}  (\textit{RXTE}; \citealt{Bradtetal93}), the \textit{Nuclear Spectroscopic Telescope Array} (\nustar; \citealt{nustar13}), \textit{Astrosat} \citep{singh2014}, and the \textit{Neutron Star Interior Composition Explorer} (\textit{NICER}; \citealt{gendreau2016}). 
-In addition, planned missions such as the \textit{Advanced Telescope for High-ENergy Astrophysics} (\textit{Athena}) will produce data sets of unprecedented size and complexity, motivating the need for both scalable algorithms as well as the well-tested, open-source software described in this manuscript.
+This has led to the study of accretion disks, in particular those of active galactic nuclei, via reverberation mapping \citep[e.g.,][]{blandford1982,Bentz2016}, and probes of the accretion disk geometry using the energy-dependence of quasi-periodic oscillations in stellar-mass black holes \citep[e.g.,][]{ingram2015,stevensuttley2016}. 
+Understanding how the emission at various wavelengths changes with time is crucial for testing and expanding our understanding of general relativity in the strong-gravity limit, the dense matter equation of state and other fundamental questions in astrophysics.
+In X-ray astronomy, there is now a wealth of public data sets of variable objects from missions such as the \textit{Rossi X-ray Timing Explorer}  (\textit{RXTE}; \citealt{Bradtetal93}), the \textit{Nuclear Spectroscopic Telescope Array} (\nustar; \citealt{nustar13}), \textit{Astrosat} \citep{singh2014}, and the \textit{Neutron Star Interior Composition Explorer} (\textit{NICER}; \citealt{gendreau2016}). 
+In addition, planned missions such as the \textit{Advanced Telescope for High-Energy Astrophysics} \citep[\textit{Athena};][]{athenaXIFU} and proposed missions like the \textit{Enhanced X-ray Timing Polarimeter} \citep[\textit{eXTP};][]{extp16} and the \textit{Spectroscopic Time-Resolving Observatory for Broadband Energy X-rays} \citep[\textit{STROBE-X};][]{strobex18} will produce data sets of unprecedented size and complexity, motivating the need for both scalable algorithms as well as the well-tested, open-source software described in this manuscript.
 
 The paper layout is as follows: 
 In Section \ref{sec:data}, we very briefly describe the data sets being used in this paper to showcase the implemented methods. 
@@ -323,7 +253,7 @@ In Sections \ref{sec:modeling}, \ref{sec:simulator} and \ref{sec:pulsar}, we pre
 Section \ref{sec:development} addresses the development process, testing and documentation environments, and Sections \ref{sec:hendrics} and \ref{sec:dave} point to connections with a command-line interface and a graphical user interface, respectively, which are being developed concurrently with \stingray. 
 Finally, in Section \ref{sec:future} we lay out our future development plans. 
 Note that we intentionally omit code examples and specific implementation details in this manuscript in order to preserve long-term accuracy. 
-All code to reproduce the figures in this paper is available online,\footnote{\url{https://github.com/StingraySoftware/stingraypaper}} and a full suite of up-to-date tutorials is also available.\footnote{\url{https://github.com/StingraySoftware/notebooks}}
+All code to reproduce the figures in this paper is available online,\footnote{\url{https://github.com/StingraySoftware/stingraypaper}} as is a full suite of up-to-date tutorials.\footnote{\label{foot:nb}\url{https://github.com/StingraySoftware/notebooks}}
 
 \section{Data}
 \label{sec:data}
@@ -341,19 +271,19 @@ This observation was taken in 64-channel event mode with $122\,\mu$s time resolu
 The following filtering criteria were used to obtain Good Time Intervals (GTIs): Proportional Counter Unit (PCU) 2 is on, two or more PCUs are on, elevation angle $>\,10\degree$, and target offset $<\,0.02\degree$. 
 Time since the South Atlantic Anomaly passage was not filtered on. 
 Applying these filters, we have $\sim$\,1\,ks of good data. 
-Since the observation is short, the data were not barycentered before analysis.
+Since the observation is short, the data were not barycentered\footnote{\label{foot:bary} ``Barycentering'' the data applies a spacecraft clock correction to correct the photon arrival times to the solar system barycenter. This is commonly done with the FTOOL \texttt{barycorr} from HEASoft.} before analysis.
 
 \subsection{Hercules X-1}
 \label{sec:herx1}
 
-Hercules X-1 (Her X-1) is a well-known persistent X- ray binary pulsar with a period of $P = 1.23\,\mathrm{s}$ \citep{tananbaum1972} in a binary system with a $\sim\,2.2\,\Msun$ stellar companion HZ Herculis \citep{davidsen1972,forman1972,bahcall1972,reynolds1997,leahy2014} with an orbital period of $P_\mathrm{orb}=1.7\,\mathrm{days}$ and super-orbital variations on a $\sim$35-day timescale \citep{giacconi1973,scott1999,igna2011}. 
+Hercules X-1 (Her X-1) is a well-known persistent X- ray binary pulsar with a period of $P = 1.23\,\mathrm{s}$ \citep{tananbaum1972} in a binary system with a $\sim$\,2.2\,$\Msun$ stellar companion HZ Herculis \citep{davidsen1972,forman1972,bahcall1972,reynolds1997,leahy2014} with an orbital period of $P_\mathrm{orb}=1.7\,\mathrm{days}$ and super-orbital variations on a $\sim$\,35-day timescale \citep{giacconi1973,scott1999,igna2011}. 
 The companion's type varies between late-type A and early-type B with orbital phase \citep{anderson1994,cheng1995}. 
 For this work, we considered two of the several observations of Her X-1 with \nustar. 
 The first observation was taken from UT 2012-09-19 to UT 2012-09-20 and was one among several used by \citet{Fuerst13} to characterize the cyclotron resonance scattering features (CRSFs) in the spectrum of the source. 
 The second was taken from UT 2016-08-20 to UT 2016-08-21 and was used by \citet{staubert_2017} to detect an inversion of the decay of the CRSF. 
-We used observation IDs 30002006002 and 10202002002 from HEASARC and applied the FTOOL barycorr and the latest (as of Nov. 27, 2018) \nustar clock correction file on the L2 cleaned science event files (file name ending with \verb|01_cl.evt|) to correct the photon arrival times to the solar system barycenter. 
+We used observation IDs 30002006002 and 10202002002 from HEASARC and barycentered$^{\ref{foot:bary}}$ the data with the latest (as of Nov. 27, 2018) \nustar clock correction file.
 For our analysis, we considered photons from 3 to 79 keV at most 50$^{\prime\prime}$ from the nominal position of the source, extracted from the two identical Focal Plane Modules A and B (FPMA and FPMB, respectively) onboard the spacecraft. 
-We used a total of 32.67\,ks of GTIs in the first observation and 36.56\,ks in the second, only selecting intervals longer than 10s.
+We used a total of 32.67\,ks of good data in the first observation and 36.56\,ks in the second, only selecting intervals longer than 10s.
 
 
 %\subsection{Simulated Data}
@@ -397,11 +327,11 @@ We used a total of 32.67\,ks of GTIs in the first observation and 36.56\,ks in t
 
 Despite decades of research, the field of spectral timing in high-energy astrophysics is fragmented in terms of software; there is no commonly accepted, up-to-date framework for the core data analysis tasks involved in (spectral) timing. 
 Code is often siloed within groups, making it difficult to reproduce scientific results. 
-Additionally, the lack of fully open-source tools constitutes a significant barrier to entry for researchers new to the field, since it effectively requires anyone not part of collaborations with an existing private code base to write their own software from scratch. 
+Additionally, the scarcity of fully open-source tools constitutes a significant barrier to entry for researchers new to the field, since it effectively requires anyone not part of collaborations with an existing private code base to write their own software from scratch. 
 The NASA library \texttt{xronos} is, to our knowledge, the only widely used open-source library in this field, and has several shortcomings. 
 In particular, it performs only a few of the most basic tasks, and it has not been maintained since 2004. 
 Other open-source projects use languages that either require an expensive license (e.g., IDL) or have a very limited scope (e.g., S-Lang).
-This dearth of  software for spectral timing motivated the development of \stingray\footnote{\stingray was named partly in homage to the popular 1960s childrens' TV series, from where \stingray's motto derives: \textit{Anything can happen in the next half hour (but probably spectral timing)!}}, a library built entirely in the popular \python language and based on \astropy functionality. 
+This dearth of  software for spectral timing motivated the development of \stingray,\footnote{\stingray was named partly in homage to the popular 1960s childrens' TV series, from where \stingray's motto derives: \textit{Anything can happen in the next half hour (but probably spectral timing)!}} a library built entirely in the widely-used \python language and based on \astropy functionality. 
 \stingray aims to make many of the core Fourier analysis tools used in timing and spectral-timing analysis available to a large range of researchers while providing a common platform for new methods and tools as they enter the field. 
 
 It includes the most relevant functionality in its core package, while extending that functionality in its subpackages in several ways, allowing for easy modeling of light curves and power spectra, simulation of synthetic data sets and pulsar timing. 
@@ -411,7 +341,7 @@ In practice, data analysis requirements are varied and depend on the type of dat
 With this in mind, \stingray does not aim to provide full-stack data analysis workflows; rather, it provides the core building blocks for users to build such workflows themselves, based on the specific data analysis requirements of their source and observation. 
 The modularity of its classes allows for easy incorporation of existing \stingray functionality into larger data analysis workflows and pipelines, while being easily extensible for cases that the library currently does not cover. 
 
-\stingray separates out core functionality from several more specialized tasks based on those core classes and functions. Constructs related to data products as well as Fourier transforms of the data (e.g.\ power spectra, cross spectra, time lags, and other spectral timing products) are considered core functionality, as are some utility functions and classes, for example related to GTI calculations. 
+\stingray separates out core functionality from several more specialized tasks based on those core classes and functions. Constructs related to data products as well as Fourier transforms of the data (e.g., power spectra, cross spectra, time lags, and other spectral timing products) are considered core functionality, as are some utility functions and classes, for example related to GTI calculations. 
 
 This core functionality is extended in various ways in currently three subpackages. 
 The \texttt{modeling} subpackage (see also Section \ref{sec:modeling}) provides a framework for modeling light curves and Fourier spectra with parametric functions. 
@@ -421,17 +351,33 @@ The subpackage \texttt{simulator} (Section \ref{sec:simulator}) provides importa
 
 Finally, the subpackage \texttt{pulsar} implements a range of methods particularly useful for period searches in pulsars. While no other sub-packages are currently under construction, we will implement new sub-packages as required. 
 
-\stingray is formally hosted as part of a GitHub organization called \textit{StingraySoftware},\footnote{\url{https://github.com/StingraySoftware/}} which also hosts the website, documentation, a repository with tutorial notebooks, this manuscript, as well as the two related software packages. 
-\stingray is designed to be used both as a standalone package, but is also at the core of two other software packages currently under development: \hendrics (\citealt{hendrics}; see also Section \ref{sec:hendrics}) provides pre-built data analysis workflows using \stingray core functionality. 
+\stingray is designed to be used both as a standalone package, but is also at the core of two other software packages currently under development: 
+\hendrics and \dave. 
+\hendrics (\citealt{hendrics}; see also Section \ref{sec:hendrics}) provides pre-built data analysis workflows using \stingray core functionality. 
 These workflows are accessible from the command line and are provided for some common data types and data analysis tasks. 
 \dave (see also Section \ref{sec:dave}) provides a Graphical User Interface on top of \stingray to allow for easy interactive exploratory data analysis.
  
-As of v0.1, \stingray is entirely written in Python, and its core functionality depends exclusively on \texttt{numpy} \citep{numpy}, \texttt{scipy} \citep{scipy} and \texttt{astropy} \citep{astropy}, with optional plotting functionality supplied by \texttt{matplotlib} \citep{matplotlib} . 
+As of v0.1, the core functionality of \stingray depends exclusively on \texttt{numpy} \citep{numpy}, \texttt{scipy} \citep{scipy} and \texttt{astropy} \citep{astropy}, with optional plotting functionality supplied by \texttt{matplotlib} \citep{matplotlib} . 
 The \texttt{modeling} subpackage optionally uses sampling methods supplied by \texttt{emcee} \citep{emcee}, some functionality implemented in \texttt{statsmodels}, and plotting using \texttt{corner} \citep{corner}. 
 The \texttt{pulse} subpackage optionally allows for just-in-time compilation using \texttt{numba} \citep{numba} for computational efficiency, and for advanced pulsar timing models using \texttt{PINT}\footnote{\url{https://github.com/nanograv/PINT}} .
 
 This paper describes \stingray v0.1, released on 2018-02-12. 
 As with most open-source packages, \stingray is under continuous development and welcomes contributions from the community.
+
+%%% DEVELOPMENT + INTEGRATION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Development and Integration Environment}
+\label{sec:development}
+
+\stingray is developed entirely in Python 3, with backwards compatibility to Python 2.7 where possible through the integration package \texttt{six}. 
+Development is version-controlled through \texttt{git}, and officially hosted on GitHub through the organization \textit{StingraySoftware},\footnote{\url{https://github.com/StingraySoftware/}} where several interconnected repositories related to \stingray live, including the core library, extension packages \hendrics and \texttt{DAVE}, the suite of tutorials, the website, and this manuscript. 
+All patches and code are submitted via pull requests to the \stingray repository, and checked by a maintainer for correctness and adherence to standards of code, documentation, and tests. 
+As an \textit{Astropy} Affiliated Package,\footnote{\url{http://www.astropy.org/affiliated/}} we follow the coding standards as well as community guidelines (including the Code of Conduct) set out by the \textit{Astropy} community. 
+All code within the \stingray core library is subject to extensive unit testing, with compatibility across platforms as well as different versions of Python and required packages controlled through Continuous Integration services \textit{Travis} (Unix platforms) and \textit{AppVeyor} (Windows). 
+Test coverage is checked using \textit{Coveralls}. 
+All user-facing functions and classes within \stingray must have documentation in the form of docstrings, compiled and built along with the main documentation pages using \textit{sphinx} and hosted on \texttt{readthedocs}.\footnote{\url{https://stingray.readthedocs.io/en/latest/}}
+Tutorials are provided in the form of executable \textit{Jupyter} notebooks in a separate repository,$^{\ref{foot:nb}}$ which can either be run interactively using \textit{Binder} \citep{project_jupyter-proc-scipy-2018} or viewed as part of the documentation. 
+
 
 %%% CORE FUNCTIONALITY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -445,7 +391,7 @@ Additionally, it incorporates a number of utilities for dealing with GTIs as wel
 \subsection{The \texttt{Lightcurve} class}
 \label{sec:lightcurve}
 
-We expect \stingray to be used largely on data sets of two forms: (1) event data (i.e. recordings of arrival times of individual photons) or (2) binned light curves (i.e. measurements of brightness in units of flux, magnitude or counts as a function of time). 
+We expect \stingray to be used largely on data sets of two forms: (1) event data (i.e., recordings of arrival times of individual photons) or (2) binned light curves (i.e. measurements of brightness in units of flux, magnitude or counts as a function of time). 
 
 The majority of methods in \stingray use binned light curves, which we thus currently consider the default format. 
 The \lightcurve class defines a basic data structure to store binned light curves. Its attributes include arrays describing time bins and associated (flux or counts) measurements, the number of data points in the light curve, the time resolution and the total duration of the light curve. 
@@ -454,7 +400,7 @@ By default, a Poisson distribution is assumed, appropriate for binned event data
 
 There are two ways to generate a \texttt{Lightcurve} object: in the standard case, the instrument has recorded a binned time series of $N$ pairs of time stamps and count (rate) or flux values, $\{t_k, c_k \}_{k=1}^{N}$. 
 In this case, one can simply instantiate a \texttt{Lightcurve} object with the keywords \texttt{time} and \texttt{counts} (and optionally set \texttt{use\_counts=False} when the input is in units of counts per second). 
-In cases where the native data format is events (e.g.\ photon arrival times) it is possible to use the static method \texttt{Lightcurve.make\_lightcurve}, passing the array of events as well as a time resolution \texttt{dt} to create a new light curve from the events.
+In cases where the native data format is events (e.g., photon arrival times) it is possible to use the static method \texttt{Lightcurve.make\_lightcurve}, passing the array of events as well as a time resolution \texttt{dt} to create a new light curve from the events.
 
 Various operations are implemented for class \lightcurve. 
 Custom behaviour of the $+$ and $-$ operators allows straightforward addition and subtraction of light curves from one another. 
@@ -497,7 +443,7 @@ It is possible to simulate more physically meaningful photon events from a given
 \label{sec:csps}
 
 The cross spectrum and the power spectrum\footnote{In the signal processing literature, generally a distinction is made between the power spectrum, which
-describes the process at the source generating variable time series, and the periodogram, which denotes a realization of said power spectrum, i.e. the time series we actually observe. While the products generated by \stingray generally fall into the latter category, the astronomy literature usually denotes them by the term power spectrum. We follow this convention here as we do within the software package itself.} 
+describes the process at the source generating variable time series, and the periodogram, which denotes a realization of said power spectrum, i.e., the time series we actually observe. While the products generated by \stingray generally fall into the latter category, the astronomy literature usually denotes them by the term power spectrum. We follow this convention here as we do within the software package itself.} 
 are closely related (for a pedagogical introduction into Fourier analysis, see \citealt{vanderklis1989}; see also \citealt{uttley2014} for a recent review of spectral timing techniques). 
 Computing the cross spectrum requires two evenly sampled time series $\mathbf{y}_1 = \{y_{1,i}\}_{i=1}^{N} $ and $\mathbf{y}_2 =  \{y_{2,i}\}_{i=1}^{N}$ taken simultaneously at exactly the same time intervals $\{t_i \}_{i=1}^N$. 
 Under this assumption, one may then compute the discrete Fourier transform of each time series, $\mathcal{F}_1$ and $\mathcal{F}_2$ independently, and multiply $\mathcal{F}_1$ with $\mathcal{F}^{*}_2$, i.e. the Fourier transform of $\mathbf{y}_1$ with the \textit{complex conjugate} of the Fourier transform of $\mathbf{y}_2$. 
@@ -567,7 +513,7 @@ The error on $\tau_j$ and $c_j$ are also computed in \stingray.
 We generated 63 light curve segments of 16 seconds length with a $0.02\,\mathrm{s}$ time resolution and Fourier-transformed each to generate a power spectrum. 
 The dynamic power spectrum here plots each power spectrum as a vertical slice as a function of time, with the color indicating the fractional rms-squared-normalized power in each bin (yellow are large powers; purple, small) . 
 The dynamic power spectrum was clipped to around the range of the QPO, and smoothed using bicubic interpolation to improve clarity. 
-The QPO is clearly visible as a yellow streak, and seems not to be present during the entire observation (consistent with [REF belloni 2010]). 
+The QPO is clearly visible as a yellow streak, and seems not to be present during the entire observation \citep[consistent with][]{belloni2005}. 
 In red, we show the frequency with the highest power found in each segment (excluding frequencies below $3\,\mathrm{Hz}$ to exclude the low-frequency red noise), using the \texttt{trace\_maximum} method.}
 \label{fig:dynspec}
 \end{center}
@@ -616,7 +562,7 @@ The classes \powerspectrum and \crossspectrum will generate warnings if the obse
 \section{The \texttt{modeling} Subpackage}
 \label{sec:modeling}
 
-Modeling data sets with parametric (often physically motivated) models that map an independent variable (e.g.\ time or frequency) to one or more dependent variables (e.g.\ flux, counts or Fourier powers) is a common task in astronomy. 
+Modeling data sets with parametric (often physically motivated) models that map an independent variable (e.g., time or frequency) to one or more dependent variables (e.g., flux, counts or Fourier powers) is a common task in astronomy. 
 Constructing a universal modeling framework is a highly non-trivial task, and better packages exist for general-purpose model building (e.g., STAN, \citealt{stan}). 
 Thus, \stingray's modeling interface restricts itself to models of commonly used spectral-timing products, in particular (averaged) power spectra. 
 While it makes heavy use of the \verb|astropy.modeling.FittableModel| definitions, it uses custom definitions for fitting algorithms motivated by the statistical properties of spectral timing products, which deviate significantly from other data types commonly found in astronomy and thus cannot easily be modelled with standard approaches defined in \texttt{astropy}.
@@ -837,27 +783,10 @@ The functionality to plot the phaseogram, interactively change the timing parame
 \begin{center}
 \includegraphics[width=\linewidth]{../figures/phaseogram.pdf}
 \caption{Phaseogram showing the variation of the pulse phase corresponding to an imperfect orbital solution (in this case the time at the ascending node $T_0$) in a \nustar observation of Her X-1, executed with \stingray and plotted in a convenient, interactive interface with \hendrics. 
-The TOA button allows to calculate the TOA for use with Tempo2, PINT or similar programs.}
+The TOA button allows the user to calculate the TOA for use with Tempo2, PINT or similar programs.}
 \label{fig:phaseogram}
 \end{center}
 \end{figure}
-
-
-
-%%% DEVELOPMENT + INTEGRATION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Development and Integration Environment}
-\label{sec:development}
-
-\stingray is developed entirely in Python 3, with backwards compatibility to Python 2.7 where possible through the integration package \texttt{six}. 
-Development is version-controlled through \texttt{git}, and officially hosted through an organization on \textit{GitHub}, where several interconnected repositories related to \stingray live, including the core library, extension packages \hendrics and \texttt{DAVE}, as well as the suite of tutorials and this manuscript. 
-All patches and code are submitted via pull requests to the \stingray repository, and checked by a maintainer for correctness and adherence to standards of code, documentation and tests. 
-As an \textit{Astropy} Affiliated Package\footnote{\url{http://www.astropy.org/affiliated/}}, we follow the coding standards as well as community guidelines (including the Code of Conduct) set out by the \textit{Astropy} community. 
-All code within the \stingray core library is subject to extensive unit testing, with compatibility across platforms as well as different versions of Python and required packages controlled through Continuous Integration services \textit{Travis} (Unix platforms) and \textit{AppVeyor} (Windows). 
-Test coverage is checked using \textit{Coveralls}. 
-All user-facing functions and classes within \stingray must have documentation in the form of docstrings, compiled and built along with the main documentation pages using \textit{sphinx} and hosted on \texttt{readthedocs}\footnote{\url{https://stingray.readthedocs.io/en/latest/}}. 
-Tutorials are provided in the form of executable \textit{Jupyter} notebooks in a separate repository\footnote{\url{https://github.com/stingraySoftware/notebooks}}, which can either be run interactively using \textit{Binder} \citep{project_jupyter-proc-scipy-2018} or viewed as part of the documentation. 
-
 
 %%% HENDRICS + DAVE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{\hendrics: A Command-Line Interface for \stingray}

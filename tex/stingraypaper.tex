@@ -187,13 +187,37 @@
 \affiliation{Department of Astronomy, University of Michigan, 1085 South University Avenue, Ann Arbor, MI 48109, USA}
 \nocollaboration
 
-\author{Simone Migliari!}
-\altaffiliation{ESAC/ESA, XMM-Newton Science Operations Centre, Camino Bajo del Castillo s/n, Urb. Villafranca del Castillo, 28692, Villanueva de la Cañada, Madrid, Spain.}
-\altaffiliation{Timelab Technologies Ltd., 20-22 Wenlock Road, London N1 7GU, United Kingdom.}
+\author{Simone Migliari}
+\affiliation{ESAC/ESA, XMM-Newton Science Operations Centre, Camino Bajo del Castillo s/n, Urb. Villafranca del Castillo, 28692, Villanueva de la Cañada, Madrid, Spain.}
+\affiliation{Timelab Technologies Ltd., 20-22 Wenlock Road, London N1 7GU, United Kingdom.}
+\nocollaboration
+
+\author{Paul Balm}
+\affiliation{Timelab Technologies Ltd., 20-22 Wenlock Road, London N1 7GU, United Kingdom.}
+\nocollaboration
+
+\author{Omar Hammad}
+\affiliation{AinShams University, Egypt}
+\nocollaboration
+
+\author{Usman Mahmood Khan}
+\affiliation{Department of Computer Science, North Carolina State University, Raleigh, USA}
+\nocollaboration
+
+\author{Himanshu Mishra}
+\affiliation{Indian Institute of Technology, Kharagpur West Bengal, India 721302}
+\nocollaboration
+
+\author{Haroon Rashid}
+\affiliation{National University of Sciences and Technology (NUST), Islamabad 44000, Pakistan}
 \nocollaboration
 
 \author{Swapnil Sharma}
-\altaffiliation{Indian Institute of Technology Mandi, Mandi, Himachal Pradesh, India}
+\affiliation{Indian Institute of Technology Mandi, Mandi, Himachal Pradesh, India}
+\nocollaboration
+
+\author{Ricardo Valles Blanco}
+\affiliation{Timelab Technologies Ltd., 20-22 Wenlock Road, London N1 7GU, United Kingdom.}
 \nocollaboration
 
 
@@ -257,7 +281,7 @@ In Section \ref{sec:data}, we very briefly describe the data sets being used in 
 In Section \ref{sec:vision}, we lay out the overall vision, followed by a description of the general package structure and the general development framework in Section \ref{sec:development}. 
 The package's core functionality is shown in more detail in Section \ref{sec:core}, where we introduce basic classes for generating light curves and Fourier spectra of various types.
 In Sections \ref{sec:modeling}, \ref{sec:simulator} and \ref{sec:pulsar}, we present the submodules allowing modeling Fourier products, simulating light curves from stochastic processes, and pulsar analysis, respectively.
-Section \ref{sec:development} addresses the development process, testing and documentation environments, and Sections \ref{sec:hendrics} and \ref{sec:dave} point to connections with a command-line interface and a graphical user interface, respectively, which are being developed concurrently with \stingray. 
+Sections \ref{sec:hendrics} and \ref{sec:dave} point to connections with a command-line interface and a graphical user interface, respectively, which are being developed concurrently with \stingray. 
 Finally, in Section \ref{sec:future} we lay out our future development plans. 
 Note that we intentionally omit code examples and specific implementation details in this manuscript in order to preserve long-term accuracy. 
 All code to reproduce the figures in this paper is available online,\footnote{\url{https://github.com/StingraySoftware/stingraypaper}} as is a full suite of up-to-date tutorials.\footnote{\label{foot:nb}\url{https://github.com/StingraySoftware/notebooks}}
@@ -322,7 +346,7 @@ Based on this framework, it allows users to search efficiently for (quasi-)perio
 
 The subpackage \texttt{simulator} (Section \ref{sec:simulator}) provides important functionality to allow efficient simulation of time series from a range of stochastic processes. This includes simulation of light curves from power spectral models as well as the use of transfer functions to introduce time lags and higher-order effects. 
 
-Finally, the subpackage \texttt{pulsar} implements a range of methods particularly useful for period searches in pulsars. While no other sub-packages are currently under construction, we will implement new sub-packages as required. 
+Finally, the subpackage \texttt{pulsar} implements a range of methods particularly useful for period searches in pulsars.
 
 \stingray is designed to be used both as a standalone package, but is also at the core of two other software packages currently under development: 
 \hendrics and \dave. 
@@ -335,7 +359,7 @@ The \texttt{modeling} subpackage optionally uses sampling methods supplied by \t
 The \texttt{pulse} subpackage optionally allows for just-in-time compilation using \texttt{numba} \citep{numba} for computational efficiency, and for advanced pulsar timing models using \texttt{PINT}\footnote{\url{https://github.com/nanograv/PINT}} .
 
 This paper describes \stingray v0.1, released on 2018-02-12. 
-As with most open-source packages, \stingray is under continuous development and welcomes contributions from the community.
+As with most open-source packages, \stingray is under continuous development and welcomes contributions from the community, including suggestions for new subpackages to be implemented.
 
 %%% DEVELOPMENT + INTEGRATION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -747,7 +771,7 @@ The full interface and its capabilities will be described in a forthcoming publi
 \section{Future Development Plans}
 \label{sec:future}
 
-Future plans for \stingray development are largely aimed at extending current functionality related to Fourier spectra (with, e.g., the planned implementation of the statistical distributions relevant to co-spectra; \citealt{huppenkothen2017}), and continuing work towards comprehensive spectra-timing capabilities. 
+Future plans for \stingray development are largely aimed at extending current functionality related to Fourier spectra (with, e.g., the planned implementation of the statistical distributions relevant to co-spectra; \citealt{huppenkothen2017}), and continuing work towards comprehensive spectral-timing capabilities. 
 While reference implementations of higher-order Fourier products such as bispectra, biphase and bicoherence exist \citep{maccarone2002,maccarone2005,maccarone2013}, they require additional extensions to be useful for science. 
 New key features in the next version of \stingray, based on an existing reference implementation of covariance spectra \citep{WilkinsonUttley09}, will include lag-energy spectra \citep{Vaughanetal94}, rms-energy spectra \citep{Revnivtsevetal99}, and excess variance spectra \citep{Vaughanetal03}. 
 In addition, while at the moment there is rudimentary functionality to build spectra-timing products, it is currently not possible to seamlessly work with these products using \stingray, because \stingray currently has no native capability for energy-spectral modeling. 

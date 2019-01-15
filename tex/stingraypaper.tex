@@ -650,7 +650,7 @@ An alternative way of seeing it, more useful for photon data, is as a \textit {h
 If the period is exactly correct and assuming a stable pulsation, the signal-to-noise ratio will get better approximately with the square root of the number of summed sub-intervals.
 This is the method used to obtain practically all pulse profiles shown in the literature, as most pulsar signals are orders of magnitude below the noise level.
 
-The \texttt{pulse.pulsar} submodule contains the functionality to calculate the phase given a simple pulse ephemeris consisting of any number of pulse frequency derivatives, or using a number of methods for the orbit of the pulsar (using the optional dependency \texttt{PINT})%
+The \texttt{pulse.pulsar} submodule contains the functionality to calculate the phase given a simple pulse ephemeris consisting of any number of pulse frequency derivatives, or using a number of methods for the orbit of the pulsar (using the optional dependency \texttt{PINT}).
 Moreover, the module also includes a mechanism to calculate the exposure of single bins in the pulse profile. 
 This is particularly useful for very long-period pulsars where the pulsed period is comparable to the length of the GTIs.
 The different exposure of pulse bins caused by the absence of signals during GTIs is taken into account in the calculation of the final pulse profile by the folding algorithm, if the user asks for it. 

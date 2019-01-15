@@ -538,7 +538,7 @@ In its most basic form, each subclass of \likelihood takes data in some form (mo
 The likelihood computes model values for each data point in the array of independent variables and statistically compares these model values with the data points stored in the dependent variable, assuming the particular statistical distribution of the likelihood definition. 
 The result is a single scalar, which can then be, for example, used in an optimization algorithm in order to find a Maximum Likelihood (ML) solution.
 
-For all likelihoods in \stingray, \stingray an equivalent subclass of \verb|stingray.modeling.Posterior| available, which uses the \likelihood definitions to compute posterior probability densities for the parameters of a model given data. 
+For all likelihoods in \stingray, an equivalent subclass of \verb|stingray.modeling.Posterior| is available, which uses the \likelihood definitions to compute posterior probability densities for the parameters of a model given data.
 All subclasses of \verb|Posterior| also require definition of a \texttt{logprior} method, which calculates the value of the prior probability density of the parameters. 
 Because priors are strongly problem-dependent, they cannot be hard-coded into \stingray. 
 Even for relatively straightforward problems such as modeling quasi-periodic oscillations of X-ray binaries, the physical properties and their effect on the data can differ strongly from source to source, indicating that a prior set for XTE~J1550--564 may not be appropriate for e.g.~GRS~1915+105. 

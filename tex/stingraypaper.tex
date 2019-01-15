@@ -455,7 +455,7 @@ For light curves with complex variability patterns, and especially for understan
 
 The classes \crossspectrum and \powerspectrum share most of the implemented methods, except where otherwise noted. 
 Both classes include methods to rebin cross- and power spectra. Linear rebinning is implemented analogously to the method in class \lightcurve. 
-Additionally, logarithmic binning is implemented in the method \texttt{rebin\_log} in such a way that the bin width at a given frequency increases a fraction of the previous bin width:
+Additionally, logarithmic binning is implemented in the method \texttt{rebin\_log} in such a way that the bin width at a given frequency increases by a fraction of the previous bin width:
 
 \[
 d\nu_{i+1} = d\nu_{i} (1 + f) \; ,

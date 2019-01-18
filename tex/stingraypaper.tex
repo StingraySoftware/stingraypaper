@@ -220,6 +220,9 @@
 \affiliation{Timelab Technologies Ltd., 20-22 Wenlock Road, London N1 7GU, United Kingdom.}
 \nocollaboration
 
+\author[0000-0002-2985-6369]{Evandro Martinez Ribeiro}
+\affiliation{Kapteyn Astronomical Institute, University of Groningen, P.O. Box 800, NL-9700 AV Groningen, The Netherlands.}
+\nocollaboration
 
 %% Note that the \and command from previous versions of AASTeX is now
 %% depreciated in this version as it is no longer necessary. AASTeX 
@@ -296,12 +299,11 @@ Here, we give brief introductions into the observations used and the data reduct
 GX 339--4 is a stellar black hole in a low-mass X-ray binary \citep{Hynesetal03}. 
 The black hole has a lower mass limit of $\sim$\,7\Msun\ \citep{MunozDariasetal08} and possibly a near-maximal spin \citep{Ludlametal15}. 
 The system also likely has a low binary orbit inclination; it has been constrained to $37 \degree <i\lesssim 60\degree$ from optical and X-ray observations \citep{Heidaetal17, Zdziarskietal98}, and spectral modeling by \citet{WangJietal18} estimates $i\approx 40\degree$.
-For this example we use an observation from the  \textit{RXTE} Proportional Counter Array (PCA; \citealt{Jahodaetal96}) in NASA's High Energy Astrophysics Science Archive Research Center (HEASARC) from the 2010 outburst of GX 339--4 \citep{Yamaokaetal10}.
-We are using observation ID 95409-01-15-06 taken from UT 2010-04-22 23:36:52 to UT 2010-04-23 00:01:10.
+We use an observation from the  \textit{RXTE} Proportional Counter Array (PCA; \citealt{Jahodaetal96}) in NASA's High Energy Astrophysics Science Archive Research Center (HEASARC) from the 2010 outburst of GX 339--4 \citep{Yamaokaetal10}, with the observation ID 95409-01-15-06 taken from UT 2010-04-22 23:36:52 to UT 2010-04-23 00:01:10.
 This observation was taken in 64-channel event mode with $122\,\mu$s time resolution (\texttt{E\_125us\_64M\_0\_1s}).
 The following filtering criteria were used to obtain Good Time Intervals (GTIs): Proportional Counter Unit (PCU) 2 is on, two or more PCUs are on, elevation angle $>\,10\degree$, and target offset $<\,0.02\degree$. 
 Time since the South Atlantic Anomaly passage was not filtered on. 
-Applying these filters, we have $\sim$\,1\,ks of good data. 
+Applying these filters, we have $\sim$\,1\,ks of data. 
 Since the observation is short, the data were not barycentered\footnote{\label{foot:bary} ``Barycentering'' the data applies a spacecraft clock correction to correct the photon arrival times to the solar system barycenter. This is commonly done with the FTOOL \texttt{barycorr} from HEASoft.} before analysis.
 
 \subsection{Hercules X-1}
@@ -348,7 +350,7 @@ The subpackage \texttt{simulator} (Section \ref{sec:simulator}) provides importa
 
 Finally, the subpackage \texttt{pulsar} implements a range of methods particularly useful for period searches in pulsars.
 
-\stingray is designed to be used both as a standalone package, but is also at the core of two other software packages currently under development: 
+\stingray is designed to be used both as a standalone package, and is also at the core of two other software packages currently under development: 
 \hendrics and \dave. 
 \hendrics (\citealt{hendrics}; see also Section \ref{sec:hendrics}) provides pre-built data analysis workflows using \stingray core functionality. 
 These workflows are accessible from the command line and are provided for some common data types and data analysis tasks. 
@@ -453,7 +455,7 @@ For light curves with complex variability patterns, and especially for understan
 
 The classes \crossspectrum and \powerspectrum share most of the implemented methods, except where otherwise noted. 
 Both classes include methods to rebin cross- and power spectra. Linear rebinning is implemented analogously to the method in class \lightcurve. 
-Additionally, logarithmic binning is implemented in the method \texttt{rebin\_log} in such a way that the bin width at a given frequency increases a fraction of the previous bin width:
+Additionally, logarithmic binning is implemented in the method \texttt{rebin\_log} in such a way that the bin width at a given frequency increases by a fraction of the previous bin width:
 
 \[
 d\nu_{i+1} = d\nu_{i} (1 + f) \; ,
@@ -536,7 +538,7 @@ In its most basic form, each subclass of \likelihood takes data in some form (mo
 The likelihood computes model values for each data point in the array of independent variables and statistically compares these model values with the data points stored in the dependent variable, assuming the particular statistical distribution of the likelihood definition. 
 The result is a single scalar, which can then be, for example, used in an optimization algorithm in order to find a Maximum Likelihood (ML) solution.
 
-For all likelihoods in \stingray, \stingray an equivalent subclass of \verb|stingray.modeling.Posterior| available, which uses the \likelihood definitions to compute posterior probability densities for the parameters of a model given data. 
+For all likelihoods in \stingray, an equivalent subclass of \verb|stingray.modeling.Posterior| is available, which uses the \likelihood definitions to compute posterior probability densities for the parameters of a model given data.
 All subclasses of \verb|Posterior| also require definition of a \texttt{logprior} method, which calculates the value of the prior probability density of the parameters. 
 Because priors are strongly problem-dependent, they cannot be hard-coded into \stingray. 
 Even for relatively straightforward problems such as modeling quasi-periodic oscillations of X-ray binaries, the physical properties and their effect on the data can differ strongly from source to source, indicating that a prior set for XTE~J1550--564 may not be appropriate for e.g.~GRS~1915+105. 
@@ -638,7 +640,7 @@ In \stingray, this procedure is actually done through arrays of events for bette
 
 \section{The \texttt{pulse} Subpackage}
 \label{sec:pulsar}
-The \stingray subpackages \texttt{pulse} contains the basic operations to perform the search and characterization of pulsed signals for use e.g.\ in searches of X-ray pulsars.
+The \stingray subpackage \texttt{pulse} contains the basic operations to perform the search and characterization of pulsed signals for use e.g.\ in searches of X-ray pulsars.
 
 \subsection{Epoch Folding}
 Among the basic algorithms used in pulsar astronomy, one cannot overstate the importance of Epoch Folding (EF).
@@ -648,7 +650,7 @@ An alternative way of seeing it, more useful for photon data, is as a \textit {h
 If the period is exactly correct and assuming a stable pulsation, the signal-to-noise ratio will get better approximately with the square root of the number of summed sub-intervals.
 This is the method used to obtain practically all pulse profiles shown in the literature, as most pulsar signals are orders of magnitude below the noise level.
 
-The \texttt{pulse.pulsar} submodule contains the functionality to calculate the phase given a simple pulse ephemeris consisting of any number of pulse frequency derivatives, or using a number of methods for the orbit of the pulsar (using the optional dependency \texttt{PINT})%
+The \texttt{pulse.pulsar} submodule contains the functionality to calculate the phase given a simple pulse ephemeris consisting of any number of pulse frequency derivatives, or using a number of methods for the orbit of the pulsar (using the optional dependency \texttt{PINT}).
 Moreover, the module also includes a mechanism to calculate the exposure of single bins in the pulse profile. 
 This is particularly useful for very long-period pulsars where the pulsed period is comparable to the length of the GTIs.
 The different exposure of pulse bins caused by the absence of signals during GTIs is taken into account in the calculation of the final pulse profile by the folding algorithm, if the user asks for it. 
@@ -709,7 +711,7 @@ The phaseogram in this context consists of a 2D histogram of the phase and arriv
 If the pulsation is stable and the pulse frequency was determined with precision, the phaseogram shows vertical stripes corresponding to perfectly aligned pulses.
 If the frequency is not as precise, the stripes become more and more diagonal.
 If the pulse has a detectable frequency derivative, these stripes bend with a parabolic shape.
-If the orbital solution is imperfect, the stripes show specific periodic features \footnote{See for example \url{https://github.com/matteobachetti/timing-lectures/blob/master/no-binder/Timing_residuals.ipynb}}.
+If the orbital solution is imperfect, the stripes show specific periodic features\footnote{See for example \url{https://github.com/matteobachetti/timing-lectures/blob/master/no-binder/Timing_residuals.ipynb}}.
 
 A very precise way to determine the exact pulse ephemeris is out of the scope of \stingray. 
 Nonetheless, \stingray has a mechanism to calculate the pulse arrival times (or times of arrival, TOAs) to be analyzed with more specialized software like Tempo, Tempo2 or PINT. 
@@ -795,6 +797,7 @@ The DIRAC Institute is supported through generous gifts from the Charles and Lis
 M.B. is supported in part by the Italian Space Agency through agreement ASI-INAF n.2017-12-H.0 and ASI-INFN agreement n.2017-13-H.0.
 A.L.S. is supported by an NSF Astronomy and Astrophysics Posdoctoral Fellowship under award AST-1801792.
 S.S. was supported by Google Summer of Code 2018.
+E.M.R. acknowledges support from Conselho Nacional de Desenvolvimento Cient\'ifico e Tecnol\'ogico (CNPq -- Brazil)
 We thank Astro Hack Week for providing the venue that started this project and the Lorentz Center workshop `The X-ray Spectral-Timing Revolution' (February 2016) that started the collaboration. 
 We thank the Google Summer of Code Program for funding a total 6 students who implemented a large fraction of the various library components over three summers.
 

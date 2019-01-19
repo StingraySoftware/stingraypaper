@@ -283,10 +283,10 @@ The paper layout is as follows:
 In Section \ref{sec:data}, we very briefly describe the data sets being used in this paper to showcase the implemented methods. 
 In Section \ref{sec:vision}, we lay out the overall vision, followed by a description of the general package structure and the general development framework in Section \ref{sec:development}. 
 The package's core functionality is shown in more detail in Section \ref{sec:core}, where we introduce basic classes for generating light curves and Fourier spectra of various types.
-In Sections \ref{sec:modeling}, \ref{sec:simulator} and \ref{sec:pulsar}, we present the submodules allowing modeling Fourier products, simulating light curves from stochastic processes, and pulsar analysis, respectively.
-Sections \ref{sec:hendrics} and \ref{sec:dave} point to connections with a command-line interface and a graphical user interface, respectively, which are being developed concurrently with \stingray. 
+In Sections \ref{sec:modeling}, \ref{sec:simulator} and \ref{sec:pulsar}, we present the submodules enabling the statistical modeling of Fourier products, simulating light curves from stochastic processes, and pulsar analysis, respectively.
+Sections \ref{sec:hendrics} and \ref{sec:dave} point to connections with a command-line interface and a graphical user interface which are being developed concurrently with \stingray. 
 Finally, in Section \ref{sec:future} we lay out our future development plans. 
-Note that we intentionally omit code examples and specific implementation details in this manuscript in order to preserve long-term accuracy. 
+Note that we intentionally omit code examples and specific implementation details in this manuscript in order to preserve longer-term accuracy. 
 All code to reproduce the figures in this paper is available online,\footnote{\url{https://github.com/StingraySoftware/stingraypaper}} as is a full suite of up-to-date tutorials.\footnote{\label{foot:nb}\url{https://github.com/StingraySoftware/notebooks}}
 
 \section{Data}
@@ -296,7 +296,7 @@ Here, we give brief introductions into the observations used and the data reduct
 
 \subsection{GX~339--4}
 \label{sec:gx339}
-GX 339--4 is a stellar black hole in a low-mass X-ray binary \citep{Hynesetal03}. 
+GX 339--4 is a stellar-mass black hole in a low-mass X-ray binary \citep{Hynesetal03}. 
 The black hole has a lower mass limit of $\sim$\,7\Msun\ \citep{MunozDariasetal08} and possibly a near-maximal spin \citep{Ludlametal15}. 
 The system also likely has a low binary orbit inclination; it has been constrained to $37 \degree <i\lesssim 60\degree$ from optical and X-ray observations \citep{Heidaetal17, Zdziarskietal98}, and spectral modeling by \citet{WangJietal18} estimates $i\approx 40\degree$.
 We use an observation from the  \textit{RXTE} Proportional Counter Array (PCA; \citealt{Jahodaetal96}) in NASA's High Energy Astrophysics Science Archive Research Center (HEASARC) from the 2010 outburst of GX 339--4 \citep{Yamaokaetal10}, with the observation taken from UT 2010-04-22 23:36:52 to UT 2010-04-23 00:01:10 (observation ID 95409-01-15-06).
@@ -329,8 +329,8 @@ Code is often siloed within groups, making it difficult to reproduce scientific 
 Additionally, the scarcity of fully open-source tools constitutes a significant barrier to entry for researchers new to the field, since it effectively requires anyone not part of collaborations with an existing private code base to write their own software from scratch. 
 The NASA library \texttt{xronos} is, to our knowledge, the only widely used open-source library in this field, and has several shortcomings. 
 In particular, it performs only a few of the most basic tasks, and it has not been maintained since 2004. 
-Other open-source projects use languages that either require an expensive license (e.g., IDL) or have a very limited scope (e.g., S-Lang).
-This dearth of  software for spectral timing motivated the development of \stingray,\footnote{\stingray was named partly in homage to the popular 1960s childrens' TV series, from where \stingray's motto derives: \textit{Anything can happen in the next half hour (but probably spectral timing)!}} a library built entirely in the widely-used \python language and based on \astropy functionality. 
+Other open-source projects use languages that either require an expensive license (e.g., IDL) or have a limited scope (e.g., S-Lang).
+This dearth of  software for spectral timing motivated the development of \stingray,\footnote{\stingray was named partly in homage to the popular 1960s childrens' TV series, from which \stingray's motto derives: \textit{Anything can happen in the next half hour (including spectral timing made easy)!}} a library built entirely in the widely-used \python language and based on \astropy functionality. 
 \stingray aims to make many of the core Fourier analysis tools used in timing and spectral-timing analysis available to a large range of researchers while providing a common platform for new methods and tools as they enter the field. 
 
 It includes the most relevant functionality in its core package, while extending that functionality in its subpackages in several ways, allowing for easy modeling of light curves and power spectra, simulation of synthetic data sets and pulsar timing. 
@@ -344,7 +344,7 @@ The modularity of its classes allows for easy incorporation of existing \stingra
 
 This core functionality is extended in various ways in currently three subpackages. 
 The \texttt{modeling} subpackage (see also Section \ref{sec:modeling}) provides a framework for modeling light curves and Fourier spectra with parametric functions. 
-Based on this framework, it allows users to search efficiently for (quasi-)periodic oscillations in light curves with stochastic variability, and provides convenience functions to aid standard tasks like fitting Lorentzian functions to power spectra. 
+Based on this framework, it allows users to search for (quasi-)periodic oscillations in light curves with stochastic variability, and provides convenience functions to aid standard tasks like fitting Lorentzian functions to power spectra. 
 
 The subpackage \texttt{simulator} (Section \ref{sec:simulator}) provides important functionality to allow efficient simulation of time series from a range of stochastic processes. This includes simulation of light curves from power spectral models as well as the use of transfer functions to introduce time lags and higher-order effects. 
 
@@ -370,7 +370,7 @@ As with most open-source packages, \stingray is under continuous development and
 
 \stingray is developed entirely in Python 3, with backwards compatibility to Python 2.7 where possible through the integration package \texttt{six}. 
 Development is version-controlled through \texttt{git}, and officially hosted on GitHub through the organization \textit{StingraySoftware},\footnote{\url{https://github.com/StingraySoftware/}} where several interconnected repositories related to \stingray live, including the core library, extension packages \hendrics and \texttt{DAVE}, the suite of tutorials, the website, and this manuscript. 
-All patches and code are submitted via pull requests to the \stingray repository, and checked by a maintainer for correctness and adherence to standards of code, documentation, and tests. 
+All patches and code are submitted via pull requests to the \stingray repository, and checked by a maintainer for correctness of algorithms, adherence to standards of code, documentation, and tests. 
 As an \textit{Astropy} Affiliated Package,\footnote{\url{http://www.astropy.org/affiliated/}} we follow the coding standards as well as community guidelines (including the Code of Conduct) set out by the \textit{Astropy} community. 
 All code within the \stingray core library is subject to extensive unit testing, with compatibility across platforms as well as different versions of Python and required packages controlled through Continuous Integration services \textit{Travis} (Unix platforms) and \textit{AppVeyor} (Windows). 
 Test coverage is checked using \textit{Coveralls}. 
@@ -379,6 +379,17 @@ Tutorials are provided in the form of executable \textit{Jupyter} notebooks in a
 
 
 %%% CORE FUNCTIONALITY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}[htbp]
+\begin{center}
+\includegraphics[width=\textwidth]{../figures/example_lc_ps.pdf}
+\caption{Left panel: A $\sim 1 \mathrm{ks}$ \rxte\ observation of the black hole X-ray binary GX~339--4. 
+Details of the observation can be found in Section \ref{sec:gx339}. 
+In gray, we show the light curve produced by binning the events into $0.02\,\mathrm{s}$ bins. 
+The blue line corresponds to the rebinned light curve at $dt = 1.0\,\mathrm{s}$. 
+Right panel: we show the power spectrum calculated from the light curve in the left panel (gray), as well as a version of the same power spectrum that has been linearly rebinned (blue) and logarithmically rebinned (orange) in frequency.}
+\label{fig:psd}
+\end{center}
+\end{figure*}
 
 \section{Core Functionality}
 \label{sec:core}
@@ -405,23 +416,13 @@ Various operations are implemented for class \lightcurve.
 Custom behaviour of the $+$ and $-$ operators allows straightforward addition and subtraction of light curves from one another. 
 Assuming the light curves have the same time bins, the $+$ and $-$ operators will add or subtract the flux or counts measurements, respectively, and return a new \lightcurve\ object with the results. 
 Other common operations implemented include time-shifting the light curve by a constant factor, joining two light curves into a single object, truncating a light curve at a certain time bin, and input/output operations to read or write objects from/to disk in various formats (HDF5, FITS and ASCII are currently supported). 
-For light curves that do not have consecutive time bins, there is a sorting operations, as well as the option to sort the light curve by the ascending or descending flux or counts. 
+For light curves that do not have consecutive time bins, there is a sorting operation, as well as the option to sort the light curve by the ascending or descending flux or counts. 
 
 We provide support for GTIs in many methods and implement rebinning the light curve to a new time resolution larger than the native resolution of the data (interpolation to a finer resolution is currently not supported). 
 In Figure \ref{fig:psd} (left panel), we show an example observation of GX~339--4 as taken with with \rxte.
 \stingray implements basic methods for plotting (useful for a quick look at the data).
 
-\begin{figure*}[htbp]
-\begin{center}
-\includegraphics[width=\textwidth]{../figures/example_lc_ps.pdf}
-\caption{Left panel: A $\sim 1 \mathrm{ks}$ \rxte\ observation of the black hole X-ray binary GX~339--4. 
-Details of the observation can be found in Section \ref{sec:gx339}. 
-In gray, we show the light curve produced by binning the events into $0.02\,\mathrm{s}$ bins. 
-The blue line corresponds to the rebinned light curve at $dt = 1.0\,\mathrm{s}$. 
-Right panel: we show the power spectrum calculated from the light curve in the left panel (gray), as well as a version of the same power spectrum that has been linearly rebinned (blue) and logarithmically rebinned (orange) in frequency.}
-\label{fig:psd}
-\end{center}
-\end{figure*}
+
 
 \subsection{The \texttt{Events} class}
 
@@ -442,7 +443,7 @@ It is possible to simulate more physically meaningful photon events from a given
 \label{sec:csps}
 
 The cross spectrum and the power spectrum\footnote{In the signal processing literature, generally a distinction is made between the power spectrum, which
-describes the process at the source generating variable time series, and the periodogram, which denotes a realization of said power spectrum, i.e., the time series we actually observe. While the products generated by \stingray generally fall into the latter category, the astronomy literature usually denotes them by the term power spectrum. We follow this convention here as we do within the software package itself.} 
+describes the process at the source generating variable time series, and the periodogram, which denotes a realization of said power spectrum, i.e., the time series we actually observe, which is an \textit{estimator} of the underlying process. While the products generated by \stingray are generally derived from data, and therefore periodograms, the astronomy literature usually denotes them by the term power spectrum. We follow this convention here as we do within the software package itself.} 
 are closely related (for a pedagogical introduction into Fourier analysis, see \citealt{vanderklis1989}; see also \citealt{uttley2014} for a recent review of spectral timing techniques). 
 Computing the cross spectrum requires two evenly sampled time series $\mathbf{y}_1 = \{y_{1,i}\}_{i=1}^{N} $ and $\mathbf{y}_2 =  \{y_{2,i}\}_{i=1}^{N}$ taken simultaneously at exactly the same time intervals $\{t_i \}_{i=1}^N$. 
 Under this assumption, one may then compute the discrete Fourier transform of each time series, $\mathcal{F}_1$ and $\mathcal{F}_2$ independently, and multiply $\mathcal{F}_1$ with $\mathcal{F}^{*}_2$, i.e. the Fourier transform of $\mathbf{y}_1$ with the \textit{complex conjugate} of the Fourier transform of $\mathbf{y}_2$. 
@@ -450,7 +451,7 @@ Under this assumption, one may then compute the discrete Fourier transform of ea
 Because the power spectrum is defined as the square of the real part of the Fourier amplitudes of a single, evenly sampled time series, it can be formulated as the special case of the cross spectrum where $\mathbf{y}_1 = \mathbf{y}_2$. 
 In \stingray, we implement a class \crossspectrum, which takes two \lightcurve objects as input and internally calculates the complex cross spectrum in one of a number of common normalizations (see below).  Because many of the internal calculations are the same, the class \powerspectrum is implemented as a subclass of \crossspectrum, but takes only a single \lightcurve object instead of two. 
 
-There are several popular normalizations for the real part of the cross spectrum as well as the power spectrum implemented in \stingray: the \textit{Leahy normalization} \citep{leahy1983} is defined such that for simple white noise, the power spectrum will follow a $\chi^2$ distribution with $2$ degrees of freedom around a mean value of $2$, and the cospectrum---the real part of the cross spectrum---will follow a Laplace distribution centred on $0$ with a scale parameter of $1$. It is particularly useful for period searches, because the white noise level is well understood and always the same (but be aware that detector effects like dead time can distort the power spectrum in practice; \citealt{Bachetti+15}).
+There are several popular normalizations for the real part of the cross spectrum as well as the power spectrum implemented in \stingray: the \textit{Leahy normalization} \citep{leahy1983} is defined such that for simple white noise, the power spectrum will follow a $\chi^2$ distribution with $2$ degrees of freedom around a mean value of $2$, and the cospectrum---the real part of the cross spectrum---will follow a Laplace distribution centred on $0$ with a scale parameter of $1$ \citep{huppenkothen2017}. It is particularly useful for period searches, because the white noise level is well understood and always the same (but be aware that detector effects like dead time can distort the power spectrum in practice; \citealt{Bachetti+15}).
 For light curves with complex variability patterns, and especially for understanding how these patterns contribute to the overall variance observed, the \textit{fractional rms-squared normalization} \citep{belloni1990,miyamoto1992}  or the \textit{absolute rms-squared normalization} \citep{uttley2001} may be more appropriate choices. 
 
 The classes \crossspectrum and \powerspectrum share most of the implemented methods, except where otherwise noted. 
@@ -469,10 +470,10 @@ For the white noise case, the equations to accurately calculate a $p$-value of r
 Note that the cross spectrum does not follow the same distribution \citep{huppenkothen2017}, and the recently derived statistical distributions for this case will be implemented in a future version of \stingray. 
 
 In many practical applications, users may wish to average power- or cross spectra from multiple light curve segments in order to suppress statistical noise. 
-This can easily be done with the appropriate classes \texttt{AveragedPowerspectrum} and \texttt{AveragedCrossspectrum}, which take a \lightcurve object or list of \lightcurve objects as an input and will compute averaged Fourier products by dividing the light curve into $N$ segments of a given size $\tau_\mathrm{seg}$. 
+This can be done with the appropriate classes \texttt{AveragedPowerspectrum} and \texttt{AveragedCrossspectrum}, which take a \lightcurve object or list of \lightcurve objects as an input and will compute averaged Fourier products by dividing the light curve into $N$ segments of a given size $\tau_\mathrm{seg}$. 
 The Fourier spectra (either cross spectra or power spectra) are averaged together. 
 Both are subclasses of \crossspectrum, and either inherit or override many of the methods relevant for those classes as well. 
-An example of the kinds of products produced by the functions above is given in Figure \ref{fig:psd}.
+An example of the kinds of products produced by the classes and methods introduced above is given in Figure \ref{fig:psd} (right panel).
 
 For averaged cross spectra, it is possible to calculate the time lag between variability in two simultaneous light curves, for example, if the two light curves cover different energy bands \citep{Vaughanetal94}. 
 The time lag $\tau_j$ is defined as
@@ -491,6 +492,12 @@ c_j = \frac{C_{xy,j}}{C_{x,j} C_{y,j}} \; .
 \noindent Here, $C_{xy,j}$ corresponds to the real part of the unnormalized cross spectrum, and $C_{x,j}$ and $C_{y,j}$ correspond to the analogous squared amplitudes of the power spectrum for each individual light curve. 
 The error on $\tau_j$ and $c_j$ are also computed in \stingray.
 
+For long observations with quasi-periodic oscillations (QPOs) spectrograms, more commonly known in the astronomy literature as Dynamic Power Spectra, can be a useful way to track changes in the QPO centroid frequency over time. 
+We have implemented \texttt{DynamicalPowerspectrum} as a subclass to \texttt{AveragedPowerspectrum} to provide this functionality. 
+Like \texttt{AveragedPowerspectrum}, this class takes a \lightcurve object and a segment size as input, but instead of averaging the power spectra of each individual segment, it will create a matrix of time bins (one bin for each segment) as columns and Fourier frequencies as rows. 
+Rebinning both along the time and frequency axis is possible. 
+Moreover, the method \texttt{trace\_maximum} automatically finds the frequency with the highest power in each segment in a given range of frequencies, and traces this maximum over time. 
+An example using data from the source GX~339--4 is shown in Figure \ref{fig:dynspec}.
 \begin{figure}[htbp]
 \begin{center}
 \includegraphics[width=9cm]{../figures/dyn_spec.pdf}
@@ -504,12 +511,6 @@ In red, we show the frequency with the highest power found in each segment (excl
 \end{center}
 \end{figure}
 
-For long observations with quasi-periodic oscillations (QPOs) spectrograms, more commonly known in the astronomy literature as Dynamic Power Spectra, can be a useful way to track changes in the QPO centroid frequency over time. 
-We have implemented \texttt{DynamicalPowerspectrum} as a subclass to \texttt{AveragedPowerspectrum} to provide this functionality. 
-Like \texttt{AveragedPowerspectrum}, this class takes a \lightcurve object and a segment size as input, but instead of averaging the power spectra of each individual segment, it will create a matrix of time bins (one bin for each segment) as columns and Fourier frequencies as rows. 
-Rebinning both along the time and frequency axis is possible. 
-Moreover, the method \texttt{trace\_maximum} automatically finds the frequency with the highest power in each segment in a given range of frequencies, and traces this maximum over time. 
-An example using data from the source GX~339--4 is shown in Figure \ref{fig:dynspec}.
 
 Closely related to the cross spectrum and power spectrum are the crosscorrelation and the autocorrelation, implemented in classes \texttt{CrossCorrelation} and \texttt{AutoCorrelation}. 
 As their respective Fourier spectra equivalents they take either one (autocorrelation) or two (cross correlation) \lightcurve objects as input and computes the correlation between the two light curves or of the single light curve with itself, along with the time lags for which the correlation was produced and the time lag at which the maximum correlation is measured.
@@ -523,7 +524,7 @@ The classes \powerspectrum and \crossspectrum will generate warnings if the obse
 \label{sec:modeling}
 
 Modeling data sets with parametric (often physically motivated) models that map an independent variable (e.g., time or frequency) to one or more dependent variables (e.g., flux, counts or Fourier powers) is a common task in astronomy. 
-Constructing a universal modeling framework is a highly non-trivial task, and better packages exist for general-purpose model building (e.g., STAN, \citealt{stan}). 
+Constructing a universal modeling framework is a highly non-trivial task, and excellent packages exist for general-purpose model building (e.g., STAN, \citealt{stan}). 
 Thus, \stingray's modeling interface restricts itself to models of commonly used spectral-timing products, in particular (averaged) power spectra. 
 While it makes heavy use of the \verb|astropy.modeling.FittableModel| definitions, it uses custom definitions for fitting algorithms motivated by the statistical properties of spectral timing products, which deviate significantly from other data types commonly found in astronomy and thus cannot easily be modelled with standard approaches defined in \texttt{astropy}.
 
@@ -608,6 +609,7 @@ Right: A corresponding light curve generated by the \texttt{simulator} subpackag
 \end{center}
 \end{figure*}
 
+\newpage
 \section{The \texttt{simulator} Subpackage}
 \label{sec:simulator}
 
@@ -630,17 +632,19 @@ The \texttt{Simulator} object is capable of generating multiple light curves sta
 \subsection{Simulating event lists from light curves}
 The \texttt{simulator.base.simulate\_times} method is able to simulate event lists from input light curves.
 It implements the acceptance-rejection method: 
-1) generate a light curve (and smooth out any Poisson noise if generated through the \citealt{timmer1995} method) over the whole observation; normalize it so that the maximum is 1; 
-2) generate an event, with uniform probability over the observing time; 
-3) associate to this event a uniform random number $\mathcal{P}$ between 0 and 1; 
-4) if $\mathcal{P}$ is lower than the normalized light curve at the event time, \textit{accept} the event, otherwise \textit{reject} it.
-In \stingray, this procedure is actually done through arrays of events for better performance, using the functionality contained in the \texttt{numpy} library.
+\begin{enumerate}
+\item Generate a light curve (and smooth out any Poisson noise if generated through the \citealt{timmer1995} method) over the whole observation; normalize it so that the maximum is 1; 
+\item Generate an event, with uniform probability over the observing time; 
+\item Associate to this event a uniform random number $\mathcal{P}$ between 0 and 1; 
+\item If $\mathcal{P}$ is lower than the normalized light curve at the event time, \textit{accept} the event, otherwise \textit{reject} it.
+\end{enumerate}
+In \stingray, we use arrays of events for better performance, using the functionality contained in the \texttt{numpy} library.
 
 %%% PULSAR FUNCTIONALITY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{The \texttt{pulse} Subpackage}
 \label{sec:pulsar}
-The \stingray subpackage \texttt{pulse} contains the basic operations to perform the search and characterization of pulsed signals for use e.g.\ in searches of X-ray pulsars.
+The subpackage \texttt{pulse} contains the basic operations to perform the search and characterization of pulsed signals for use e.g.\ in searches of X-ray pulsars.
 
 \subsection{Epoch Folding}
 Among the basic algorithms used in pulsar astronomy, one cannot overstate the importance of Epoch Folding (EF).
@@ -748,7 +752,7 @@ Like \stingray, \hendrics is an \astropy affiliated package and aims to build up
 \begin{center}
 \includegraphics[width=\linewidth]{../figures/dave.pdf}
 \caption{An example of the \dave graphical user interface for the Her X-1 pulsar data observed with \nustar: 
-At the top left, the last 30\,ks of the pulsar light curve with the GTIs clearly marked. In the top right, the averaged power spectrum generated from 109 segments of $256\,\mathrm{s}$ duration with a binned time resolution of $1.5\,\mathrm{s}$. 
+In the top left, we show the last 30\,ks of the pulsar light curve with the GTIs clearly marked. In the top right, we plot the averaged power spectrum generated from 109 segments of $256\,\mathrm{s}$ duration with a binned time resolution of $1.5\,\mathrm{s}$. 
 In the middle, we present the dynamic power spectrum generated from the same $256\,\mathrm{s}$ segments that generated the top right averaged power spectrum. 
 Below, header meta-data is shown for reference. 
 On the left, the menu presents a range of options of figures to plot and compare, including spectral-timing capabilities. 
@@ -765,7 +769,7 @@ Much of the core functionality within \stingray is available in \dave as well: c
 In addition, it implements interactive filtering of light curves with respect to energy channels or energies (if a response matrix file is loaded), time ranges, and count rates. 
 Users may compare light curves and power spectra from different energy ranges, and may create auxiliary products such as color-color and color-intensity diagrams that further aid the exploration of the data. 
 An example of the interface is shown in Figure \ref{fig:dave}. 
-The full interface and its capabilities will be described in a forthcoming publication. 
+The full interface and its capabilities will be described in a future publication. 
 
 
 %%% FUTURE DEVELOPMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -773,8 +777,8 @@ The full interface and its capabilities will be described in a forthcoming publi
 \section{Future Development Plans}
 \label{sec:future}
 
-Future plans for \stingray development are largely aimed at extending current functionality related to Fourier spectra (with, e.g., the planned implementation of the statistical distributions relevant to co-spectra; \citealt{huppenkothen2017}), and continuing work towards comprehensive spectral-timing capabilities. 
-While reference implementations of higher-order Fourier products such as bispectra, biphase and bicoherence exist \citep{maccarone2002,maccarone2005,maccarone2013}, they require additional extensions to be useful for science. 
+Future plans for \stingray development are largely aimed at extending current functionality related to Fourier spectra, and continuing work towards comprehensive spectral-timing capabilities. 
+While open-source reference implementations of higher-order Fourier products such as bispectra, biphase and bicoherence exist \citep{maccarone2002,maccarone2005,maccarone2013}, they require additional extensions to be useful for X-ray spectral timing. 
 New key features in the next version of \stingray, based on an existing reference implementation of covariance spectra \citep{WilkinsonUttley09}, will include lag-energy spectra \citep{Vaughanetal94}, rms-energy spectra \citep{Revnivtsevetal99}, and excess variance spectra \citep{Vaughanetal03}. 
 In addition, while at the moment there is rudimentary functionality to build spectra-timing products, it is currently not possible to seamlessly work with these products using \stingray, because \stingray currently has no native capability for energy-spectral modeling. 
 Instead, they would have to be exported (e.g., saved to disk) and then loaded into another software, significantly disrupting workflows and pipeline development. 
@@ -792,14 +796,14 @@ Where possible, we will replace existing implementations by high-performance equ
 %% command.
 \acknowledgments
 
+We thank Astro Hack Week for providing the venue that started this project and the Lorentz Center workshop `The X-ray Spectral-Timing Revolution' (February 2016) that started the collaboration. 
+We thank the Google Summer of Code Program for funding a total 6 students who implemented a large fraction of the various library components over three summers.
 D.H. acknowledges support from the DIRAC Institute in the Department of Astronomy at the University of Washington. 
 The DIRAC Institute is supported through generous gifts from the Charles and Lisa Simonyi Fund for Arts and Sciences, and the Washington Research Foundation.
 M.B. is supported in part by the Italian Space Agency through agreement ASI-INAF n.2017-12-H.0 and ASI-INFN agreement n.2017-13-H.0.
 A.L.S. is supported by an NSF Astronomy and Astrophysics Posdoctoral Fellowship under award AST-1801792.
 S.S. was supported by Google Summer of Code 2018.
 E.M.R. acknowledges support from Conselho Nacional de Desenvolvimento Cient\'ifico e Tecnol\'ogico (CNPq -- Brazil)
-We thank Astro Hack Week for providing the venue that started this project and the Lorentz Center workshop `The X-ray Spectral-Timing Revolution' (February 2016) that started the collaboration. 
-We thank the Google Summer of Code Program for funding a total 6 students who implemented a large fraction of the various library components over three summers.
 
 %% Similar to \facility{}, there is the optional \software command to allow 
 %% authors a place to specify which programs were used during the creation of 

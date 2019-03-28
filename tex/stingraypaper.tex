@@ -216,13 +216,14 @@
 \affiliation{Indian Institute of Technology Mandi, Mandi, Himachal Pradesh, India}
 \nocollaboration
 
+\author[0000-0002-2985-6369]{Evandro Martinez Ribeiro}
+\affiliation{Kapteyn Astronomical Institute, University of Groningen, P.O. Box 800, NL-9700 AV Groningen, The Netherlands.}
+\nocollaboration
+
 \author{Ricardo Valles Blanco}
 \affiliation{Timelab Technologies Ltd., 20-22 Wenlock Road, London N1 7GU, United Kingdom.}
 \nocollaboration
 
-\author[0000-0002-2985-6369]{Evandro Martinez Ribeiro}
-\affiliation{Kapteyn Astronomical Institute, University of Groningen, P.O. Box 800, NL-9700 AV Groningen, The Netherlands.}
-\nocollaboration
 
 %% Note that the \and command from previous versions of AASTeX is now
 %% depreciated in this version as it is no longer necessary. AASTeX 
@@ -306,6 +307,14 @@ Time since the South Atlantic Anomaly passage was not filtered on.
 Applying these filters, we have $\sim$\,1\,ks of good data. 
 Since the observation is short, the data were not barycentered\footnote{\label{foot:bary} ``Barycentering'' the data applies a spacecraft clock correction to correct the photon arrival times to the solar system barycenter. This is commonly done with the FTOOL \texttt{barycorr} from HEASoft.} before analysis.
 
+\subsection{KIC12158940}
+\label{sec:kepleragn}
+
+KIC12158940 is one of 21 Active Galactic Nuclei studied in \citet{smith2018} and was observed for 12 epochs with the \textit{Kepler} Space Telescope \citep{borucki2010}. \citet{smith2018} report an average Kepler magnitude of 14.85 \citep[originally calculated in][]{brown2011} and a black hole mass of $\log{M_{\sun} }= 8.04$. The power spectrum shows a break at a characteristic time scale of $\tau_\mathrm{char} = 31.6$ and a steep power spectral slope of $\Gamma = -3.3$.
+
+We downloaded the pre-produced light curves for all twelve epochs from the Barbara A. Mikulski Archive for Space Telescopes (MAST). We note that \citet{smith2018} caution that because Kepler was designed for observing stars, these pre-produced AGN light curves contain instrumental artifacts (e.g. too small extraction apertures and rolling band noise) that render these light curves too imprecise to derive scientific conclusions from them. Because the purpose of this work is to showcase \stingray's capabilities on different types of data rather than deriving physical properties, we continue with the pre-produced MAST light curves. We did spot checks using a larger aperture to extract photometric fluxes from the full-frame images using the Python package \textit{Lightkurve} \citep{lightkurve} and find no discernible differences due to the smaller apertures used by the \textit{Kepler} team. 
+For astrophysical investigations, however, we urge the reader interested analysing AGN light curves observed with Kepler to follow the methods laid out in \citet{smith2018} to produce de-biased light curves before using \stingray. We split the \textit{Kepler} light curves for KIC12158940 along data gaps to produce contiguous segments, and rebinned all segments to a resolution of 0.075 days in order to generate evenly sampled light curves. 
+
 \subsection{Hercules X-1}
 \label{sec:herx1}
 
@@ -381,12 +390,23 @@ Tutorials are provided in the form of executable \textit{Jupyter} notebooks in a
 %%% CORE FUNCTIONALITY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}[htbp]
 \begin{center}
-\includegraphics[width=\textwidth]{../figures/example_lc_ps.pdf}
+\includegraphics[width=\textwidth]{example_lc_ps.pdf}
 \caption{Left panel: A $\sim 1 \mathrm{ks}$ \rxte\ observation of the black hole X-ray binary GX~339--4. 
 Details of the observation can be found in Section \ref{sec:gx339}. 
 In gray, we show the light curve produced by binning the events into $0.02\,\mathrm{s}$ bins. 
 The blue line corresponds to the rebinned light curve at $dt = 1.0\,\mathrm{s}$. 
 Right panel: we show the power spectrum calculated from the light curve in the left panel (gray), as well as a version of the same power spectrum that has been linearly rebinned (blue) and logarithmically rebinned (orange) in frequency.}
+\label{fig:psd}
+\end{center}
+\end{figure*}
+
+\begin{figure*}[htbp]
+\begin{center}
+\includegraphics[width=\textwidth]{example_kepler_agn.pdf}
+\caption{Left panel: All twelve epochs of the \textit{Kepler} observation of the AGN KIC12158940. 
+Details of the observation can be found in Section \ref{sec:kepleragn}. 
+In the left panel, we show the light curve, rebinned to 0.075 days. While there are error bars on the \textit{Kepler} data points, they are so small on this scale as to be virtually invisible.
+The right panel shows the corresponding averaged power spectrum, using a total of $50$ segments of 10-day length each.}
 \label{fig:psd}
 \end{center}
 \end{figure*}
@@ -419,7 +439,7 @@ Other common operations implemented include time-shifting the light curve by a c
 For light curves that do not have consecutive time bins, there is a sorting operation, as well as the option to sort the light curve by the ascending or descending flux or counts. 
 
 We provide support for GTIs in many methods and implement rebinning the light curve to a new time resolution larger than the native resolution of the data (interpolation to a finer resolution is currently not supported). 
-In Figure \ref{fig:psd} (left panel), we show an example observation of GX~339--4 as taken with with \rxte.
+In Figure \ref{fig:psd} (left panel), we show an example observation of GX~339--4 as taken with with \rxte, and in Figure \ref{fig:kepleragn} (left panel) a \textit{Kepler} observation of KIC12158940.
 \stingray implements basic methods for plotting (useful for a quick look at the data).
 
 
@@ -473,7 +493,7 @@ In many practical applications, users may wish to average power- or cross spectr
 This can be done with the appropriate classes \texttt{AveragedPowerspectrum} and \texttt{AveragedCrossspectrum}, which take a \lightcurve object or list of \lightcurve objects as an input and will compute averaged Fourier products by dividing the light curve into $N$ segments of a given size $\tau_\mathrm{seg}$. 
 The Fourier spectra (either cross spectra or power spectra) are averaged together. 
 Both are subclasses of \crossspectrum, and either inherit or override many of the methods relevant for those classes as well. 
-An example of the kinds of products produced by the classes and methods introduced above is given in Figure \ref{fig:psd} (right panel).
+Examples of the kinds of products produced by the classes and methods introduced above are given in Figures \ref{fig:psd} and \ref{fig:kepleragn} (right panels).
 
 For averaged cross spectra, it is possible to calculate the time lag between variability in two simultaneous light curves, for example, if the two light curves cover different energy bands \citep{Vaughanetal94}. 
 The time lag $\tau_j$ is defined as
@@ -500,7 +520,7 @@ Moreover, the method \texttt{trace\_maximum} automatically finds the frequency w
 An example using data from the source GX~339--4 is shown in Figure \ref{fig:dynspec}.
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[width=9cm]{../figures/dyn_spec.pdf}
+\includegraphics[width=9cm]{dyn_spec.pdf}
 \caption{An example of a dynamic power spectrum generated from the GX-339 light curve shown in Figure \ref{fig:psd}. 
 We generated 63 light curve segments of 16 seconds length with a $0.02\,\mathrm{s}$ time resolution and Fourier-transformed each to generate a power spectrum. 
 The dynamic power spectrum here plots each power spectrum as a vertical slice as a function of time, with the color indicating the fractional rms-squared-normalized power in each bin (yellow are large powers; purple, small) . 
@@ -561,9 +581,9 @@ Other statistical models can be easily implemented by subclassing the \texttt{Lo
 \begin{figure*}[htbp]
 \begin{center}
 \subfloat[]{%
-\includegraphics[width=10cm]{../figures/example_posterior.pdf}
+\includegraphics[width=10cm]{example_posterior.pdf}
 }\subfloat[]{%
-\includegraphics[width=6.5cm]{../figures/example_psd_corner.pdf}
+\includegraphics[width=6.5cm]{example_psd_corner.pdf}
 }\caption{Left panel: In black, a power spectrum averaged out of 15 light curve segments of 64s each of the GX~339--4 observation, along with draws from the posterior distribution of the power law model plus the Lorentzian QPO model and constant used to represent the data (red). 
 Right panel: corner plot showing the marginal posterior distributions (diagonal) of the six parameters of the model: the amplitude of the power law $A_\mathrm{PL}$, the power law index $\alpha$, the amplitude of the Lorentzian $A_\mathrm{QPO}$, the QPO centroid frequency $\nu_0$, the width of the QPO $\Delta_\nu$, and the amplitude of the white noise, $A_\mathrm{WN}$. The right-hand figure was produced using the package \texttt{corner} \citep{corner}.}
 \label{fig:posterior}
@@ -602,7 +622,7 @@ Providing this functionality is planned for a future release of \stingray.
 %%% SIMULATOR %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}[htbp]
 \begin{center}
-\includegraphics[width=\linewidth]{../figures/sim_lc.pdf}
+\includegraphics[width=\linewidth]{sim_lc.pdf}
 \caption{Left: A power spectral shape generated using a compound \texttt{astropy.modeling.models} object of a power law and a Lorentzian. 
 Right: A corresponding light curve generated by the \texttt{simulator} subpackage with a time resolution of $0.05\,\mathrm{s}$, a total duration of $15\,\mathrm{ks}$, a mean count rate of $40\,\mathrm{counts}/\mathrm{s}$ and a fractional rms amplitude of $0.2$. In blue we show a binned version of the same light curve.}
 \label{fig:sim_lc}
@@ -726,7 +746,7 @@ The functionality to plot the phaseogram, interactively change the timing parame
 
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[width=\linewidth]{../figures/phaseogram.pdf}
+\includegraphics[width=\linewidth]{phaseogram.pdf}
 \caption{Phaseogram showing the variation of the pulse phase corresponding to an imperfect orbital solution (in this case the time at the ascending node $T_0$) in a \nustar observation of Her X-1, executed with \stingray and plotted in a convenient, interactive interface with \hendrics. 
 The TOA button allows the user to calculate the TOA for use with Tempo2, PINT or similar programs.}
 \label{fig:phaseogram}
@@ -750,7 +770,7 @@ Like \stingray, \hendrics is an \astropy affiliated package and aims to build up
 
 \begin{figure*}[htbp]
 \begin{center}
-\includegraphics[width=\linewidth]{../figures/dave.pdf}
+\includegraphics[width=\linewidth]{dave.pdf}
 \caption{An example of the \dave graphical user interface for the Her X-1 pulsar data observed with \nustar: 
 In the top left, we show the last 30\,ks of the pulsar light curve with the GTIs clearly marked. In the top right, we plot the averaged power spectrum generated from 109 segments of $256\,\mathrm{s}$ duration with a binned time resolution of $1.5\,\mathrm{s}$. 
 In the middle, we present the dynamic power spectrum generated from the same $256\,\mathrm{s}$ segments that generated the top right averaged power spectrum. 
@@ -797,7 +817,7 @@ Where possible, we will replace existing implementations by high-performance equ
 \acknowledgments
 
 We thank Astro Hack Week for providing the venue that started this project and the Lorentz Center workshop `The X-ray Spectral-Timing Revolution' (February 2016) that started the collaboration. 
-We thank the Google Summer of Code Program for funding a total 6 students who implemented a large fraction of the various library components over three summers.
+We thank the Google Summer of Code Program for funding a total 6 students who implemented a large fraction of the various library components over three summers. We thank Jim Davenport for providing help with the Kepler data, as well as the anonymous referee and the AAS statistics editor for their helpful comments on the manuscript.
 D.H. acknowledges support from the DIRAC Institute in the Department of Astronomy at the University of Washington. 
 The DIRAC Institute is supported through generous gifts from the Charles and Lisa Simonyi Fund for Arts and Sciences, and the Washington Research Foundation.
 M.B. is supported in part by the Italian Space Agency through agreement ASI-INAF n.2017-12-H.0 and ASI-INFN agreement n.2017-13-H.0.

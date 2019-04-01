@@ -797,7 +797,7 @@ The full interface and its capabilities will be described in a future publicatio
 \section{Future Development Plans}
 \label{sec:future}
 
-Future plans for \stingray development are largely aimed at extending current functionality related to Fourier spectra, and continuing work towards comprehensive spectral-timing capabilities. 
+Near- and medium-term plans for \stingray development are largely aimed at extending current functionality related to Fourier spectra, and continuing work towards comprehensive spectral-timing capabilities. 
 While open-source reference implementations of higher-order Fourier products such as bispectra, biphase and bicoherence exist \citep{maccarone2002,maccarone2005,maccarone2013}, they require additional extensions to be useful for X-ray spectral timing. 
 New key features in the next version of \stingray, based on an existing reference implementation of covariance spectra \citep{WilkinsonUttley09}, will include lag-energy spectra \citep{Vaughanetal94}, rms-energy spectra \citep{Revnivtsevetal99}, and excess variance spectra \citep{Vaughanetal03}. 
 In addition, while at the moment there is rudimentary functionality to build spectra-timing products, it is currently not possible to seamlessly work with these products using \stingray, because \stingray currently has no native capability for energy-spectral modeling. 
@@ -808,6 +808,8 @@ Here, it will be necessary to connect \stingray with the extensive suite of phys
 Data rates from current and future X-ray instruments are increasing at a precipitous rate, pushing memory and processing requirements for even simple tasks like Fast Fourier Transforms of data observed e.g. with \textit{NICER} and \textit{Astrosat} into a regime that is difficult with standard desktop computing architectures. 
 Therefore, the other strong emphasis for the second version of \stingray will be code and algorithm optimization. 
 Where possible, we will replace existing implementations by high-performance equivalents that take advantage of recent developments in computing (such as GPU-enabled computations and multi-core batch processing), optimize and streamline existing code to minimize computational overhead and memory usage of the classes and functions implemented within \stingray. 
+
+Typical X-ray timing observations--long, deep stares at single objects with high time resolution--are particularly well suited for Fourier-based methods, owing to their relatively regular time sampling and observations duration much longer than the physical time scales of interest encoded in the light curves. While some optical telescopes, most notably \textit{Kepler} and the Transiting Exoplanet Survey Satellite (\textit{TESS}), employ similar modes of observation that make the current suite of methods in \stingray transferable to these observations, many current and future \textit{survey instruments} such as the \textit{Zwicky Transient Facility} (\textit{ZTF}; \citealt{bellm2019,graham2019}) or the \textit{Large Synoptic Survey Telescope} (\textit{LSST}; \citealt{lsst2019}) will provide the community with long-term light curves that are irregularly sampled. A range of methods has been developed for time series analysis of these light curves in the time domain, e.g.\ CARMA (see for example \citealt{kelly2014,foremanmackey2017}), and ARIMA \citep[e.g.][]{feigelson2018} processes. Developing \textit{spectral} timing methods for irregularly sampled light curves is a major future challenge for the field, and a high-priority long-term goal for \stingray.
 
 %%% ACKNOWLEDGMENTS + REFERENCES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -820,7 +822,7 @@ We thank Astro Hack Week for providing the venue that started this project and t
 D.H. acknowledges support from the DIRAC Institute in the Department of Astronomy at the University of Washington. 
 The DIRAC Institute is supported through generous gifts from the Charles and Lisa Simonyi Fund for Arts and Sciences, and the Washington Research Foundation.
 M.B. is supported in part by the Italian Space Agency through agreement ASI-INAF n.2017-12-H.0 and ASI-INFN agreement n.2017-13-H.0.
-A.L.S. is supported by an NSF Astronomy and Astrophysics Posdoctoral Fellowship under award AST-1801792.
+A.L.S. is supported by an NSF Astronomy and Astrophysics Postdoctoral Fellowship under award AST-1801792.
 S.S. was supported by Google Summer of Code 2018.
 E.M.R. acknowledges support from Conselho Nacional de Desenvolvimento Cient\'ifico e Tecnol\'ogico (CNPq -- Brazil)
 
